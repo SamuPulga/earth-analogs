@@ -21,10 +21,11 @@ const cargando = (texto) => el("div", { class: "cargando" }, el("i"), el("i"), e
 
 /**
  * Pinta la información del punto en `caja` (un elemento vacío).
- * @param {{lat:number, lon:number, sitio?:object, destino?:object, mision?:string}} punto
+ * @param {{lat:number, lon:number, sitio?:object, destino?:object, mision?:string, evaluacion?:object}} punto
+ * `evaluacion`: cómo quedó el punto con los pesos de la misión; la IA la usa para explicar por qué es análogo.
  * Devuelve una función para cancelar las consultas si el usuario cambia de sitio.
  */
-export function investigarLugar(caja, { lat, lon, sitio = null, destino = null, mision = null }) {
+export function investigarLugar(caja, { lat, lon, sitio = null, destino = null, mision = null, evaluacion = null }) {
   caja.__cancelar?.();
   const ctrl = new AbortController();
   caja.__cancelar = () => ctrl.abort();
@@ -72,7 +73,7 @@ export function investigarLugar(caja, { lat, lon, sitio = null, destino = null, 
     try {
       const r = await fetch("/api/lugar/resumen", {
         method: "POST", headers: { "Content-Type": "application/json" }, signal: ctrl.signal,
-        body: JSON.stringify({ lat, lon, sitio, destino, mision }),
+        body: JSON.stringify({ lat, lon, sitio, destino, mision, evaluacion }),
       });
       if (!r.ok || !r.body) throw new Error(`HTTP ${r.status}`);
       const lector = r.body.getReader();

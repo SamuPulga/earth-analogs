@@ -2,18 +2,18 @@ mision_id,tipo,destino,variable,operador,valor,unidad,metodo,peso,texto,fuente,e
 rover_lunar,mision,shackleton,,,,,,,Lunar rover navigation (cameras and thermal cycles),,borrador
 rover_lunar,restriccion,,pendiente_p95,<=,25,degrees,,,Maximum slope the rover can climb (ILLUSTRATIVE),TO BE VERIFIED,borrador
 rover_lunar,parametro,,reflectancia,,0.05,albedo (difference),tolerancia,,Ground as bright as regolith: navigation cameras see similar contrast,TO BE VERIFIED,borrador
-rover_lunar,parametro,,variacion_temperatura,,0.2,unitless,tolerancia,,Strong day/night cycle to test batteries and electronics,TO BE VERIFIED,borrador
-rover_lunar,parametro,,temperatura,,60,K (difference),tolerancia,,Similar cold background; wide tolerance because Earth never reaches lunar temperatures,TO BE VERIFIED,borrador
+rover_lunar,parametro,,variacion_temperatura,,5,°C (difference),tolerancia,,Strong day/night cycle to test batteries and electronics,TO BE VERIFIED,borrador
+rover_lunar,parametro,,temperatura,,15,°C (difference),tolerancia,,Similar cold background; wide tolerance because Earth never reaches lunar temperatures,TO BE VERIFIED,borrador
 rover_lunar,limite_tierra,,,,,,,,Gravity is 6 times the Moon's: wheel traction is different,,borrador
 rover_lunar,limite_tierra,,,,,,,,There is an atmosphere: it scatters light and softens the shadows the cameras see,,borrador
 termica_marte,mision,jezero,,,,,,,Thermal testing of equipment for Mars,,borrador
-termica_marte,parametro,,temperatura,,30,K (difference),tolerancia,,Mean temperature similar to the Martian site,TO BE VERIFIED,borrador
-termica_marte,parametro,,variacion_temperatura,,0.15,unitless,tolerancia,,Daily thermal cycle similar to the Martian one,TO BE VERIFIED,borrador
-termica_marte,parametro,,viento,,5,m/s (difference),tolerancia,,Wind changes how much heat the equipment loses by convection,TO BE VERIFIED,borrador
+termica_marte,parametro,,temperatura,,15,°C (difference),tolerancia,,Mean temperature similar to the Martian site,TO BE VERIFIED,borrador
+termica_marte,parametro,,variacion_temperatura,,5,°C (difference),tolerancia,,Daily thermal cycle similar to the Martian one,TO BE VERIFIED,borrador
+termica_marte,parametro,,viento,,3,m/s (difference),tolerancia,,Wind changes how much heat the equipment loses by convection,TO BE VERIFIED,borrador
 termica_marte,limite_tierra,,,,,,,,Without vacuum heat moves by convection: good for thermal cycling but not for thermal vacuum,,borrador
 polvo_marte,mision,jezero,,,,,,,Structures against Martian dust,,borrador
 polvo_marte,restriccion,,precipitacion_anual_mm,<=,200,mm/yr,,,Very dry site (ILLUSTRATIVE),TO BE VERIFIED,borrador
 polvo_marte,parametro,,humedad,,15,% RH (difference),tolerancia,,Very dry air: dust does not clump,TO BE VERIFIED,borrador
-polvo_marte,parametro,,viento,,4,m/s (difference),tolerancia,,Wind that lifts and deposits dust,TO BE VERIFIED,borrador
+polvo_marte,parametro,,viento,,3,m/s (difference),tolerancia,,Wind that lifts and deposits dust,TO BE VERIFIED,borrador
 polvo_marte,parametro,,reflectancia,,0.05,albedo (difference),tolerancia,,Ground as bright as Martian dust,TO BE VERIFIED,borrador
 polvo_marte,limite_tierra,,,,,,,,Martian air has ~1 % of Earth's density: good for dust deposition and abrasion but not for wind loads,,borrador

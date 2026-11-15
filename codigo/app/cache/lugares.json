@@ -411,5 +411,253 @@
    ],
    "segundos": 1.16
   }
+ },
+ "-11.500,-76.500": {
+  "hechos": {
+   "lat": -11.5,
+   "lon": -76.5,
+   "lugar": {
+    "nombre": "San Pedro de Laraos",
+    "region": "Lima",
+    "pais": "Peru",
+    "descripcion": "San Pedro de Laraos, Province of Huarochirí, Lima, Peru"
+   },
+   "wikipedia": {
+    "titulo": "Tarapu",
+    "extracto": "Tarapu is a mountain in the Andes of Peru which reaches an altitude of approximately 5,000 metres (16,404 ft). It is located in the Lima Region, Canta Province, Canta District, and in the Huarochirí Province, Laraos District. Tarapu lies southwest of a lake named Qiwllaqucha.",
+    "url": "https://en.wikipedia.org/wiki/Tarapu",
+    "imagen": "",
+    "idioma": "en",
+    "distancia_km": 1.9
+   },
+   "elevacion_m": 4695.0,
+   "fuentes": [
+    "OpenStreetMap Nominatim (© OpenStreetMap contributors, ODbL)",
+    "Wikipedia (CC BY-SA)",
+    "Open-Meteo (elevation)"
+   ],
+   "segundos": 1.9
+  }
+ },
+ "33.500,-114.500": {
+  "hechos": {
+   "lat": 33.5,
+   "lon": -114.5,
+   "lugar": {
+    "nombre": "La Paz County",
+    "region": "Arizona",
+    "pais": "United States",
+    "descripcion": "La Paz County, Arizona, United States"
+   },
+   "wikipedia": null,
+   "elevacion_m": 158.0,
+   "fuentes": [
+    "OpenStreetMap Nominatim (© OpenStreetMap contributors, ODbL)",
+    "Wikipedia (CC BY-SA)",
+    "Open-Meteo (elevation)"
+   ],
+   "segundos": 0.84
+  }
+ },
+ "-36.500,-71.500": {
+  "hechos": {
+   "lat": -36.5,
+   "lon": -71.5,
+   "lugar": {
+    "nombre": "San Fabián",
+    "region": "Nuble Region",
+    "pais": "Chile",
+    "descripcion": "San Fabián, Provincia de Punilla, Nuble Region, Chile"
+   },
+   "wikipedia": {
+    "titulo": "San Fabián",
+    "extracto": "San Fabián is the easternmost of 21 communes in the Punilla Province of central Chile's. Ñuble Region. The capital is the town of San Fabián de Alico. The commune spans an area of 1,568.3 km2 (606 sq mi).",
+    "url": "https://en.wikipedia.org/wiki/San_Fabi%C3%A1n",
+    "imagen": "https://thumb.wikimedia.org/wikipedia/commons/thumb/c/c4/Comuna_de_San_Fabi%C3%A1n.svg/330px-Comuna_de_San_Fabi%C3%A1n.svg.png?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail",
+    "idioma": "en",
+    "distancia_km": 7.1
+   },
+   "elevacion_m": 1238.0,
+   "fuentes": [
+    "OpenStreetMap Nominatim (© OpenStreetMap contributors, ODbL)",
+    "Wikipedia (CC BY-SA)",
+    "Open-Meteo (elevation)"
+   ],
+   "segundos": 1.52
+  }
+ },
+ "-24.500,-70.500": {
+  "hechos": {
+   "lat": -24.5,
+   "lon": -70.5,
+   "lugar": {
+    "nombre": "Antofagasta",
+    "region": "Antofagasta Region",
+    "pais": "Chile",
+    "descripcion": "Antofagasta, Provincia de Antofagasta, Antofagasta Region, Chile"
+   },
+   "wikipedia": {
+    "titulo": "Quebrada Botija",
+    "extracto": "La quebrada Botija es un lecho seco se desarrolla en la costa de la Región de Antofagasta.",
+    "url": "https://es.wikipedia.org/wiki/Quebrada_Botija",
+    "imagen": "https://thumb.wikimedia.org/wikipedia/commons/thumb/7/74/Cuenca-028-029-B.svg/langes-330px-Cuenca-028-029-B.svg.png?utm_source=es.wikipedia.org&utm_campaign=api&utm_content=thumbnail",
+    "idioma": "es",
+    "distancia_km": 6.7
+   },
+   "elevacion_m": 1276.0,
+   "fuentes": [
+    "OpenStreetMap Nominatim (© OpenStreetMap contributors, ODbL)",
+    "Wikipedia (CC BY-SA)",
+    "Open-Meteo (elevation)"
+   ],
+   "segundos": 0.85
+  }
+ },
+ "-11.500,-76.500|v4|Lunar rover navigation (cameras and thermal cycles)|b85bc5bbe2": {
+  "resumen": "**What it is:** This point in the San Pedro de Laraos area of Lima, Peru, sits at about 4,700 m elevation and has been evaluated for a lunar‑rover navigation test.\n\n**Why it is an analog for this mission:** Its surface reflectance (albedo 0.15) is close to the Moon’s Shackleton rim target (0.12) and falls within the 0.05 tolerance, matching the mission’s priority on optical conditions (60 % weight). It ranks 1 of 357 on the Pareto front, indicating the best overall match among evaluated sites.\n\n**Where it falls short:** The local temperature (≈ 9 °C) is far warmer than the lunar target (‑25 °C), exceeding the 15 °C tolerance and making temperature the decisive limiting factor; Earth cannot reproduce the Moon’s low gravity, vacuum, or radiation environment."
+ },
+ "-45.500,-68.500": {
+  "hechos": {
+   "lat": -45.5,
+   "lon": -68.5,
+   "lugar": {
+    "nombre": "Departamento Sarmiento",
+    "region": "Chubut",
+    "pais": "Argentina",
+    "descripcion": "Departamento Sarmiento, Chubut, Argentina"
+   },
+   "wikipedia": null,
+   "elevacion_m": 310.0,
+   "fuentes": [
+    "OpenStreetMap Nominatim (© OpenStreetMap contributors, ODbL)",
+    "Wikipedia (CC BY-SA)",
+    "Open-Meteo (elevation)"
+   ],
+   "segundos": 1.69
+  }
+ },
+ "-42.500,-67.500": {
+  "hechos": {
+   "lat": -42.5,
+   "lon": -67.5,
+   "lugar": {
+    "nombre": "Departamento Telsen",
+    "region": "Chubut",
+    "pais": "Argentina",
+    "descripcion": "Departamento Telsen, Chubut, Argentina"
+   },
+   "wikipedia": null,
+   "elevacion_m": 923.0,
+   "fuentes": [
+    "OpenStreetMap Nominatim (© OpenStreetMap contributors, ODbL)",
+    "Wikipedia (CC BY-SA)",
+    "Open-Meteo (elevation)"
+   ],
+   "segundos": 0.98
+  }
+ },
+ "33.500,-113.500": {
+  "hechos": {
+   "lat": 33.5,
+   "lon": -113.5,
+   "lugar": {
+    "nombre": "La Paz County",
+    "region": "Arizona",
+    "pais": "United States",
+    "descripcion": "La Paz County, Arizona, United States"
+   },
+   "wikipedia": null,
+   "elevacion_m": 510.0,
+   "fuentes": [
+    "OpenStreetMap Nominatim (© OpenStreetMap contributors, ODbL)",
+    "Wikipedia (CC BY-SA)",
+    "Open-Meteo (elevation)"
+   ],
+   "segundos": 1.72
+  }
+ },
+ "33.500,-114.500|v4|Structures against Martian dust|ef81adf975": {
+  "resumen": "**What it is:** This site in La Paz County, Arizona, is evaluated as an analog for testing structures against Martian dust.  \n\n**Why it is an analog for this mission:** Humidity is 24 % RH (target ≈ 20 % RH, within 15 % tolerance), wind speed is 5.2 m/s (target 4 m/s, within 3 m/s tolerance), and surface reflectance is 0.21 (target 0.20, within 0.05 tolerance). The user’s weighting gives the most importance to reflectance (60 % share), and the site ranks 1 of 41 on the Pareto front, the top‑ranked location.  \n\n**Where it falls short:** Wind speed is the decisive parameter, slightly higher than the Martian target, and Earth cannot reproduce Mars’s low gravity, thin atmosphere, or radiation environment."
+ },
+ "33.500,-112.500": {
+  "hechos": {
+   "lat": 33.5,
+   "lon": -112.5,
+   "lugar": {
+    "nombre": "Buckeye",
+    "region": "Arizona",
+    "pais": "United States",
+    "descripcion": "Buckeye, Maricopa County, Arizona, United States"
+   },
+   "wikipedia": {
+    "titulo": "Verrado High School",
+    "extracto": "Verrado High School is a public high school in the Verrado community of Buckeye, Arizona, United States. Operated by the Agua Fria Union High School District, the school primarily serves the Verrado area and is the fourth school in the district.",
+    "url": "https://en.wikipedia.org/wiki/Verrado_High_School",
+    "imagen": "https://thumb.wikimedia.org/wikipedia/en/thumb/c/c8/Verrado_High_School_V_logo.svg/330px-Verrado_High_School_V_logo.svg.png?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail",
+    "idioma": "en",
+    "distancia_km": 1.0
+   },
+   "elevacion_m": 378.0,
+   "fuentes": [
+    "OpenStreetMap Nominatim (© OpenStreetMap contributors, ODbL)",
+    "Wikipedia (CC BY-SA)",
+    "Open-Meteo (elevation)"
+   ],
+   "segundos": 1.61
+  }
+ },
+ "34.500,-114.500": {
+  "hechos": {
+   "lat": 34.5,
+   "lon": -114.5,
+   "lugar": {
+    "nombre": "San Bernardino County",
+    "region": "California",
+    "pais": "United States",
+    "descripcion": "San Bernardino County, California, United States"
+   },
+   "wikipedia": {
+    "titulo": "Chemehuevi Valley Airport",
+    "extracto": "Chemehuevi Valley Airport is a public airport located four miles (6.4 km) north of Chemehuevi Valley, serving as one of two airports in the Lake Havasu City, Arizona, United States metropolitan area. The airport is mostly used for general aviation.",
+    "url": "https://en.wikipedia.org/wiki/Chemehuevi_Valley_Airport",
+    "imagen": "",
+    "idioma": "en",
+    "distancia_km": 7.0
+   },
+   "elevacion_m": 367.0,
+   "fuentes": [
+    "OpenStreetMap Nominatim (© OpenStreetMap contributors, ODbL)",
+    "Wikipedia (CC BY-SA)",
+    "Open-Meteo (elevation)"
+   ],
+   "segundos": 1.66
+  }
+ },
+ "33.500,-116.500": {
+  "hechos": {
+   "lat": 33.5,
+   "lon": -116.5,
+   "lugar": {
+    "nombre": "Riverside County",
+    "region": "California",
+    "pais": "United States",
+    "descripcion": "Riverside County, California, United States"
+   },
+   "wikipedia": {
+    "titulo": "Santa Rosa Mountain (Riverside County)",
+    "extracto": "Santa Rosa Mountain is a mountain summit of the Santa Rosa Mountains, in Riverside County, California.",
+    "url": "https://en.wikipedia.org/wiki/Santa_Rosa_Mountain_(Riverside_County)",
+    "imagen": "https://thumb.wikimedia.org/wikipedia/commons/thumb/3/3e/Santa_Rosa_Mountain_from_Pines_to_Palms_Trail%2C_California.jpg/330px-Santa_Rosa_Mountain_from_Pines_to_Palms_Trail%2C_California.jpg?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail",
+    "idioma": "en",
+    "distancia_km": 5.6
+   },
+   "elevacion_m": 1412.0,
+   "fuentes": [
+    "OpenStreetMap Nominatim (© OpenStreetMap contributors, ODbL)",
+    "Wikipedia (CC BY-SA)",
+    "Open-Meteo (elevation)"
+   ],
+   "segundos": 1.39
+  }
  }
 }

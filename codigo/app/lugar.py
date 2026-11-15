@@ -115,7 +115,18 @@ _cargar_cache()
 
 
 # ---------------------------------------------------------------- servicios gratuitos
+_osm_turno = asyncio.Lock()
+_osm_ultima = 0.0
+
+
 async def _lugar_osm(c: httpx.AsyncClient, lat: float, lon: float) -> dict:
+    # Nominatim permite máximo 1 consulta por segundo: las consultas hacen fila
+    global _osm_ultima
+    async with _osm_turno:
+        espera = _osm_ultima + 1.05 - time.monotonic()
+        if espera > 0:
+            await asyncio.sleep(espera)
+        _osm_ultima = time.monotonic()
     r = await c.get("https://nominatim.openstreetmap.org/reverse",
                     params={"format": "jsonv2", "lat": lat, "lon": lon, "zoom": 10, "accept-language": "en"})
     r.raise_for_status()
@@ -197,7 +208,7 @@ async def hechos(lat: float, lon: float) -> dict:
 
 
 # ---------------------------------------------------------------- paso 2: resumen con IA
-VERSION_PROMPT = 3  # súbela al cambiar SISTEMA: así no se reutilizan resúmenes viejos de la caché
+VERSION_PROMPT = 4  # súbela al cambiar SISTEMA: así no se reutilizan resúmenes viejos de la caché
 
 SISTEMA = """You are the assistant of an app that finds places on Earth to test missions to the Moon and Mars.
 Write a VERY short profile of the place in clear English for engineering students (at most 100 words).
@@ -208,11 +219,23 @@ How to read the data:
   never say the site is that city, county or region.
 - "nearest_wikipedia_article" is the article closest to the point, which may be about something else nearby.
   Use it only if it clearly describes the site or its immediate surroundings; otherwise ignore it.
-- If there is no "site" (a random point on the map), describe it only through its area and elevation, and in
-  "Why it could work" say that the team has not evaluated this point yet, so its value as an analog is unknown.
+- If there is no "site" and no "mission_evaluation" (a random point on the map), describe it only through its area and
+  elevation, and in "Why it could work" say that the team has not evaluated this point yet, so its value as an analog is unknown.
+- "mission_evaluation" is how the app's mathematical model rated this point for the user's mission settings. Each parameter
+  has the value measured at this point, the destination target, their difference, the tolerance the user chose (smaller
+  tolerance = more weight) and whether it is within that tolerance. "target_rule" "lowest_on_earth"/"highest_on_earth" means
+  the real Moon/Mars value is beyond anything on Earth, so the target is the most extreme value on the continent.
+  The "decisive_parameter" is the one that limits the score. Quote the numbers with their units, rounded.
 - "team_hypothesis" comes from the team and may be test data: present it as the team's idea, not as a measurement.
 - Do not mention coordinates or field names.
-Exact format, in Markdown, with no title:
+Exact format, in Markdown, with no title.
+If there is a "mission_evaluation" (at most 130 words):
+**What it is:** one sentence.
+**Why it is an analog for this mission:** two or three sentences: which parameters match the destination (with numbers),
+which of them the user's settings prioritize, and its rank.
+**Where it falls short:** one or two sentences: parameters outside tolerance or the decisive parameter, and what Earth
+cannot reproduce (for example gravity, vacuum or radiation).
+Otherwise:
 **What it is:** one or two sentences.
 **Why it could work:** one or two sentences linked to the mission and destination (or, if there is no mission, to "suggested_for").
 **What it does not reproduce:** one sentence (for example gravity, vacuum, atmosphere or radiation).
@@ -234,10 +257,16 @@ def _mensaje_usuario(h: dict, contexto: dict) -> str:
         "nearest_wikipedia_article": {"title": w.get("titulo"), "distance_km": w.get("distancia_km"),
                                       "extract": w.get("extracto")} if w.get("titulo") else None,
         "mission": contexto.get("mision"),
+        "mission_evaluation": contexto.get("evaluacion"),
         "destination": ({"name": d.get("nombre"), "body": {"luna": "Moon", "marte": "Mars"}.get(d.get("cuerpo"), d.get("cuerpo"))}
                         if d else None),
     }
     return json.dumps(datos, ensure_ascii=False)
+
+
+def hash_corto(texto: str) -> str:
+    import hashlib
+    return hashlib.sha1(texto.encode()).hexdigest()[:10] if texto else ""
 
 
 def resumen_sin_ia(h: dict, contexto: dict) -> str:
@@ -256,12 +285,20 @@ def resumen_sin_ia(h: dict, contexto: dict) -> str:
     sitio = contexto.get("sitio") or {}
     if sitio.get("por_que"):
         partes.append(f"**Team hypothesis:** {sitio['por_que']}.")
+    ev = contexto.get("evaluacion") or {}
+    if ev.get("parameters"):
+        si = [p["name"] for p in ev["parameters"] if p.get("within_tolerance")]
+        no = [p["name"] for p in ev["parameters"] if p.get("within_tolerance") is False]
+        txt = f"**For this mission:** rank {ev.get('rank') or '—'}" + (f"; within tolerance in {', '.join(si)}" if si else "")
+        txt += (f"; outside tolerance in {', '.join(no)}" if no else "") + "."
+        partes.append(txt)
     return "\n\n".join(partes) or "No information found for this point."
 
 
 async def resumen(h: dict, contexto: dict):
     """Paso 2, en streaming: va devolviendo trozos de texto a medida que la IA los escribe."""
-    k = f'{clave(h["lat"], h["lon"])}|v{VERSION_PROMPT}|{(contexto.get("mision") or "")[:80]}'
+    ev = json.dumps(contexto.get("evaluacion"), sort_keys=True) if contexto.get("evaluacion") else ""
+    k = f'{clave(h["lat"], h["lon"])}|v{VERSION_PROMPT}|{(contexto.get("mision") or "")[:80]}|{hash_corto(ev)}'
     guardado = _cache.get(k, {}).get("resumen")
     if guardado:
         yield guardado
@@ -271,7 +308,7 @@ async def resumen(h: dict, contexto: dict):
         return
 
     cuerpo = {
-        "model": CONFIG["IA_MODELO"], "stream": True, "temperature": 0, "max_tokens": 350,
+        "model": CONFIG["IA_MODELO"], "stream": True, "temperature": 0, "max_tokens": 450,
         "messages": [{"role": "system", "content": SISTEMA},
                      {"role": "user", "content": _mensaje_usuario(h, contexto)}],
     }

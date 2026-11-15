@@ -599,3 +599,19 @@ summary { cursor: pointer; color: var(--suave); padding: 6px 0; }
 .cargando span { margin-left: 6px; }
 @keyframes puntito { 0%, 100% { opacity: .25; transform: translateY(0); } 50% { opacity: 1; transform: translateY(-3px); } }
 .lugar-resumen:empty { display: none; }
+
+/* ---------- Grilla de Daniel: leyenda, tabla "compared with the destination" y mapas medidos */
+.hud-leyenda .degradado i { display: inline-block; width: 54px; height: 8px; border-radius: 4px;
+  background: linear-gradient(90deg, hsl(195 90% 68%), hsl(212 70% 48%), hsl(230 40% 28%)); }
+.tabla-scroll { overflow-x: auto; }
+.tabla-analogo { width: 100%; border-collapse: collapse; font-size: 12px; }
+.tabla-analogo th { text-align: left; font: 600 9px var(--cuerpo); letter-spacing: .08em; text-transform: uppercase; color: var(--suave); padding: 6px 4px; border-bottom: 1px solid var(--linea); }
+.tabla-analogo td { padding: 7px 4px; border-bottom: 1px solid var(--linea); vertical-align: top; }
+.tabla-analogo td small { display: block; color: var(--suave); font-size: 11px; }
+.tabla-analogo .num-t { font-variant-numeric: tabular-nums; }
+.mapas-medidos { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 10px; }
+.mapa-medido { display: grid; gap: 6px; text-decoration: none; color: var(--texto); font-size: 12px; }
+.mapa-medido img { width: 100%; aspect-ratio: 5 / 3; object-fit: cover; border-radius: 10px; background: #fff; border: 1px solid var(--linea); transition: transform .2s; }
+.mapa-medido:hover img { transform: scale(1.03); }
+.mapa-medido span { color: var(--suave); }
+.mapa-medido b { color: var(--texto); font-weight: 600; }

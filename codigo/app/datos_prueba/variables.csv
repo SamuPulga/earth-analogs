@@ -1,9 +1,9 @@
 variable,unidad,tierra,luna,marte,metrica,estado
-temperatura,K (difference),MODIS LST (MOD11A2),Diviner,THEMIS / MCS,difference in mean surface temperature,en proceso
-humedad,% RH (difference),ERA5 / MERRA-2 (TO BE VERIFIED),not applicable (no atmosphere),MCS / REMS (TO BE VERIFIED),difference in relative humidity,en proceso
-viento,m/s (difference),ERA5 / MERRA-2 (TO BE VERIFIED),not applicable (no atmosphere),MCD / REMS (TO BE VERIFIED),difference in mean speed,en proceso
-variacion_temperatura,unitless,MODIS LST day/night,Diviner,THEMIS,difference in normalized temperature range,en proceso
-reflectancia,albedo (difference),MODIS albedo (MCD43),LROC WAC / Diviner,TES albedo,difference in albedo,en proceso
+temperatura,°C,MODIS LST (MOD11A2),Diviner,THEMIS / MCS,difference in mean surface temperature,en proceso
+humedad,% RH,ERA5 / MERRA-2 (TO BE VERIFIED),not applicable (no atmosphere),MCS / REMS (TO BE VERIFIED),difference in relative humidity,en proceso
+viento,m/s,ERA5 / MERRA-2 (TO BE VERIFIED),not applicable (no atmosphere),MCD / REMS (TO BE VERIFIED),difference in mean speed,en proceso
+variacion_temperatura,°C (day − night),MODIS LST day/night,Diviner,THEMIS,difference in day–night temperature range,en proceso
+reflectancia,albedo (0–1),MODIS albedo (MCD43),LROC WAC / Diviner,TES albedo,difference in albedo,en proceso
 pendiente_p95,degrees,Copernicus DEM GLO-30,—,—,site value (constraint),en proceso
 precipitacion_anual_mm,mm/yr,GPM IMERG,—,—,site value (constraint),en proceso
 temperatura_media_c,°C,MODIS LST,—,—,site value (constraint),en proceso

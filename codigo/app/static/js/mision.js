@@ -15,6 +15,9 @@ const E = {
   mapa: null,
   capa: null,
   listo: false,
+  G: null,            // grilla de Daniel (puntos de 1° x 1° con los 5 parámetros medidos)
+  nombres: {},        // id del punto → nombre del lugar (OpenStreetMap)
+  parametrosCalculo: [],
 };
 
 const ESTADO = { borrador: "draft", verificado: "verified" };
@@ -22,6 +25,7 @@ const ESTADO = { borrador: "draft", verificado: "verified" };
 // Sitio del catálogo; si el modelo devolvió un punto que no está en sitios.csv (p. ej. una celda de grilla),
 // se arma con la lat/lon/nombre que trae el propio ranking.
 function sitio(id) {
+  if (E.G?.idx.has(id)) return puntoRejilla(id);
   const s = E.inicio.sitios.find((x) => x.id === id);
   if (s) return s;
   const r = E.resultado?.ranking.find((x) => x.sitio_id === id) || {};
@@ -46,6 +50,7 @@ function motivoNoDisponible(v) {
 // ---------------------------------------------------------------- inicio
 export function iniciarMision(inicio) {
   E.inicio = inicio;
+  E.G = prepararRejilla(inicio.rejilla);
   $("#sel-destino").append(...inicio.destinos.map((d) => el("option", { value: d.id }, `${d.nombre} (${{ luna: "Moon", marte: "Mars" }[d.cuerpo] || d.cuerpo})`)));
   $("#sel-destino").addEventListener("change", (e) => { E.mision.destino = e.target.value; cambio(true); });
   $("#btn-agregar-parametro").addEventListener("click", agregarParametro);
@@ -255,7 +260,7 @@ async function calcular() {
   if (!E.mision) return;
   const err = $("#error");
   // Solo se mandan los parámetros que el destino tiene (los "no aplica" quedan fuera)
-  const parametros = E.mision.parametros.filter((p) => disponible(p.variable));
+  const parametros = paramsActivos();
   if (!parametros.length) {
     err.hidden = false;
     err.textContent = "Add at least one parameter that exists for this destination.";
@@ -275,8 +280,13 @@ async function calcular() {
     }
     err.hidden = true;
     E.resultado = datos;
-    if (!E.sel || !estadoDe(E.sel)) E.sel = datos.ranking[0]?.sitio_id ?? null;
+    E.parametrosCalculo = structuredClone(parametros);
+    const cambioOptimo = datos.optimo?.sitio_id !== E._optimoId;
+    E._optimoId = datos.optimo?.sitio_id;
+    // Al cambiar el óptimo se selecciona; si el usuario escogió otro punto que sigue existiendo, se respeta
+    if (!E.sel || !estadoDe(E.sel) || (cambioOptimo && E.selEsOptimo)) { E.sel = datos.optimo?.sitio_id ?? datos.ranking[0]?.sitio_id ?? null; E.selEsOptimo = true; }
     pintarResultado();
+    if (datos.rejilla) datos.ranking.slice(0, 5).forEach((x) => pedirNombre(x.sitio_id));
   } catch (e) {
     if (e.name === "AbortError") return;
     err.hidden = false;
@@ -284,10 +294,115 @@ async function calcular() {
   }
 }
 
+const paramsActivos = () => (E.mision?.parametros || []).filter((p) => disponible(p.variable));
+
+// ---------------------------------------------------------------- grilla de Daniel (puntos de 1° x 1°)
+function prepararRejilla(r) {
+  if (!r) return null;
+  const G = { ids: [], idx: new Map(), lat: [], lon: [], val: {}, rango: {}, variables: r.variables };
+  r.variables.forEach((v) => (G.val[v] = []));
+  r.puntos.forEach((p, i) => {
+    G.ids.push(p[0]); G.idx.set(p[0], i); G.lat.push(p[1]); G.lon.push(p[2]);
+    r.variables.forEach((v, j) => G.val[v].push(p[3 + j]));
+  });
+  for (const v of r.variables) {
+    const xs = G.val[v].filter((x) => x != null);
+    G.rango[v] = Math.max(...xs) - Math.min(...xs);
+  }
+  return G;
+}
+
+// Nombre del lugar (OpenStreetMap, vía /api/lugar). Se piden en fila: el servidor hace máximo 1 por segundo.
+const cola = [];
+let colaOcupada = false;
+function pedirNombre(id) {
+  if (!E.G?.idx.has(id) || E.nombres[id] || cola.includes(id)) return;
+  cola.push(id);
+  procesarCola();
+}
+async function procesarCola() {
+  if (colaOcupada) return;
+  colaOcupada = true;
+  while (cola.length) {
+    const id = cola.shift();
+    const k = E.G.idx.get(id);
+    try {
+      const h = await (await fetch(`/api/lugar?lat=${E.G.lat[k]}&lon=${E.G.lon[k]}`)).json();
+      const l = h.lugar || {};
+      if (h.lugar) E.nombres[id] = { nombre: l.nombre || l.region || "", region: [l.nombre ? l.region : "", l.pais].filter(Boolean).join(", ") };
+      if (E.resultado) pintarResultado(false);
+    } catch { /* sin nombre: se queda con las coordenadas */ }
+  }
+  colaOcupada = false;
+}
+
+function puntoRejilla(id) {
+  const k = E.G.idx.get(id);
+  const n = E.nombres[id];
+  const coords = coordenadas(E.G.lat[k], E.G.lon[k]);
+  return { id, k, lat: E.G.lat[k], lon: E.G.lon[k], rejilla: true,
+    nombre: n?.nombre || coords, pais: n ? n.region : "1° grid cell" };
+}
+
+// Evaluación de un punto con la configuración actual (la misma cuenta del modelo: Chebyshev ponderado)
+function evaluar(k) {
+  const obj = E.resultado.objetivos;
+  const detalle = E.parametrosCalculo.map((p) => {
+    const v = p.variable, x = E.G.val[v][k], o = obj[v].valor;
+    const dif = Math.abs(x - o), f = dif / E.G.rango[v];
+    const w_f = p.metodo === "tolerancia" ? dif / p.valor : f * p.peso;
+    return { variable: v, f, w_f, dentro_tolerancia: p.metodo === "tolerancia" ? w_f <= 1 : null,
+      valor_sitio: x, objetivo: o, diferencia: dif, tolerancia: p.metodo === "tolerancia" ? p.valor : null };
+  });
+  const wf = detalle.map((d) => d.w_f);
+  const m = Math.max(...wf);
+  const conTol = detalle.filter((d) => d.dentro_tolerancia !== null);
+  return { sitio_id: E.G.ids[k], puntuacion: m, parametro_decisivo: detalle[wf.indexOf(m)].variable,
+    dentro_tolerancia: conTol.length ? conTol.every((d) => d.dentro_tolerancia) : null, robustez: null, detalle };
+}
+
+function puestoFrente(k) {
+  const P = E.resultado.puntos, s = P[k][0];
+  let n = 1;
+  for (const [x, est] of P) if (est === 0 && x < s) n++;
+  return n;
+}
+
+// Quién domina a un punto: entre los del frente que son iguales o mejores en todo, el de menor puntuación
+function dominador(k) {
+  const obj = E.resultado.objetivos, vs = E.parametrosCalculo.map((p) => p.variable);
+  const f = (i) => vs.map((v) => Math.abs(E.G.val[v][i] - obj[v].valor) / E.G.rango[v]);
+  const fk = f(k);
+  let mejor = null;
+  E.resultado.puntos.forEach(([s, est], j) => {
+    if (est !== 0) return;
+    const fj = f(j);
+    if (fj.every((x, i) => x <= fk[i]) && fj.some((x, i) => x < fk[i]) && (mejor === null || s < E.resultado.puntos[mejor][0])) mejor = j;
+  });
+  return mejor === null ? null : E.G.ids[mejor];
+}
+
+function motivoDescarte(k) {
+  for (const r of E.mision.restricciones) {
+    const x = E.G.val[r.variable]?.[k];
+    if (x == null) continue;
+    if (r.operador === "<=" ? x > r.valor : x < r.valor) return `${nombre(r.variable)} = ${fmt(x)} (must be ${r.operador} ${r.valor} ${r.unidad || ""})`;
+  }
+  return "Does not meet a constraint";
+}
+
 function estadoDe(id) {
   const R = E.resultado;
   const i = R.ranking.findIndex((x) => x.sitio_id === id);
-  if (i >= 0) return { tipo: "frente", puesto: i + 1, dato: R.ranking[i] };
+  if (i >= 0) return { tipo: "frente", puesto: i + 1, dato: R.ranking[i], eval: R.ranking[i] };
+  if (R.rejilla && E.G?.idx.has(id)) {
+    const k = E.G.idx.get(id);
+    const est = R.puntos[k][1];
+    if (est === 2) return { tipo: "descartado", dato: { sitio_id: id, motivo: motivoDescarte(k) } };
+    const ev = evaluar(k);
+    if (est === 0) return { tipo: "frente", puesto: puestoFrente(k), dato: ev, eval: ev };
+    return { tipo: "dominado", dato: { sitio_id: id, dominado_por: dominador(k) }, eval: ev };
+  }
   const d = R.dominados.find((x) => x.sitio_id === id);
   if (d) return { tipo: "dominado", dato: d };
   const x = R.descartados.find((x) => x.sitio_id === id);
@@ -295,14 +410,17 @@ function estadoDe(id) {
   return null;
 }
 
-function seleccionar(id) {
+function seleccionar(id, zoom = 6) {
   E.sel = id;
+  E.selEsOptimo = id === E.resultado?.optimo?.sitio_id;
   pintarResultado();
-  volarA(sitio(id), 5);
+  volarA(sitio(id), zoom);
+  pedirNombre(id);
 }
 
-function pintarResultado() {
+function pintarResultado(conMapa = true) {
   const R = E.resultado;
+  const tot = R.totales;
   $("#ranking").replaceChildren(...R.ranking.map((x, i) => {
     const s = sitio(x.sitio_id);
     const etq = x.dentro_tolerancia === null ? null :
@@ -312,109 +430,217 @@ function pintarResultado() {
       onkeydown: (e) => { if (e.key === "Enter") seleccionar(x.sitio_id); } },
       el("span", { class: "puesto" }, String(i + 1).padStart(2, "0")),
       el("div", {}, el("div", { class: "nombre" }, s.nombre),
-        el("div", { class: "meta" }, `${s.pais || ""} · decided by: ${nombre(x.parametro_decisivo)} · robustness ${pct(x.robustez)} `), etq),
+        el("div", { class: "meta" }, `${s.pais ? s.pais + " · " : ""}decided by: ${nombre(x.parametro_decisivo)} · robustness ${pct(x.robustez)} `), etq),
       el("div", { class: "punt" }, el("b", {}, fmt(x.puntuacion)), el("span", { class: "meta" }, "score")));
   }));
   if (!R.ranking.length) {
     $("#ranking").append(el("p", { class: "nota" }, "No site meets the constraints."));
   }
-  $("#n-dom").textContent = R.dominados.length;
+  const nota = $("#filtro-nota");
+  const partes = [];
+  if (tot) partes.push(`${tot.puntos.toLocaleString("en")} points of Daniel's grid · ${tot.frente.toLocaleString("en")} on the Pareto front${tot.frente > R.ranking.length ? ` (top ${R.ranking.length} shown; click the map for any other)` : ""}.`);
+  if (R.restricciones_omitidas?.length) partes.push(`Not applied, no data in the grid yet: ${R.restricciones_omitidas.map(nombre).join(", ")}.`);
+  nota.hidden = !partes.length;
+  nota.textContent = partes.join(" ");
+
+  $("#n-dom").textContent = (tot?.dominados ?? R.dominados.length).toLocaleString("en");
   $("#dominados").replaceChildren(...R.dominados.map((d) =>
     el("li", { onclick: () => seleccionar(d.sitio_id) }, `${sitio(d.sitio_id).nombre} — beaten by ${sitio(d.dominado_por).nombre}`)));
-  $("#n-desc").textContent = R.descartados.length;
+  $("#n-desc").textContent = (tot?.descartados ?? R.descartados.length).toLocaleString("en");
   $("#descartados").replaceChildren(...R.descartados.map((d) =>
     el("li", { onclick: () => seleccionar(d.sitio_id) }, `${sitio(d.sitio_id).nombre} — ${d.motivo}`)));
 
-  pintarMapa();
+  if (conMapa) pintarMapa();
   pintarOptimo();
   pintarFicha();
 }
 
-// Lugar óptimo (salida del modelo de Daniel): recuadro sobre el mapa y vuelo hasta él cuando cambia
+// Lugar óptimo (salida del modelo de Daniel): recuadro sobre el mapa, y el mapa vuela y hace zoom cuando cambia
 function pintarOptimo() {
   if (!E.mapa) return;
   const o = E.resultado.optimo;
   const caja = $("#optimo");
   caja.hidden = !o || o.lat == null;
   if (caja.hidden) return;
+  const s = sitio(o.sitio_id);
   caja.replaceChildren(
     el("span", { class: "optimo-etq" }, "Optimal site"),
-    el("b", {}, o.nombre || o.sitio_id),
-    el("span", { class: "optimo-coords" }, coordenadas(o.lat, o.lon)),
-    el("button", { class: "btn chico", type: "button", onclick: () => { seleccionar(o.sitio_id); volarA(o, 7); } }, "Center ", el("i", { class: "flecha" })));
+    el("b", {}, s.nombre || o.sitio_id),
+    el("span", { class: "optimo-coords" }, `${s.pais && s.rejilla ? s.pais + " · " : ""}${coordenadas(o.lat, o.lon)}`),
+    el("button", { class: "btn chico", type: "button", onclick: () => seleccionar(o.sitio_id, 7) }, "Center ", el("i", { class: "flecha" })));
   const clave = `${o.lat},${o.lon}`;
   if (clave !== E._ultimoOptimo && E.mapa.getSize().x > 0) {
     E._ultimoOptimo = clave;
-    volarA(o, 4);
+    volarA(o, 6);
   }
 }
 
 function volarA(p, zoom) {
-  if (p?.lat == null) return;
+  if (p?.lat == null || !E.mapa) return;
   E.mapa.flyTo([p.lat, p.lon], Math.max(E.mapa.getZoom(), zoom), { duration: 1.6 });
 }
 
 function pintarMapa() {
   if (!E.mapa) return;
   E.capa.clearLayers();
-  const puntos = [];
-  const ids = new Set(E.inicio.sitios.map((s) => s.id));
-  const extra = E.resultado.ranking.filter((x) => !ids.has(x.sitio_id)).map((x) => sitio(x.sitio_id));
-  for (const s of [...E.inicio.sitios, ...extra]) {
+  if (E.resultado.rejilla) { pintarRejilla(); return; }
+  for (const s of E.inicio.sitios) {
     if (s.lat == null || s.lon == null) continue;
     const st = estadoDe(s.id);
     if (!st) continue;
-    let clase = st.tipo, texto = "", tam = 16;
-    if (st.tipo === "frente") { texto = st.puesto; tam = 26; if (st.puesto === 1) { clase += " primero"; tam = 30; } }
-    if (s.id === E.sel) tam += 6;
-    const icono = L.divIcon({ className: "", iconSize: [tam, tam],
-      html: `<div class="marcador ${clase}" style="width:${tam}px;height:${tam}px">${texto}</div>` });
-    L.marker([s.lat, s.lon], { icon: icono, title: s.nombre, zIndexOffset: st.tipo === "frente" ? 1000 - (st.puesto || 0) : 0 })
-      .on("click", () => seleccionar(s.id)).addTo(E.capa);
-    puntos.push([s.lat, s.lon]);
+    marcador(s, st);
   }
 }
 
-// "Sobre este lugar": se investiga una vez por sitio y misión; al mover los pesos se reutiliza (no se vuelve a consultar)
-function sobreElLugar(s) {
-  const k = `${s.id}|${E.mision.id}|${E.mision.destino}`;
+function marcador(s, st) {
+  let clase = st.tipo, texto = "", tam = 16;
+  if (st.tipo === "frente") { texto = st.puesto; tam = 26; if (st.puesto === 1) { clase += " primero"; tam = 30; } }
+  if (s.id === E.sel) tam += 6;
+  const icono = L.divIcon({ className: "", iconSize: [tam, tam],
+    html: `<div class="marcador ${clase}" style="width:${tam}px;height:${tam}px">${texto}</div>` });
+  L.marker([s.lat, s.lon], { icon: icono, title: s.nombre, zIndexOffset: st.tipo === "frente" ? 1000 - (st.puesto || 0) : 0 })
+    .on("click", () => seleccionar(s.id)).addTo(E.capa);
+}
+
+// Cada punto de la grilla es un cuadro de 1°, coloreado según qué tan bien imita al destino con los pesos actuales
+function pintarRejilla() {
+  const G = E.G, R = E.resultado;
+  if (!E.celdas) {
+    const lienzo = L.canvas({ padding: 0.3 });
+    E.capaCeldas = L.layerGroup().addTo(E.mapa);
+    E.celdas = G.ids.map((id, i) => L.rectangle([[G.lat[i] - 0.5, G.lon[i] - 0.5], [G.lat[i] + 0.5, G.lon[i] + 0.5]],
+      { renderer: lienzo, weight: 0, fillOpacity: 0, interactive: true })
+      .on("click", () => seleccionar(id)).addTo(E.capaCeldas));
+  }
+  // color por percentil de la puntuación: así siempre se ve el contraste, sea cual sea la escala
+  const orden = R.puntos.map((p, i) => [p[0], i]).filter((x) => x[0] != null).sort((a, b) => a[0] - b[0]);
+  const perc = new Float32Array(G.ids.length).fill(1);
+  orden.forEach(([, i], n) => (perc[i] = n / Math.max(1, orden.length - 1)));
+  E.celdas.forEach((c, i) => {
+    const est = R.puntos[i][1], t = perc[i];
+    const sel = G.ids[i] === E.sel;
+    if (est === 2) c.setStyle({ fillColor: "#ff5d6c", fillOpacity: 0.16, weight: sel ? 2 : 0, color: "#fff" });
+    else c.setStyle({ fillColor: `hsl(${195 + 35 * t}, ${90 - 50 * t}%, ${68 - 40 * t}%)`,
+      fillOpacity: est === 0 ? 0.85 - 0.45 * t : 0.6 - 0.5 * t, weight: sel ? 2 : 0, color: "#fff" });
+  });
+  R.ranking.slice(0, 10).forEach((x, i) => marcador(sitio(x.sitio_id), { tipo: "frente", puesto: i + 1 }));
+  if (E.sel && !R.ranking.slice(0, 10).some((x) => x.sitio_id === E.sel) && G.idx.has(E.sel)) {
+    const s = sitio(E.sel);
+    L.marker([s.lat, s.lon], { icon: L.divIcon({ className: "", iconSize: [18, 18], html: '<div class="marcador-punto"></div>' }) }).addTo(E.capa);
+  }
+}
+
+// "Sobre este lugar": la IA lo investiga y explica por qué es análogo CON LA CONFIGURACIÓN ACTUAL.
+// Al mover los pesos se espera a que el usuario suelte el control antes de volver a preguntarle a la IA.
+function sobreElLugar(s, st) {
+  const ev = st?.eval ? paraIA(st) : null;
+  const k = `${s.id}|${E.mision.id}|${E.mision.destino}|${JSON.stringify(ev)}`;
   if (E._lugarClave !== k) {
+    const mismoSitio = E._lugarSitio === s.id && E._lugarNodo;
     E._lugarClave = k;
-    E._lugarNodo = el("div");
-    if (s.lat != null) {
+    E._lugarSitio = s.id;
+    if (!mismoSitio) E._lugarNodo = el("div", { class: "lugar" }, el("p", { class: "nota" }, "Looking up the place…"));
+    const nodo = E._lugarNodo;
+    clearTimeout(E._lugarEspera);
+    if (s.lat == null) { nodo.replaceChildren(el("p", { class: "nota" }, "This point has no coordinates.")); }
+    else {
       const atr = E.inicio.atributos.find((a) => a.sitio_id === s.id) || {};
       const d = destino(E.mision.destino);
-      investigarLugar(E._lugarNodo, { lat: s.lat, lon: s.lon,
+      E._lugarEspera = setTimeout(() => investigarLugar(nodo, { lat: s.lat, lon: s.lon,
         sitio: E.inicio.sitios.some((x) => x.id === s.id) ? { ...s, ...atr } : null,
-        destino: d.nombre ? { nombre: d.nombre, cuerpo: d.cuerpo } : null, mision: E.mision.nombre });
-    } else {
-      E._lugarNodo.append(el("p", { class: "nota" }, "This point has no coordinates."));
+        destino: d.nombre ? { nombre: d.nombre, cuerpo: d.cuerpo } : null, mision: E.mision.nombre, evaluacion: ev }),
+      mismoSitio ? 900 : 100);
     }
   }
   return [el("h3", {}, "About this place"), E._lugarNodo];
 }
 
+const REGLA = { min: "lowest_on_earth", max: "highest_on_earth", fijo: "fixed_value" };
+const redondo = (x) => (x == null ? null : +(+x).toPrecision(3));
+
+// Lo que la IA necesita para explicar el ranking: valores del punto, objetivo del destino, tolerancias y pesos
+function paraIA(st) {
+  const ev = st.eval, R = E.resultado, obj = R.objetivos || {};
+  const pesos = E.parametrosCalculo.map((p) => (p.metodo === "tolerancia" ? (E.G?.rango[p.variable] || 1) / p.valor : p.peso));
+  const suma = pesos.reduce((a, b) => a + b, 0) || 1;
+  return {
+    status: { frente: "on the Pareto front", dominado: "dominated: another point is equal or better in every parameter" }[st.tipo],
+    rank: st.puesto ? `${st.puesto} of ${R.totales?.frente ?? R.ranking.length} on the Pareto front` : null,
+    is_optimal_site: ev.sitio_id === R.optimo?.sitio_id,
+    score: redondo(ev.puntuacion),
+    score_meaning: "largest difference/tolerance among the parameters; 1 or less means within tolerance in all of them",
+    decisive_parameter: nombre(ev.parametro_decisivo),
+    robustness: ev.robustez == null ? null : `ranked first in ${Math.round(ev.robustez * 100)}% of runs with slightly changed weights`,
+    parameters: ev.detalle.map((d, i) => ({
+      name: nombre(d.variable), unit: (variable(d.variable).unidad || "").replace(/\s*\(.*\)$/, ""),
+      value_here: redondo(d.valor_sitio), destination_target: redondo(d.objetivo),
+      target_rule: REGLA[obj[d.variable]?.regla] || null, difference: redondo(d.diferencia),
+      tolerance: redondo(d.tolerancia), within_tolerance: d.dentro_tolerancia,
+      weight_share_percent: Math.round((pesos[i] / suma) * 100),
+    })),
+  };
+}
+
+// Mapas medidos por el equipo (IMAGENES-DATOS): se muestran los de los parámetros de la misión
+const MAPAS = { temperatura: "Surface temperature (°C)", humedad: "Surface relative humidity (%)", viento: "Wind speed (m/s)",
+  variacion_temperatura: "Day–night surface temperature range (°C)", reflectancia: "Surface albedo (%)" };
+function mapasMedidos(s) {
+  const vs = E.parametrosCalculo.map((p) => p.variable).filter((v) => MAPAS[v]);
+  if (!vs.length) return null;
+  return [el("h3", {}, "Measured data behind this site"),
+    el("p", { class: "ayuda" }, `Maps of the Americas measured by the team, one per mission parameter. This point: ${coordenadas(s.lat, s.lon)}.`),
+    el("div", { class: "mapas-medidos" }, ...vs.map((v) => {
+      const k = E.G?.idx.get(s.id);
+      const aqui = k != null ? E.G.val[v][k] : null;
+      return el("a", { class: "mapa-medido", href: `/static/img/mapas/${v}.png`, target: "_blank", rel: "noopener" },
+        el("img", { src: `/static/img/mapas/${v}.png`, alt: `${MAPAS[v]} across the Americas`, loading: "lazy" }),
+        el("span", {}, el("b", {}, nombre(v)), aqui != null ? ` · here: ${+aqui.toPrecision(3)} ${(variable(v).unidad || "").replace(/\s*\(.*\)$/, "")}` : ""));
+    }))];
+}
+
+function tablaAnalogo(ev) {
+  const obj = E.resultado.objetivos || {};
+  const regla = { min: "lowest on Earth", max: "highest on Earth" };
+  const u = (v) => (variable(v).unidad || "").replace(/\s*\(.*\)$/, "");
+  const n = (x) => (x == null ? "—" : String(+(+x).toPrecision(3)));
+  return el("div", { class: "tabla-scroll" }, el("table", { class: "tabla-analogo" },
+    el("thead", {}, el("tr", {}, ...["Parameter", "Here", "Target", "Diff.", "Tol.", ""].map((h) => el("th", {}, h)))),
+    el("tbody", {}, ...ev.detalle.map((d) => el("tr", {},
+      el("td", {}, nombre(d.variable), el("small", {}, u(d.variable))),
+      el("td", { class: "num-t" }, n(d.valor_sitio)),
+      el("td", { class: "num-t", title: obj[d.variable]?.por_que || "" }, n(d.objetivo), regla[obj[d.variable]?.regla] ? el("small", {}, regla[obj[d.variable].regla]) : null),
+      el("td", { class: "num-t" }, n(d.diferencia)),
+      el("td", { class: "num-t" }, d.tolerancia == null ? "AHP" : n(d.tolerancia)),
+      el("td", {}, d.dentro_tolerancia == null ? "" : el("span", { class: `etq ${d.dentro_tolerancia ? "bien" : "mal"}` }, d.dentro_tolerancia ? "✓" : "✗")))))));
+}
+
 function pintarFicha() {
   const caja = $("#ficha");
-  const f = { replaceChildren: (...xs) => caja.replaceChildren(...xs.flat().filter((x) => x !== null && x !== undefined)) };
+  const f = { replaceChildren: (...xs) => caja.replaceChildren(...xs.flat(Infinity).filter((x) => x !== null && x !== undefined)) };
   const titulo = el("div", { class: "paso" }, el("span", {}, "5"), el("h2", {}, "Site profile"));
   if (!E.sel) { f.replaceChildren(titulo, el("p", { class: "nota" }, "Pick a site.")); return; }
   const s = sitio(E.sel);
   const st = estadoDe(E.sel);
   const cab = el("div", { class: "ficha-cab" }, el("h2", {}, s.nombre),
-    el("span", { class: "pais" }, `${s.pais || ""} · ${coordenadas(s.lat, s.lon)}`));
+    el("span", { class: "pais" }, `${s.pais ? s.pais + " · " : ""}${coordenadas(s.lat, s.lon)}`));
   const hipotesis = s.por_que ? el("p", { class: "nota" }, `Hypothesis: ${s.por_que}`) : null;
-  const fuente = el("p", { class: "nota" }, `Source: ${s.fuente || "—"} · status: ${ESTADO[s.estado] || s.estado || "—"}`);
+  const fuente = s.rejilla
+    ? el("p", { class: "nota" }, "Source: Daniel's grid (1° × 1°, 5 measured parameters) · targets: research team (TO BE VERIFIED)")
+    : el("p", { class: "nota" }, `Source: ${s.fuente || "—"} · status: ${ESTADO[s.estado] || s.estado || "—"}`);
   const limites = [el("h3", {}, "What Earth cannot reproduce"),
     el("ul", {}, ...E.mision.limites_tierra.map((t) => el("li", {}, t)), ...LIMITES_SIEMPRE.map((t) => el("li", {}, t)))];
 
   if (!st) { f.replaceChildren(titulo, cab, el("p", { class: "nota" }, "No result for this site."), hipotesis, fuente); return; }
   if (st.tipo === "descartado") {
-    f.replaceChildren(titulo, cab, el("p", { class: "error" }, `Ruled out: ${st.dato.motivo}`), hipotesis, sobreElLugar(s), fuente);
+    f.replaceChildren(titulo, cab, el("p", { class: "error" }, `Ruled out: ${st.dato.motivo}`), hipotesis, sobreElLugar(s, null), fuente);
     return;
   }
   if (st.tipo === "dominado") {
-    f.replaceChildren(titulo, cab, el("p", {}, `Dominated by ${sitio(st.dato.dominado_por).nombre}: that site is equal or better in every mission parameter and better in at least one. That is why it is not recommended.`), hipotesis, sobreElLugar(s), fuente);
+    const quien = st.dato.dominado_por ? sitio(st.dato.dominado_por).nombre : "another point";
+    f.replaceChildren(titulo, cab,
+      el("p", {}, `Dominated by ${quien}: that point is equal or better in every mission parameter and better in at least one. That is why it is not recommended.`),
+      hipotesis, st.eval ? [el("h3", {}, "Compared with the destination"), tablaAnalogo(st.eval)] : null,
+      sobreElLugar(s, st), s.rejilla ? mapasMedidos(s) : null, fuente);
     return;
   }
 
@@ -422,34 +648,28 @@ function pintarFicha() {
   const cifras = el("div", { class: "cifras" },
     el("div", { class: "cifra" }, el("b", {}, `#${st.puesto}`), el("span", {}, "rank")),
     el("div", { class: "cifra" }, el("b", {}, fmt(x.puntuacion)), el("span", {}, "score (≤ 1 = within)")),
-    el("div", { class: "cifra" }, el("b", {}, pct(x.robustez)), el("span", {}, "robustness (times 1st)")));
+    el("div", { class: "cifra" }, el("b", {}, x.robustez == null ? "—" : pct(x.robustez)), el("span", {}, "robustness (times 1st)")));
 
   const escala = Math.max(2, ...x.detalle.map((d) => d.w_f));
   const barras = x.detalle.map((d) => {
-    const p = E.mision.parametros.find((q) => q.variable === d.variable) || {};
     const color = d.dentro_tolerancia === false ? "var(--mal)" : d.dentro_tolerancia ? "var(--bien)" : "var(--cian)";
     return el("div", { class: "barra-param" },
       el("div", { class: "rotulo" }, el("span", {}, nombre(d.variable)),
-        el("span", { class: "meta" }, `f = ${fmt(d.f)} ${p.unidad || ""} · w·f = ${fmt(d.w_f)}`)),
+        el("span", { class: "meta" }, `w·f = ${fmt(d.w_f)}`)),
       el("div", { class: "pista" },
         el("i", { style: `width:${(d.w_f / escala) * 100}%;background:${color}` }),
         el("span", { class: "marca-1", style: `left:${(1 / escala) * 100}%` })));
   });
 
-  const si = x.detalle.filter((d) => d.dentro_tolerancia === true);
-  const no = x.detalle.filter((d) => d.dentro_tolerancia === false);
-  const tol = (v) => (E.mision.parametros.find((q) => q.variable === v) || {}).valor;
   const fuera = E.mision.parametros.filter((p) => !disponible(p.variable));
-  f.replaceChildren(titulo, cab, hipotesis, cifras, sobreElLugar(s),
+  const comparacion = x.detalle[0]?.valor_sitio !== undefined
+    ? [el("h3", {}, "Compared with the destination"), el("p", { class: "ayuda" }, "Target = the destination's value. When the Moon or Mars is beyond anything on Earth, the target is the most extreme value on the continent."), tablaAnalogo(x)]
+    : null;
+  f.replaceChildren(titulo, cab, hipotesis, cifras, comparacion, sobreElLugar(s, st),
     el("h3", {}, "Weighted difference per parameter"),
-    el("p", { class: "ayuda" }, "The white line marks 1: to its left, within tolerance."),
+    el("p", { class: "ayuda" }, "Difference ÷ tolerance. The white line marks 1: to its left, within tolerance. The longest bar sets the score."),
     ...barras,
-    el("h3", {}, "Where it matches"),
-    si.length ? el("ul", {}, ...si.map((d) => el("li", {}, `${nombre(d.variable)}: difference ${fmt(d.f)}, tolerance ${fmt(tol(d.variable))}`)))
-      : el("p", { class: "nota" }, "It is not within tolerance in any parameter."),
-    el("h3", {}, "Where it falls short"),
-    no.length ? el("ul", {}, ...no.map((d) => el("li", {}, `${nombre(d.variable)}: difference ${fmt(d.f)}, ${fmt(d.w_f, 1)} times the tolerance`)))
-      : el("p", { class: "nota" }, "It is within tolerance in every parameter."),
+    s.rejilla ? mapasMedidos(s) : null,
     fuera.length ? el("p", { class: "nota" }, `Not compared at this destination: ${fuera.map((p) => nombre(p.variable)).join(", ")}.`) : null,
     ...limites, fuente);
 }
