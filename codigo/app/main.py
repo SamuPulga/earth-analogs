@@ -313,7 +313,9 @@ app.mount("/static", StaticFiles(directory=AQUI / "static"), name="static")
 
 @app.get("/favicon.ico", include_in_schema=False)
 def favicon():
-    return FileResponse(AQUI / "static" / "favicon.svg", media_type="image/svg+xml")
+    # Logo del equipo (static/img/). Sin caché larga para que el navegador no se quede con el icono viejo.
+    return FileResponse(AQUI / "static" / "img" / "favicon_32.png", media_type="image/png",
+                        headers={"Cache-Control": "no-cache"})
 
 
 @app.get("/")

@@ -766,3 +766,13 @@ summary { cursor: pointer; color: var(--suave); padding: 6px 0; }
   .mini-tarjetas { grid-template-columns: 1fr; }
   .tutorial > li { grid-template-columns: 1fr; }
 }
+
+/* ---------- Logo del equipo (dibujo de Procreate, fondo transparente) */
+.marca .logo-nav { width: 40px; height: 40px; object-fit: contain; filter: drop-shadow(0 0 6px rgba(120, 180, 255, .25)); }
+.marca-hero { display: flex; align-items: center; gap: 18px; margin: 0 0 14px; }
+.marca-hero img { width: clamp(64px, 8vw, 96px); height: auto; filter: drop-shadow(0 0 18px rgba(120, 180, 255, .25)); }
+.marca-hero .siglas-hero { margin: 0; }
+.logo-proyecto { display: flex; align-items: center; gap: 32px; margin: 8px 0 28px; }
+.logo-proyecto img { width: min(240px, 45vw); height: auto; flex-shrink: 0; filter: drop-shadow(0 0 24px rgba(120, 180, 255, .2)); }
+.logo-proyecto p { margin: 0; color: #c9ced8; font-size: 15px; line-height: 1.65; max-width: 520px; }
+@media (max-width: 600px) { .logo-proyecto { flex-direction: column; align-items: flex-start; } }
