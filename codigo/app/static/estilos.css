@@ -685,3 +685,15 @@ summary { cursor: pointer; color: var(--suave); padding: 6px 0; }
 .marcador-conocido { width: 12px; height: 12px; transform: rotate(45deg); border: 2px solid #fff; background: rgba(0,0,0,.6); box-shadow: 0 0 8px rgba(255,255,255,.6); }
 .lista-control small.uso { font-style: italic; opacity: .85; }
 .pto.conocido { border-radius: 0; width: 9px; height: 9px; transform: rotate(45deg); border: 2px solid #fff; background: rgba(0,0,0,.6); }
+
+/* ---------- Objetivo y peso de cada parámetro */
+.modo-peso { margin: 4px 0 12px; }
+.control.objetivo { grid-template-columns: auto 1fr auto; align-items: center; }
+.control.objetivo .nota-objetivo { grid-column: 1 / -1; font-size: 11px; color: var(--suave); }
+.control.objetivo .nota-objetivo.recorte { color: #f5c451; }
+.etq-ctrl { font: 600 10px var(--cuerpo); letter-spacing: .12em; text-transform: uppercase; color: var(--suave); min-width: 52px; }
+.mini { border: 1px solid var(--linea-fuerte); background: transparent; color: var(--suave); border-radius: 999px; width: 30px; height: 30px; cursor: pointer; }
+.mini:hover { color: var(--texto); border-color: var(--acento); }
+.cuota { position: relative; margin-top: 8px; font-size: 11px; color: var(--acento-2); padding-top: 6px; }
+.cuota::before { content: ""; position: absolute; top: 0; left: 0; height: 3px; width: var(--x, 0%); background: var(--acento); border-radius: 2px; transition: width .2s; }
+.fila .control:not(.tres):not(.objetivo) { grid-template-columns: 52px 1fr 80px; }

@@ -162,3 +162,30 @@ def celda_de(lat: float, lon: float) -> str | None:
     b = base()
     fila = b[(b["latitud"] == la) & (b["longitud"] == lo)]
     return str(fila.index[0]) if len(fila) else None
+
+
+def recortar(variable: str, valor: float) -> tuple[float, bool]:
+    """Un objetivo puesto por el usuario se corta al rango que existe en América (mínimo–máximo de la grilla)."""
+    b = base()[variable]
+    lo, hi = float(b.min()), float(b.max())
+    nuevo = min(max(float(valor), lo), hi)
+    return nuevo, nuevo != float(valor)
+
+
+def objetivos_con(destino: str, pedidos: dict[str, float]) -> dict[str, dict]:
+    """Objetivos del destino, cambiando los que el usuario fijó (ya recortados al rango de la Tierra)."""
+    obj = {v: dict(o) for v, o in objetivos(destino).items()}
+    for v, x in pedidos.items():
+        if v in obj:
+            valor, recortado = recortar(v, x)
+            obj[v].update({"valor": valor, "regla": "usuario", "pedido": float(x), "recortado": recortado,
+                           "por_que": "Set by the user" + (" (clipped to the range found in the Americas)" if recortado else "")})
+    return obj
+
+
+@lru_cache(maxsize=64)
+def F_con(destino: str, pedidos: tuple) -> pd.DataFrame:
+    """Como F(destino), pero con los objetivos que fijó el usuario. pedidos = ((variable, valor), ...)."""
+    from modelo.recomendar import distancias_normalizadas
+    obj = objetivos_con(destino, dict(pedidos))
+    return distancias_normalizadas(base(), {v: o["valor"] for v, o in obj.items()})

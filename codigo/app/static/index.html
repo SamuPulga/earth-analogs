@@ -309,8 +309,13 @@
           </label>
           <p id="nota-mision" class="nota"></p>
 
-          <div class="paso"><span>2</span><h2>Parameters and tolerances</h2></div>
-          <p class="ayuda">Lower tolerance = more weight: that parameter penalizes differences more.</p>
+          <div class="paso"><span>2</span><h2>Targets and weights</h2></div>
+          <p class="ayuda">For each parameter: the <b>target</b> value you want to reproduce (by default, the destination's) and how much it <b>weighs</b>. Targets beyond what exists in the Americas are clipped to the maximum or minimum.</p>
+          <div class="modo-peso"><span class="etq-capa">Set importance as</span>
+            <div class="segmentado" id="modo-peso" role="group" aria-label="How to set the importance of each parameter">
+              <button type="button" data-m="tolerancia">Tolerances</button>
+              <button type="button" data-m="ahp">Weights (%)</button>
+            </div></div>
           <div id="lista-parametros"></div>
           <div class="agregar">
             <select id="sel-nuevo-parametro" aria-label="Parameter to add"></select>

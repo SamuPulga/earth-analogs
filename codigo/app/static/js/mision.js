@@ -56,6 +56,7 @@ export function iniciarMision(inicio) {
   $("#btn-agregar-restriccion").addEventListener("click", agregarRestriccion);
   $$(".pestana").forEach((b) => b.addEventListener("click", () => cambiarModo(b.dataset.modo)));
   iniciarAsistente(inicio);
+  $$("#modo-peso button").forEach((b) => b.addEventListener("click", () => cambiarModoPeso(b.dataset.m)));
   pintarMisiones();
 }
 
@@ -152,6 +153,8 @@ function pintarConfig() {
   // parámetros
   const lp = $("#lista-parametros");
   lp.replaceChildren(...m.parametros.map((p, i) => filaParametro(p, i)));
+  $$("#modo-peso button").forEach((b) => b.classList.toggle("activo", b.dataset.m === modoPeso()));
+  setTimeout(actualizarCuotas);
   if (!m.parametros.length) lp.append(el("p", { class: "nota" }, "Add at least one parameter."));
 
   // restricciones
@@ -180,41 +183,118 @@ function pintarConfig() {
     ...LIMITES_SIEMPRE.map((t) => el("li", { class: "nota" }, t)));
 }
 
+// ---------------------------------------------------------------- objetivo y peso de cada parámetro
+const unidadCorta = (v) => (variable(v).unidad || "").replace(/\s*\(.*\)$/, "").replace(/^albedo$/, "");
+const objetivoDestino = (v) => destino(E.mision.destino).objetivos?.[v] || null;
+
+// Peso de cada parámetro en el modelo: tolerancia → rango/τ (w = 1/τ en la escala de Daniel); peso → tal cual
+function pesoModelo(p) {
+  return p.metodo === "tolerancia" ? (E.G?.rango[p.variable] || 1) / p.valor : (p.peso || 0);
+}
+function cuotas() {
+  const ps = paramsActivos();
+  const suma = ps.reduce((a, p) => a + pesoModelo(p), 0) || 1;
+  return Object.fromEntries(ps.map((p) => [p.variable, pesoModelo(p) / suma]));
+}
+function actualizarCuotas() {
+  const c = cuotas();
+  for (const [v, x] of Object.entries(c)) {
+    const n = document.getElementById(`cuota-${v}`);
+    if (n) { n.textContent = `${Math.round(x * 100)} % of the weight`; n.style.setProperty("--x", `${x * 100}%`); }
+  }
+}
+
+// Todas las tolerancias o todos los pesos: mezclarlos no tiene una escala común
+function modoPeso() {
+  const ps = E.mision?.parametros || [];
+  return ps.length && ps.every((p) => p.metodo === "ahp") ? "ahp" : "tolerancia";
+}
+function cambiarModoPeso(modo) {
+  if (!E.mision || modo === modoPeso()) return;
+  pasarAPersonalizada();
+  if (modo === "ahp") {
+    const c = cuotas();
+    E.mision.parametros.forEach((p) => {
+      if (p.metodo === "tolerancia") p._tol = p.valor;
+      p.metodo = "ahp"; p.peso = Math.max(0.01, +(c[p.variable] ?? 1 / E.mision.parametros.length).toFixed(2));
+    });
+  } else {
+    E.mision.parametros.forEach((p) => {
+      p.metodo = "tolerancia";
+      p.valor = p._tol ?? E.base[p.variable] ?? +((E.G?.rango[p.variable] || 1) * 0.2).toPrecision(2);
+      E.base[p.variable] ??= p.valor;
+    });
+  }
+  cambio(true);
+}
+
 function filaParametro(p, i) {
   const activo = disponible(p.variable);
-  const quitar = el("button", { class: "quitar", title: "Remove", "aria-label": `Remove ${nombre(p.variable)}`, onclick: () => {
+  const v = p.variable, u = unidadCorta(v);
+  const quitar = el("button", { class: "quitar", title: "Remove", "aria-label": `Remove ${nombre(v)}`, onclick: () => {
     E.mision.parametros.splice(i, 1); cambio(true); } }, "×");
-  const cab = el("div", { class: "fila-cab" },
-    el("strong", {}, nombre(p.variable)),
-    el("span", { class: "unidad" }, p.metodo === "tolerancia" ? `tolerance · ${p.unidad || ""}` : "AHP weight"),
-    quitar);
+  const cab = el("div", { class: "fila-cab" }, el("strong", {}, nombre(v)), el("span", { class: "unidad" }, u), quitar);
   if (!activo) {
-    return el("div", { class: "fila inactiva" }, cab, el("div", { class: "texto" }, `${motivoNoDisponible(p.variable)} Not used in the calculation.`));
+    return el("div", { class: "fila inactiva" }, cab, el("div", { class: "texto" }, `${motivoNoDisponible(v)} Not used in the calculation.`));
   }
   const texto = p.texto ? el("div", { class: "texto" }, p.texto) : null;
 
+  // ---- objetivo: el del destino por defecto; el usuario lo puede cambiar (se corta al rango de América)
+  const od = objetivoDestino(v);
+  const lo = E.G?.min[v], hi = E.G?.max[v];
+  const regla = { min: "lowest in the Americas", max: "highest in the Americas", fijo: "destination value" };
+  const nota = el("span", { class: "nota-objetivo" });
+  const pintarNota = (recorte = "") => {
+    nota.className = `nota-objetivo${recorte ? " recorte" : ""}`;
+    nota.textContent = recorte || (p.objetivo == null
+      ? `${destino(E.mision.destino).nombre || "Destination"}: ${regla[od?.regla] || "target"}`
+      : `Your target · destination: ${od ? +od.valor.toPrecision(3) : "—"}`);
+  };
+  const obj = el("input", { type: "number", step: "any", value: +(p.objetivo ?? od?.valor ?? 0).toPrecision(4),
+    "aria-label": `Target for ${nombre(v)}`, title: lo != null ? `Range in the Americas: ${+lo.toPrecision(3)} to ${+hi.toPrecision(3)} ${u}` : "" });
+  obj.addEventListener("change", () => {
+    let x = parseFloat(obj.value);
+    if (Number.isNaN(x)) { obj.value = +(p.objetivo ?? od?.valor ?? 0).toPrecision(4); return; }
+    let recorte = "";
+    if (hi != null && x > hi) { recorte = `Above the maximum in the Americas: set to ${+hi.toPrecision(4)} ${u}`; x = hi; }
+    if (lo != null && x < lo) { recorte = `Below the minimum in the Americas: set to ${+lo.toPrecision(4)} ${u}`; x = lo; }
+    obj.value = +x.toPrecision(4);
+    p.objetivo = x;
+    pintarNota(recorte);
+    cambio();
+  });
+  const volver = el("button", { type: "button", class: "mini", title: "Back to the destination's target", onclick: () => {
+    p.objetivo = null; obj.value = +(od?.valor ?? 0).toPrecision(4); pintarNota(); cambio(); } }, "↺");
+  pintarNota();
+  const filaObjetivo = el("div", { class: "control objetivo" }, el("span", { class: "etq-ctrl" }, "Target"), obj, volver, nota);
+
+  // ---- peso: como tolerancia (menor = más importante) o como peso directo
   let control;
   if (p.metodo === "tolerancia") {
     // slider en escala logarítmica alrededor de la tolerancia original: de base/10 a base·10
-    const base = E.base[p.variable] ?? p.valor;
-    const num = el("input", { type: "number", min: "0", step: "any", value: +p.valor.toPrecision(3), "aria-label": `Tolerance for ${nombre(p.variable)}` });
+    const base = E.base[v] ?? p.valor;
+    const num = el("input", { type: "number", min: "0", step: "any", value: +p.valor.toPrecision(3), "aria-label": `Tolerance for ${nombre(v)}` });
     const rango = el("input", { type: "range", min: "-1", max: "1", step: "0.02",
-      value: Math.log10(p.valor / base).toFixed(2), "aria-label": `Tolerance for ${nombre(p.variable)} (slider)` });
+      value: Math.log10(p.valor / base).toFixed(2), "aria-label": `Tolerance for ${nombre(v)} (slider)` });
     rango.addEventListener("input", () => {
       p.valor = +(base * 10 ** +rango.value).toPrecision(3);
       num.value = p.valor; cambio();
     });
     num.addEventListener("change", () => {
-      const v = parseFloat(num.value);
-      if (v > 0) { p.valor = v; rango.value = Math.log10(v / base).toFixed(2); cambio(); }
+      const x = parseFloat(num.value);
+      if (x > 0) { p.valor = x; rango.value = Math.log10(x / base).toFixed(2); cambio(); }
     });
-    control = el("div", { class: "control" }, rango, num);
+    control = el("div", { class: "control" }, el("span", { class: "etq-ctrl", title: "Largest acceptable difference from the target. Smaller = more weight" }, "± Tol."), rango, num);
   } else {
-    const num = el("input", { type: "number", min: "0", step: "0.01", value: p.peso });
-    num.addEventListener("change", () => { const v = parseFloat(num.value); if (v > 0) { p.peso = v; cambio(); } });
-    control = el("div", { class: "control" }, el("span", { class: "nota" }, "weight w ="), num);
+    const num = el("input", { type: "number", min: "1", max: "100", step: "1", value: Math.round((p.peso || 0) * 100), "aria-label": `Weight of ${nombre(v)} (%)` });
+    const rango = el("input", { type: "range", min: "1", max: "100", step: "1", value: Math.round((p.peso || 0) * 100), "aria-label": `Weight of ${nombre(v)} (slider)` });
+    const poner = (x) => { x = Math.min(100, Math.max(1, Math.round(x))); p.peso = x / 100; num.value = x; rango.value = x; cambio(); };
+    rango.addEventListener("input", () => poner(+rango.value));
+    num.addEventListener("change", () => { const x = parseFloat(num.value); if (x > 0) poner(x); });
+    control = el("div", { class: "control" }, el("span", { class: "etq-ctrl" }, "Weight"), rango, num);
   }
-  return el("div", { class: "fila" }, cab, texto, control);
+  const cuota = el("div", { class: "cuota", id: `cuota-${v}` });
+  return el("div", { class: "fila" }, cab, texto, filaObjetivo, control, cuota);
 }
 
 function filaRestriccion(r, i) {
@@ -235,9 +315,12 @@ function agregarParametro() {
   const v = $("#sel-nuevo-parametro").value;
   if (!v || !disponible(v)) return;
   pasarAPersonalizada();
-  E.mision.parametros.push({ variable: v, metodo: "tolerancia", valor: 1, peso: null,
-    unidad: variable(v).unidad || "", texto: "Added by hand: adjust the tolerance", fuente: "" });
-  E.base[v] = 1;
+  // tolerancia inicial: 20 % del rango de América (o un peso parejo, si la misión usa pesos)
+  const tol = +((E.G?.rango[v] || 1) * 0.2).toPrecision(2);
+  const conPesos = modoPeso() === "ahp" && E.mision.parametros.length;
+  E.mision.parametros.push({ variable: v, metodo: conPesos ? "ahp" : "tolerancia", valor: conPesos ? null : tol,
+    peso: conPesos ? 0.3 : null, objetivo: null, unidad: variable(v).unidad || "", texto: "Added by hand: set its target and weight", fuente: "" });
+  E.base[v] = tol;
   cambio(true);
 }
 
@@ -259,6 +342,7 @@ function pasarAPersonalizada() {
 let espera;
 function cambio(repintar = false) {
   if (repintar) pintarConfig();
+  actualizarCuotas();
   clearTimeout(espera);
   espera = setTimeout(calcular, 250);
 }
@@ -582,7 +666,7 @@ function sobreElLugar(s, st) {
   return [el("h3", {}, "About this place"), E._lugarNodo];
 }
 
-const REGLA = { min: "lowest_on_earth", max: "highest_on_earth", fijo: "fixed_value" };
+const REGLA = { min: "lowest_on_earth", max: "highest_on_earth", fijo: "fixed_value", usuario: "set_by_user" };
 const redondo = (x) => (x == null ? null : +(+x).toPrecision(3));
 
 // Lo que la IA necesita para explicar el ranking: valores del punto, objetivo del destino, tolerancias y pesos
@@ -625,7 +709,7 @@ function mapasMedidos(s) {
 
 function tablaAnalogo(ev) {
   const obj = E.resultado.objetivos || {};
-  const regla = { min: "lowest on Earth", max: "highest on Earth" };
+  const regla = { min: "lowest on Earth", max: "highest on Earth", usuario: "set by you" };
   const u = (v) => (variable(v).unidad || "").replace(/\s*\(.*\)$/, "");
   const n = (x) => (x == null ? "—" : String(+(+x).toPrecision(3)));
   return el("div", { class: "tabla-scroll" }, el("table", { class: "tabla-analogo" },
@@ -633,7 +717,7 @@ function tablaAnalogo(ev) {
     el("tbody", {}, ...ev.detalle.map((d) => el("tr", {},
       el("td", {}, nombre(d.variable), el("small", {}, u(d.variable))),
       el("td", { class: "num-t" }, n(d.valor_sitio)),
-      el("td", { class: "num-t", title: obj[d.variable]?.por_que || "" }, n(d.objetivo), regla[obj[d.variable]?.regla] ? el("small", {}, regla[obj[d.variable].regla]) : null),
+      el("td", { class: "num-t", title: obj[d.variable]?.por_que || "" }, n(d.objetivo), regla[obj[d.variable]?.regla] ? el("small", {}, regla[obj[d.variable].regla] + (obj[d.variable].recortado ? " (clipped)" : "")) : null),
       el("td", { class: "num-t" }, n(d.diferencia)),
       el("td", { class: "num-t" }, d.tolerancia == null ? "AHP" : n(d.tolerancia)),
       el("td", {}, d.dentro_tolerancia == null ? "" : el("span", { class: `etq ${d.dentro_tolerancia ? "bien" : "mal"}` }, d.dentro_tolerancia ? "✓" : "✗")))))));

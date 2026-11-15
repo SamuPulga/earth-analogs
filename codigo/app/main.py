@@ -55,6 +55,7 @@ class Parametro(BaseModel):
     metodo: Literal["tolerancia", "ahp"]
     valor: float | None = None
     peso: float | None = None
+    objetivo: float | None = None   # valor objetivo puesto por el usuario (None = el del destino)
     unidad: str = ""
     texto: str = ""
     fuente: str = ""
@@ -179,10 +180,13 @@ def _en_ingles(texto: str) -> str:
 
 def _recomendar_rejilla(mision: dict) -> dict:
     destino = mision["destino"]
-    Fd = rejilla.F(destino)
-    if not len(Fd):
+    if not rejilla.objetivos(destino):
         raise HTTPException(400, f"No target values for {destino} yet")
-    obj = rejilla.objetivos(destino)
+    # Objetivos que fijó el usuario: se cortan al mínimo/máximo que existe en América
+    pedidos = tuple(sorted((p["variable"], float(p["objetivo"])) for p in mision["parametros"]
+                           if p.get("objetivo") is not None and p["variable"] in rejilla.VARIABLES))
+    Fd = rejilla.F_con(destino, pedidos) if pedidos else rejilla.F(destino)
+    obj = rejilla.objetivos_con(destino, dict(pedidos)) if pedidos else rejilla.objetivos(destino)
     no_aplica = [p["variable"] for p in mision["parametros"] if p["variable"] not in obj]
     if no_aplica:
         raise HTTPException(400, f"Not applicable at this destination: {', '.join(no_aplica)}")
@@ -192,7 +196,7 @@ def _recomendar_rejilla(mision: dict) -> dict:
     omitidas = [r["variable"] for r in mision["restricciones"] if r["variable"] not in rejilla.VARIABLES]
     m = rejilla.a_unidades_del_modelo({**mision, "restricciones": aplicables})
 
-    clave = rejilla.firma({"d": destino, "p": m["parametros"], "r": aplicables})
+    clave = rejilla.firma({"d": destino, "p": m["parametros"], "r": aplicables, "o": pedidos})
     if clave not in _resultados:
         try:
             r = recomendar(m, Fd, rejilla.atributos(), rejilla.ids())

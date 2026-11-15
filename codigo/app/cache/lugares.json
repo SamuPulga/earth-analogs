@@ -1439,5 +1439,269 @@
  },
  "-11.500,-76.500|v8|Lunar rover navigation (cameras and thermal cycles)|edb71f88a5": {
   "resumen": "**Where it is:** San Pedro de Laraos, Huarochirí Province, Lima, Peru, at ~4,700 m elevation. The village lies in the Andes of central Peru; the surrounding region is mountainous, with nearby peaks such as Tarapu reaching ~5,000 m and alpine lakes.\n\n**Climate:** Mean annual temperature ≈ 2.8 °C with a large daily range of ~9 °C. Recorded extremes run from –6 °C to 10.8 °C. Annual precipitation is high at ~1,590 mm, and about one‑third of days are dry. Mean daily maximum wind is modest (~16 km/h).\n\n**Why it is an analog:**  \n*No place in the Americas meets all your tolerances, so this is the least‑bad match, not a full analog.*  \n- **Reflectance (albedo):** 0.154 vs target 0.12, difference 0.034 → within tolerance (weight 60 %).  \n- **Temperature variation:** 21.3 °C vs lunar target 28.8 °C, difference 7.5 °C → outside tolerance (weight 24 %).  \n- **Temperature:** 9.4 °C vs lunar target –25 °C, difference 34.4 °C → outside tolerance (weight 16 %).  \nThe decisive parameter is temperature, which exceeds the allowed deviation. The site ranks 1 of 357 on the Pareto front with a robustness of 62 % (first in 62 % of weight‑perturbation runs).\n\n**What you could test here:**  \n1. Validate rover camera navigation algorithms under low‑albedo, high‑contrast terrain that mimics the lunar surface reflectance.  \n2. Conduct thermal‑cycle endurance tests for rover components, exploiting the 21 °C daily swing that approaches lunar diurnal temperature changes.\n\n**Where it falls short:** The ambient temperature (≈9 °C) and its variation (≈21 °C) are far warmer and less extreme than the Moon’s –25 °C average and ~29 °C swing, limiting fidelity for thermal‑stress testing. Earth’s gravity (9.8 m s⁻²) and atmosphere also cannot reproduce lunar vacuum, radiation, or low‑gravity conditions."
+ },
+ "-11.500,-76.500|v8|Thermal testing of equipment for Mars|3f7ccdbdde": {
+  "resumen": "**Where it is:** San Pedro de Laraos, Huarochirí Province, Lima, Peru, at ~4,700 m elevation. The village lies in the Andes, within a high‑altitude basin near the 5,000 m Tarapu mountain and a lake called Qiwllaqucha.\n\n**Climate:** Mean annual temperature 2.8 °C, with a mean daily range of 9.1 °C. Recorded extremes are –6 °C (low) to 10.8 °C (high). Annual precipitation is about 1,587 mm, and dry days make up roughly 32 % of the year. Mean daily maximum wind is 16 km h⁻¹.\n\n**Why it is an analog:**  \nNo place in the Americas meets all your tolerances, so this is the least‑bad match, not a full analog. Parameters within tolerance: wind speed (4.56 m s⁻¹ vs target 4 m s⁻¹, tolerance ±3 m s⁻¹). Parameters outside tolerance: temperature (9.39 °C vs Mars target –25 °C, tolerance ±15 °C) and temperature variation (21.3 °C vs target 28.8 °C, tolerance ±5 °C). Temperature carries 27 % of the weight and is the decisive parameter limiting the score. The site ranks 1 of 171 on the Pareto front with a robustness of 60 % across weight variations.\n\n**What you could test here:**  \n1. Thermal control hardware under low‑temperature, high‑diurnal‑range conditions that approximate the Martian night‑day swing.  \n2. Wind‑exposure systems using the measured wind speed close to the Martian target.\n\n**Where it falls short:** The ambient temperature is far warmer than the –25 °C Mars target, and the daily temperature swing is smaller than the desired 28.8 °C variation. Earth cannot reproduce Mars’ low gravity, thin CO₂ atmosphere, or radiation environment, which remain unaddressed at this site."
+ },
+ "32.500,-112.500": {
+  "hechos2": {
+   "lat": 32.5,
+   "lon": -112.5,
+   "lugar": {
+    "nombre": "Hickiwan",
+    "condado": "Pima County",
+    "region": "Arizona",
+    "pais": "United States",
+    "tipo": "village",
+    "descripcion": "Hickiwan, Pima County, Arizona, United States"
+   },
+   "wikipedia": {
+    "titulo": "Stoa Pitk, Arizona",
+    "extracto": "Stoa Pitk is a populated place situated in Pima County, Arizona, United States. It has an estimated elevation of 2,405 feet (733 m) above sea level. Its name comes from Tohono Oʼodham, where it means 'white clay'.",
+    "url": "https://en.wikipedia.org/wiki/Stoa_Pitk%2C_Arizona",
+    "imagen": "",
+    "idioma": "en",
+    "distancia_km": 2.3
+   },
+   "wikipedia_area": {
+    "titulo": "Hickiwan, Arizona",
+    "extracto": "Hickiwan is a populated place situated in Pima County, Arizona, United States. It has been known by a plethora of names over the years, such as Hikibon, Hikiro, Hikjorn, Hikuwan, Jiquibo, Kokuli, Milpitas, Perigua, Periqua, Piriqua, and Tachitoa. The name was officially recognized as Hickiwan by a decision of the Board on Geographic Names in 1941. It has an estimated elevation of 2,198 feet (670 m) above sea level.",
+    "url": "https://en.wikipedia.org/wiki/Hickiwan%2C_Arizona",
+    "imagen": "",
+    "idioma": "en"
+   },
+   "elevacion_m": 743.0,
+   "clima": {
+    "anio": 2025,
+    "temp_media_c": 21.9,
+    "oscilacion_diaria_media_c": 12.2,
+    "temp_min_c": -0.3,
+    "temp_max_c": 42.9,
+    "lluvia_anual_mm": 192,
+    "dias_secos_pct": 90,
+    "viento_max_medio_kmh": 19.8
+   },
+   "fuentes": [
+    "OpenStreetMap Nominatim (© OpenStreetMap contributors, ODbL)",
+    "Wikipedia (CC BY-SA)",
+    "Open-Meteo (elevation; ERA5 climate reanalysis, Copernicus/ECMWF)"
+   ],
+   "segundos": 1.64
+  }
+ },
+ "32.500,-114.500": {
+  "hechos2": {
+   "lat": 32.5,
+   "lon": -114.5,
+   "lugar": {
+    "nombre": "Yuma",
+    "condado": "Yuma County",
+    "region": "Arizona",
+    "pais": "United States",
+    "tipo": "city",
+    "descripcion": "Yuma, Yuma County, Arizona, United States"
+   },
+   "wikipedia": {
+    "titulo": "Yuma Desert",
+    "extracto": "The Yuma Desert is a lower-elevation section of the Sonoran Desert in the southwestern United States and the northwest of Mexico. It lies in the Salton basin. The desert contains areas of sparse vegetation and has notable areas of sand dunes. With an average annual rainfall of less than 8 inches (200 mm), it is among the harshest deserts in North America. Human presence is sparse throughout; the largest city is Yuma, Arizona, on the Colorado River and the border of California.",
+    "url": "https://en.wikipedia.org/wiki/Yuma_Desert",
+    "imagen": "https://thumb.wikimedia.org/wikipedia/commons/thumb/c/ca/Imperial_sand_dunes.jpg/330px-Imperial_sand_dunes.jpg?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail",
+    "idioma": "en",
+    "distancia_km": 5.9
+   },
+   "wikipedia_area": {
+    "titulo": "Yuma, Arizona",
+    "extracto": "Yuma is a city in and the county seat of Yuma County, Arizona, United States. The city's population was 95,548 at the 2020 census, up from the 2010 census population of 93,064.",
+    "url": "https://en.wikipedia.org/wiki/Yuma%2C_Arizona",
+    "imagen": "https://thumb.wikimedia.org/wikipedia/commons/thumb/e/e3/Old_Yuma_City_Hall.jpg/330px-Old_Yuma_City_Hall.jpg?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail",
+    "idioma": "en"
+   },
+   "elevacion_m": 86.0,
+   "clima": {
+    "anio": 2025,
+    "temp_media_c": 24.5,
+    "oscilacion_diaria_media_c": 12.8,
+    "temp_min_c": 4.5,
+    "temp_max_c": 46.9,
+    "lluvia_anual_mm": 175,
+    "dias_secos_pct": 94,
+    "viento_max_medio_kmh": 20.5
+   },
+   "fuentes": [
+    "OpenStreetMap Nominatim (© OpenStreetMap contributors, ODbL)",
+    "Wikipedia (CC BY-SA)",
+    "Open-Meteo (elevation; ERA5 climate reanalysis, Copernicus/ECMWF)"
+   ],
+   "segundos": 1.64
+  }
+ },
+ "32.500,-112.500|v8|Thermal testing of equipment for Mars|8839c10439": {
+  "resumen": "**Where it is:** Hickiwan, Pima County, Arizona, United States, elevation ≈ 743 m (2,198 ft). The point lies in a sparsely populated desert region of southern Arizona, historically known by many names and situated among similar low‑lying settlements such as Stoa Pitk.\n\n**Climate:** Mean annual temperature ≈ 21.9 °C with a mean daily range of 12.2 °C. Recorded extremes span from ‑0.3 °C to 42.9 °C. Annual precipitation is low, about 192 mm, and dry days account for ≈ 90 % of the year. Mean daily maximum wind is ≈ 19.8 km h⁻¹.\n\n**Why it is an analog:** For the Mars‑thermal‑testing mission, Hickiwan scores highest on the Pareto front (rank 1 of 41) with a robustness of 25 % (rank stable in a quarter of weight‑variation runs).  \n- **Temperature:** 24.2 °C vs. Mars target 30.5 °C (Δ 6.24 °C, tolerance ±15 °C, weight 27 %). Within tolerance.  \n- **Temperature variation:** 27.9 °C vs. highest Earth value 28.8 °C (Δ 0.83 °C, tolerance ±5 °C, weight 41 %). Within tolerance.  \n- **Wind speed:** 5.21 m s⁻¹ vs. Mars target 4 m s⁻¹ (Δ 1.21 m s⁻¹, tolerance ±3 m s⁻¹, weight 31 %). Within tolerance.  \nThe decisive parameter is **Temperature**, but it still meets the user’s tolerance.\n\n**What you could test here:** 1) Operate a thermal control subsystem on a rover mock‑up while exposing it to the diurnal temperature swing (≈ 12 °C) and mean temperature (≈ 24 °C) to validate heating/cooling cycles for Martian conditions. 2) Run wind‑tunnel‑style tests using the site’s typical wind speed (≈ 5 m s⁻¹) to assess dust‑mitigation hardware under realistic gust regimes.\n\n**Where it falls short:** No measured parameter exceeds the user’s tolerances, but Earth cannot replicate Mars‑specific factors such as 0.38 g gravity, a CO₂‑rich thin atmosphere, and the high radiation environment. These must be addressed in separate simulation facilities."
+ },
+ "32.500,-113.500": {
+  "hechos2": {
+   "lat": 32.5,
+   "lon": -113.5,
+   "lugar": {
+    "nombre": "Yuma County",
+    "condado": "Yuma County",
+    "region": "Arizona",
+    "pais": "United States",
+    "tipo": "county",
+    "descripcion": "Yuma County, Arizona, United States"
+   },
+   "wikipedia": {
+    "titulo": "Área metropolitana de Yuma",
+    "extracto": "El área estadística metropolitana de Yuma, AZ MSA , como la denomina la Oficina de Administración y Presupuesto, es un área estadística metropolitana designada como tal en 1990. Centrada en la ciudad de Yuma, estado de Arizona, Estados Unidos, solo abarca el condado homónimo. Su población según el censo de 2010 es de 195.751 habitantes.",
+    "url": "https://es.wikipedia.org/wiki/%C3%81rea_metropolitana_de_Yuma",
+    "imagen": "https://thumb.wikimedia.org/wikipedia/commons/thumb/3/39/Map_of_Arizona_highlighting_Yuma_County.svg/langes-330px-Map_of_Arizona_highlighting_Yuma_County.svg.png?utm_source=es.wikipedia.org&utm_campaign=api&utm_content=thumbnail",
+    "idioma": "es",
+    "distancia_km": 8.7
+   },
+   "wikipedia_area": {
+    "titulo": "Yuma County, Arizona",
+    "extracto": "Yuma County is a county in the southwestern corner of the U.S. state of Arizona, one of 15 counties in the state. As of the 2020 census, its population was 203,881. The county seat is Yuma.",
+    "url": "https://en.wikipedia.org/wiki/Yuma_County%2C_Arizona",
+    "imagen": "https://thumb.wikimedia.org/wikipedia/commons/thumb/e/e3/Old_Yuma_City_Hall.jpg/330px-Old_Yuma_City_Hall.jpg?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail",
+    "idioma": "en"
+   },
+   "elevacion_m": 192.0,
+   "clima": {
+    "anio": 2025,
+    "temp_media_c": 23.9,
+    "oscilacion_diaria_media_c": 13.8,
+    "temp_min_c": 1.2,
+    "temp_max_c": 46.5,
+    "lluvia_anual_mm": 163,
+    "dias_secos_pct": 94,
+    "viento_max_medio_kmh": 19.2
+   },
+   "fuentes": [
+    "OpenStreetMap Nominatim (© OpenStreetMap contributors, ODbL)",
+    "Wikipedia (CC BY-SA)",
+    "Open-Meteo (elevation; ERA5 climate reanalysis, Copernicus/ECMWF)"
+   ],
+   "segundos": 1.44
+  }
+ },
+ "29.500,-111.500": {
+  "hechos2": {
+   "lat": 29.5,
+   "lon": -111.5,
+   "lugar": {
+    "nombre": "Hermosillo",
+    "condado": "Hermosillo",
+    "region": "Sonora",
+    "pais": "Mexico",
+    "tipo": "county",
+    "descripcion": "Hermosillo, Sonora, Mexico"
+   },
+   "wikipedia": null,
+   "wikipedia_area": {
+    "titulo": "Hermosillo",
+    "extracto": "Hermosillo, formerly called Pitic, is the capital and largest city of the northwestern Mexican state of Sonora, and the municipal seat of the municipality of Hermosillo. It also is the primary economic center for the state and the region. According to the 2020 census, the city has a population of 936,263, making it the 18th largest city in Mexico. The recent increase in the city's population is due to expanded industrialization, especially within the automotive industry.",
+    "url": "https://en.wikipedia.org/wiki/Hermosillo",
+    "imagen": "https://thumb.wikimedia.org/wikipedia/commons/thumb/9/96/Hermosillo_Collage.jpg/330px-Hermosillo_Collage.jpg?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail",
+    "idioma": "en"
+   },
+   "elevacion_m": 350.0,
+   "clima": {
+    "anio": 2025,
+    "temp_media_c": 24.8,
+    "oscilacion_diaria_media_c": 13.3,
+    "temp_min_c": 2.9,
+    "temp_max_c": 44.4,
+    "lluvia_anual_mm": 326,
+    "dias_secos_pct": 91,
+    "viento_max_medio_kmh": 21.4
+   },
+   "fuentes": [
+    "OpenStreetMap Nominatim (© OpenStreetMap contributors, ODbL)",
+    "Wikipedia (CC BY-SA)",
+    "Open-Meteo (elevation; ERA5 climate reanalysis, Copernicus/ECMWF)"
+   ],
+   "segundos": 1.51
+  }
+ },
+ "32.500,-112.500|v8|Custom (based on: Thermal testing of equipment for Mars)|897d31d174": {
+  "resumen": "**Where it is:** Hickiwan, Pima County, Arizona, United States, at an elevation of about **743 m** (≈ 2,198 ft). The point lies in the arid desert landscape of southern Arizona, a sparsely populated region characterized by low‑lying plains and scattered scrub.\n\n**Climate:** Mean annual temperature **21.9 °C** with a large daily swing of **12.2 °C**. Recorded extremes range from **‑0.3 °C** to **42.9 °C**. Annual precipitation is modest at **192 mm**, and **dry days account for ~90 %** of the year. Mean daily maximum wind is **19.8 km h⁻¹**.\n\n**Why it is an analog:** The mission model rates Hickiwan as the top site that meets all user‑defined tolerances for Mars‑thermal testing.  \n- **Temperature:** 24.2 °C vs. target 30.5 °C (difference 6.24 °C) – within tolerance, weight 27 %.  \n- **Temperature variation:** 27.9 °C vs. target 28.8 °C (difference 0.83 °C) – within tolerance, weight 41 % (the decisive parameter).  \n- **Wind speed:** 5.21 m s⁻¹ vs. target 4 m s⁻¹ (difference 1.21 m s⁻¹) – within tolerance, weight 31 %.  \nRanked **1 of 41** on the Pareto front, with a robustness of **25 %** (first‑ranked in a quarter of weight‑variation runs).\n\n**What you could test here:**  \n1. Thermal control hardware (radiators, heaters, insulation) under diurnal temperature swings that closely mimic the Martian day‑night range.  \n2. Wind‑induced dust transport on prototype rover components, using the site’s typical wind speed and dry, low‑precipitation conditions.\n\n**Where it falls short:** Although the surface climate matches the thermal and wind criteria, Earth cannot reproduce Mars‑specific factors such as **0.38 g gravity, a CO₂‑rich thin atmosphere, and high radiation levels**. These must be simulated in laboratory or flight‑test environments."
+ },
+ "28.500,-110.500": {
+  "hechos2": {
+   "lat": 28.5,
+   "lon": -110.5,
+   "lugar": {
+    "nombre": "Guaymas",
+    "condado": "Guaymas",
+    "region": "Sonora",
+    "pais": "Mexico",
+    "tipo": "county",
+    "descripcion": "Guaymas, Sonora, Mexico"
+   },
+   "wikipedia": null,
+   "wikipedia_area": {
+    "titulo": "Guaymas",
+    "extracto": "Guaymas is a city in Guaymas Municipality, in the southwest part of the state of Sonora, in northwestern Mexico. The city is 134 kilometres (83 mi) south of the state capital of Hermosillo, and 389 kilometres (242 mi) from the U.S. border. The municipality's formal name is Guaymas de Zaragoza and the city's formal name is the Heroica Ciudad de Guaymas.",
+    "url": "https://en.wikipedia.org/wiki/Guaymas",
+    "imagen": "https://thumb.wikimedia.org/wikipedia/commons/thumb/b/bf/Parroquia_de_San_Fernando_a_lo_lejos_en_Guaymas.jpg/330px-Parroquia_de_San_Fernando_a_lo_lejos_en_Guaymas.jpg?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail",
+    "idioma": "en"
+   },
+   "elevacion_m": 268.0,
+   "clima": {
+    "anio": 2025,
+    "temp_media_c": 24.8,
+    "oscilacion_diaria_media_c": 13.8,
+    "temp_min_c": 4.8,
+    "temp_max_c": 43.7,
+    "lluvia_anual_mm": 530,
+    "dias_secos_pct": 84,
+    "viento_max_medio_kmh": 16.0
+   },
+   "fuentes": [
+    "OpenStreetMap Nominatim (© OpenStreetMap contributors, ODbL)",
+    "Wikipedia (CC BY-SA)",
+    "Open-Meteo (elevation; ERA5 climate reanalysis, Copernicus/ECMWF)"
+   ],
+   "segundos": 1.7
+  }
+ },
+ "29.500,-110.500": {
+  "hechos2": {
+   "lat": 29.5,
+   "lon": -110.5,
+   "lugar": {
+    "nombre": "Ures",
+    "condado": "Ures",
+    "region": "Sonora",
+    "pais": "Mexico",
+    "tipo": "county",
+    "descripcion": "Ures, Sonora, 84900, Mexico"
+   },
+   "wikipedia": null,
+   "wikipedia_area": {
+    "titulo": "Ures",
+    "extracto": "Ures is a small city and a municipality in the Mexican state of Sonora.",
+    "url": "https://en.wikipedia.org/wiki/Ures",
+    "imagen": "https://thumb.wikimedia.org/wikipedia/commons/thumb/f/f8/Plaza_Zaragosa%2C_Ures%2C_Sonora_%2822573648998%29.jpg/330px-Plaza_Zaragosa%2C_Ures%2C_Sonora_%2822573648998%29.jpg?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail",
+    "idioma": "en"
+   },
+   "elevacion_m": 492.0,
+   "clima": {
+    "anio": 2025,
+    "temp_media_c": 24.2,
+    "oscilacion_diaria_media_c": 15.4,
+    "temp_min_c": 0.6,
+    "temp_max_c": 44.6,
+    "lluvia_anual_mm": 771,
+    "dias_secos_pct": 86,
+    "viento_max_medio_kmh": 15.3
+   },
+   "fuentes": [
+    "OpenStreetMap Nominatim (© OpenStreetMap contributors, ODbL)",
+    "Wikipedia (CC BY-SA)",
+    "Open-Meteo (elevation; ERA5 climate reanalysis, Copernicus/ECMWF)"
+   ],
+   "segundos": 3.91
+  }
  }
 }
