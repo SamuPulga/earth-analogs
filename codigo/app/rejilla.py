@@ -152,3 +152,13 @@ def firma(obj) -> str:
 
 def nombre_punto(lat: float, lon: float) -> str:
     return f"{abs(lat):.1f}° {'N' if lat >= 0 else 'S'}, {abs(lon):.1f}° {'E' if lon >= 0 else 'W'}"
+
+
+def celda_de(lat: float, lon: float) -> str | None:
+    """Id del punto de la grilla cuyo cuadro de 1° contiene (lat, lon), o None si ese cuadro no tiene datos.
+    No se busca el vecino más cercano: un cuadro de al lado describiría otro lugar."""
+    import math
+    la, lo = math.floor(lat) + 0.5, math.floor(lon) + 0.5
+    b = base()
+    fila = b[(b["latitud"] == la) & (b["longitud"] == lo)]
+    return str(fila.index[0]) if len(fila) else None

@@ -408,9 +408,79 @@ function pintarResultado(conMapa = true) {
   $("#descartados").replaceChildren(...R.descartados.map((d) =>
     el("li", { onclick: () => seleccionar(d.sitio_id) }, `${sitio(d.sitio_id).nombre} — ${d.motivo}`)));
 
+  pintarAvisoCalidad();
+  pintarControl();
   if (conMapa) pintarMapa();
   pintarOptimo();
   pintarFicha();
+}
+
+// ---------------------------------------------------------------- ¿el resultado es bueno o solo el menos malo?
+// Puntuación del óptimo > 1 = ningún lugar cumple todas las tolerancias: el primero es solo el menos malo.
+function pintarAvisoCalidad() {
+  const R = E.resultado, caja = $("#aviso-calidad");
+  const top = R.ranking[0];
+  if (!top) { caja.hidden = true; return; }
+  const partes = [];
+  if (top.puntuacion > 1) {
+    const p = E.parametrosCalculo.find((q) => q.variable === top.parametro_decisivo);
+    partes.push(el("span", {}, el("b", {}, "No place in the Americas meets all the tolerances"),
+      ` (best score ${fmt(top.puntuacion)}; 1 or less means within tolerance). The optimal site is only the `, el("b", {}, "least-bad match"),
+      `, limited by ${nombre(top.parametro_decisivo)}${p?.metodo === "tolerancia" ? ` (tolerance ±${p.valor}, ${fmt(top.puntuacion, 1)}× exceeded)` : ""}. `,
+      "Loosen that tolerance if the mission allows it, or check whether the settings really describe the mission."));
+  }
+  if (top.robustez < 0.3) {
+    partes.push(el("span", {}, el("b", {}, "Fragile first place: "),
+      `it stays first in only ${pct(top.robustez)} of runs with slightly different weights. Look at the next places too.`));
+  }
+  caja.hidden = !partes.length;
+  caja.className = "aviso-calidad";
+  caja.replaceChildren(...partes.flatMap((x, i) => (i ? [el("br"), el("br"), x] : [x])));
+}
+
+// Control positivo (AGENTS.md §4): ¿dónde quedan los análogos que ya se usan, con esta configuración?
+function conocidosDelDestino() {
+  const cuerpo = destino(E.mision.destino).cuerpo;
+  return (E.inicio.analogos_conocidos || []).filter((a) => a.destino_sugerido === cuerpo || a.destino_sugerido === "ambos");
+}
+
+function puestoGlobal(k) {
+  const P = E.resultado.puntos, s = P[k][0];
+  if (s == null) return null;
+  let n = 1, total = 0;
+  for (const [x] of P) { if (x == null) continue; total++; if (x < s) n++; }
+  return { n, total, frac: n / total };
+}
+
+function pintarControl() {
+  const lista = conocidosDelDestino();
+  const veredicto = $("#control-veredicto");
+  const filas = lista.map((a) => {
+    const k = a.celda != null ? E.G.idx.get(a.celda) : undefined;
+    if (k === undefined) {
+      return { a, html: el("li", {}, el("span", {}, el("b", {}, a.nombre)), el("span", { class: "pos nd" }, "no data"),
+        el("small", {}, "Its 1° square is not in Daniel's grid (a parameter is missing there, likely humidity), so it cannot be ranked.")) };
+    }
+    const g = puestoGlobal(k);
+    const [s, est] = E.resultado.puntos[k];
+    const clase = g.frac <= 0.1 ? "bien" : g.frac <= 0.33 ? "medio" : "mal";
+    const estado = est === 0 ? `Pareto front #${puestoFrente(k)}` : est === 2 ? "ruled out by a constraint" : "dominated";
+    return { a, g, html: el("li", { class: "clic", tabindex: "0", onclick: () => seleccionar(a.celda), onkeydown: (e) => { if (e.key === "Enter") seleccionar(a.celda); } },
+      el("span", {}, el("b", {}, a.nombre)), el("span", { class: `pos ${clase}` }, `#${g.n.toLocaleString("en")}`),
+      el("small", {}, `Top ${Math.max(1, Math.round(g.frac * 100))} % of ${g.total.toLocaleString("en")} · score ${fmt(s)}${s <= 1 ? " (within tolerance)" : ""} · ${estado}`),
+      a.por_que ? el("small", { class: "uso" }, `Used for: ${a.por_que}`) : null) };
+  });
+  $("#control-positivo").replaceChildren(...filas.map((f) => f.html));
+  const evaluables = filas.filter((f) => f.g);
+  veredicto.className = "control-veredicto";
+  if (!lista.length) veredicto.textContent = "No known analogs for this destination in sitios.csv.";
+  else if (!evaluables.length) { veredicto.classList.add("mal"); veredicto.textContent = `Cannot check: none of the ${lista.length} known analogs for this destination is in the grid yet.`; }
+  else {
+    const mejor = Math.min(...evaluables.map((f) => f.g.frac));
+    if (mejor <= 0.1) { veredicto.classList.add("bien"); veredicto.textContent = `Consistent: at least one known analog is in the top ${Math.max(1, Math.round(mejor * 100))} % with these settings.`; }
+    else { veredicto.classList.add("mal"); veredicto.textContent = `Warning: the known analogs rank low with these settings (best: top ${Math.round(mejor * 100)} %). This matters if they were chosen for what this mission tests (see "Used for"): then the settings may not describe the mission well, or the data misses what makes them good analogs.`; }
+    if (evaluables.length < lista.length) veredicto.textContent += ` ${lista.length - evaluables.length} of ${lista.length} have no data in the grid.`;
+  }
 }
 
 // Lugar óptimo (salida del modelo de Daniel): recuadro sobre el mapa, y el mapa vuela y hace zoom cuando cambia
@@ -421,11 +491,13 @@ function pintarOptimo() {
   caja.hidden = !o || o.lat == null;
   if (caja.hidden) return;
   const s = sitio(o.sitio_id);
-  caja.replaceChildren(
+  caja.replaceChildren(...[
     el("span", { class: "optimo-etq" }, "Optimal site"),
+    (E.resultado.ranking[0]?.puntuacion > 1) ? el("span", { class: "etq-menos-malo", title: "No place meets all the tolerances" }, "least-bad match") : null,
     el("b", {}, s.nombre || o.sitio_id),
     el("span", { class: "optimo-coords" }, `${s.pais && s.rejilla ? s.pais + " · " : ""}${coordenadas(o.lat, o.lon)}`),
-    el("button", { class: "btn chico", type: "button", onclick: () => seleccionar(o.sitio_id, 7) }, "Center ", el("i", { class: "flecha" })));
+    el("button", { class: "btn chico", type: "button", onclick: () => seleccionar(o.sitio_id, 7) }, "Center ", el("i", { class: "flecha" })),
+  ].filter(Boolean));
   const clave = `${o.lat},${o.lon}`;
   if (clave !== E._ultimoOptimo && E.mapa.getSize().x > 0) {
     E._ultimoOptimo = clave;
@@ -476,6 +548,11 @@ function pintarRejilla() {
       fillOpacity: est === 0 ? 0.85 - 0.45 * t : 0.6 - 0.5 * t, weight: sel ? 2 : 0, color: "#fff" });
   });
   R.ranking.slice(0, 10).forEach((x, i) => marcador(sitio(x.sitio_id), { tipo: "frente", puesto: i + 1 }));
+  for (const a of conocidosDelDestino()) {
+    L.marker([a.lat, a.lon], { icon: L.divIcon({ className: "", iconSize: [12, 12], html: '<div class="marcador-conocido"></div>' }),
+      title: `${a.nombre} (known analog)`, zIndexOffset: 500 })
+      .on("click", () => (a.celda ? seleccionar(a.celda) : null)).addTo(E.capa);
+  }
   if (E.sel && !R.ranking.slice(0, 10).some((x) => x.sitio_id === E.sel) && G.idx.has(E.sel)) {
     const s = sitio(E.sel);
     L.marker([s.lat, s.lon], { icon: L.divIcon({ className: "", iconSize: [18, 18], html: '<div class="marcador-punto"></div>' }) }).addTo(E.capa);
@@ -517,6 +594,7 @@ function paraIA(st) {
     status: { frente: "on the Pareto front", dominado: "dominated: another point is equal or better in every parameter" }[st.tipo],
     rank: st.puesto ? `${st.puesto} of ${R.totales?.frente ?? R.ranking.length} on the Pareto front` : null,
     is_optimal_site: ev.sitio_id === R.optimo?.sitio_id,
+    no_place_meets_all_tolerances: (R.ranking[0]?.puntuacion ?? 0) > 1,
     score: redondo(ev.puntuacion),
     score_meaning: "largest difference/tolerance among the parameters; 1 or less means within tolerance in all of them",
     decisive_parameter: nombre(ev.parametro_decisivo),

@@ -273,7 +273,7 @@ async def hechos(lat: float, lon: float) -> dict:
 
 
 # ---------------------------------------------------------------- paso 2: resumen con IA
-VERSION_PROMPT = 6  # súbela al cambiar SISTEMA: así no se reutilizan resúmenes viejos de la caché
+VERSION_PROMPT = 8  # súbela al cambiar SISTEMA: así no se reutilizan resúmenes viejos de la caché
 
 SISTEMA = """You are the field-site analyst of an app that finds places in the Americas to test missions to the Moon and
 Mars. Write a clear, well-argued profile of the place in English for engineers (180 to 230 words).
@@ -294,6 +294,11 @@ How to read the data:
   tolerance = more weight), its share of the weight and whether it is within tolerance. "target_rule"
   lowest_on_earth/highest_on_earth means the real Moon/Mars value is beyond anything on Earth, so the target is the most
   extreme value on the continent. "decisive_parameter" is the one that limits the score.
+  If "result_quality" is "least_bad_match", NO place in the Americas meets all the user's tolerances. Then the
+  "Why it is an analog" section MUST begin with this exact sentence: "No place in the Americas meets all your
+  tolerances, so this is the least-bad match, not a full analog." Then list which parameters are within tolerance and
+  which are not. Never claim it meets tolerances it does not meet.
+  Low robustness (under 30 %) means its rank is fragile: say so.
 - "site"/"team_hypothesis": the team's own notes; present them as the team's idea.
 - If there is no mission_evaluation and no measured_point, say the team has not evaluated this point yet.
 - Do not mention field names or raw coordinates.
@@ -333,6 +338,8 @@ def _mensaje_usuario(h: dict, contexto: dict) -> str:
                      "dry_days_percent": cl.get("dias_secos_pct"), "mean_daily_max_wind_kmh": cl.get("viento_max_medio_kmh")}
                     if cl else None),
         "mission": contexto.get("mision"),
+        "result_quality": ("least_bad_match" if (contexto.get("evaluacion") or {}).get("no_place_meets_all_tolerances")
+                           else "best_place_meets_all_tolerances" if contexto.get("evaluacion") else None),
         "mission_evaluation": contexto.get("evaluacion"),
         "measured_point": contexto.get("medidas"),
         "destination": ({"name": d.get("nombre"), "body": {"luna": "Moon", "marte": "Mars"}.get(d.get("cuerpo"), d.get("cuerpo"))}

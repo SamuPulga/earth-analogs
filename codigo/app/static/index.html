@@ -337,6 +337,7 @@
             <div class="hud hud-leyenda">
               <span class="degradado"><i></i>Better match → worse</span>
               <span><i class="pto frente"></i>Top 10 (number = rank)</span>
+              <span><i class="pto conocido"></i>Known analog</span>
               <span><i class="pto descartado"></i>Ruled out</span>
             </div>
           </div>
@@ -346,9 +347,16 @@
               <div class="paso"><span>4</span><h2>Ranking</h2></div>
               <p id="filtro-nota" class="nota" hidden></p>
               <p id="error" class="error" hidden></p>
+              <div id="aviso-calidad" class="aviso-calidad" hidden></div>
               <ol id="ranking" class="ranking"></ol>
               <details id="det-dominados"><summary>Dominated (<span id="n-dom">0</span>)</summary><ul id="dominados" class="lista-chica"></ul></details>
               <details id="det-descartados"><summary>Ruled out (<span id="n-desc">0</span>)</summary><ul id="descartados" class="lista-chica"></ul></details>
+              <div class="control-positivo">
+                <h3>Positive control: known analogs</h3>
+                <p class="ayuda">Places already used by NASA and field teams. With good settings, they should rank high. Rank = position by score among all grid points.</p>
+                <p id="control-veredicto" class="control-veredicto"></p>
+                <ul id="control-positivo" class="lista-control"></ul>
+              </div>
             </div>
             <div class="panel ficha" id="ficha">
               <div class="paso"><span>5</span><h2>Site profile</h2></div>

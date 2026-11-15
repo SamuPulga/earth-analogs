@@ -109,6 +109,18 @@ def inicio():
     destinos, f_destinos = datos.cargar_destinos()
     variables, f_variables = datos.cargar_variables()
     misiones, errores, f_misiones = datos.cargar_misiones(variables, destinos)
+    sitios, f_sitios = datos.cargar_sitios()
+
+    # Análogos conocidos (sitios.csv, clasico = sí): el control positivo (AGENTS.md §4 y §5.5).
+    # A cada uno se le asigna el cuadro de la grilla que lo contiene (None si ese cuadro no tiene datos).
+    conocidos = []
+    for sid, f in (sitios.iterrows() if len(sitios) else []):
+        if str(f.get("clasico", "")).strip().lower() not in ("sí", "si", "yes") or f["lat"] != f["lat"]:
+            continue
+        conocidos.append({"id": sid, "nombre": f["nombre"], "pais": f.get("pais", ""), "lat": float(f["lat"]),
+                          "lon": float(f["lon"]), "destino_sugerido": f.get("destino_sugerido", ""),
+                          "por_que": f.get("por_que", ""), "fuente": f.get("fuente", ""), "estado": f.get("estado", ""),
+                          "celda": rejilla.celda_de(float(f["lat"]), float(f["lon"]))})
 
     # Para cada destino: qué parámetros tienen valor objetivo. Los que no (p. ej. humedad y viento en
     # la Luna, que no tiene atmósfera) se desactivan en la app.
@@ -119,7 +131,8 @@ def inicio():
     return {
         "modelo": MODELO,
         "ia": lugar.estado_ia(),
-        "fuentes": {"destinos": f_destinos, "variables": f_variables, "misiones": f_misiones},
+        "fuentes": {"destinos": f_destinos, "variables": f_variables, "misiones": f_misiones, "sitios": f_sitios},
+        "analogos_conocidos": conocidos,
         "destinos": lista_destinos,
         "restricciones_disponibles": rejilla.VARIABLES,
         # Grilla de Daniel: [id, lat, lon, temperatura, humedad, viento, variacion_temperatura, reflectancia]
