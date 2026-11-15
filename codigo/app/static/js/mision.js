@@ -674,7 +674,7 @@ function pintarFicha() {
     el("span", { class: "pais" }, `${s.pais ? s.pais + " · " : ""}${coordenadas(s.lat, s.lon)}`));
   const hipotesis = s.por_que ? el("p", { class: "nota" }, `Hypothesis: ${s.por_que}`) : null;
   const fuente = s.rejilla
-    ? el("p", { class: "nota" }, "Source: measured grid of the Americas (1° × 1°, 5 surface parameters). Destination targets: see More data.")
+    ? el("p", { class: "nota" }, "Source: measured grid of the Americas (1° × 1°, 5 surface parameters). Destination targets: see Science.")
     : el("p", { class: "nota" }, `Source: ${s.fuente || "—"}`);
   const limites = [el("h3", {}, "What Earth cannot reproduce"),
     el("ul", {}, ...E.mision.limites_tierra.map((t) => el("li", {}, t)), ...LIMITES_SIEMPRE.map((t) => el("li", {}, t)))];

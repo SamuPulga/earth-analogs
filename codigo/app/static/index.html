@@ -31,7 +31,10 @@
       <a href="#/luna" data-vista="luna">Moon</a>
       <a href="#/marte" data-vista="marte">Mars</a>
       <a href="#/mision" data-vista="mision">Plan a mission</a>
-      <a href="#/datos" data-vista="datos">More data</a>
+      <a href="#/tutorial" data-vista="tutorial">How it works</a>
+      <a href="#/usuarios" data-vista="usuarios">Who it's for</a>
+      <a href="#/datos" data-vista="datos">Science</a>
+      <a href="#/nosotros" data-vista="nosotros">About us</a>
     </nav>
     <div class="reloj" title="Coordinated Universal Time (UTC)"><span>UTC</span><b id="reloj">--:--:--</b></div>
   </header>
@@ -87,11 +90,16 @@
         <a class="banda" href="#/datos" style="--img:url(/static/img/datos.jpg)">
           <span class="num">05</span>
           <div>
-            <h3>More data</h3>
-            <p>How the model decides, where the data comes from, and what Earth cannot reproduce.</p>
+            <h3>The science</h3>
+            <p>What a terrestrial analog is, the mathematics that ranks the places, the data and the limits.</p>
           </div>
           <i class="punto-flecha"></i>
         </a>
+        <div class="mini-tarjetas">
+          <a href="#/tutorial"><span class="num">06</span><h3>How it works</h3><p>A six-step tutorial to get and read a recommendation.</p><i class="punto-flecha"></i></a>
+          <a href="#/usuarios"><span class="num">07</span><h3>Who it's for</h3><p>Universities, start-ups, analog programs, agencies and educators.</p><i class="punto-flecha"></i></a>
+          <a href="#/nosotros"><span class="num">08</span><h3>About us</h3><p>Five engineering students from Universidad EAFIT.</p><i class="punto-flecha"></i></a>
+        </div>
       </div>
     </section>
 
@@ -363,7 +371,7 @@
     <section class="vista" id="v-datos" data-vista="datos">
       <div class="cabecera corta" style="--img:url(/static/img/datos.jpg)">
         <div class="contenedor">
-          <p class="kicker">05 · More data</p>
+          <p class="kicker">05 · Science</p>
           <h1>The science behind it</h1>
           <p class="lead">What a terrestrial analog is, why these parameters, the mathematics that ranks the places, and the limits of the method.</p>
         </div>
@@ -490,6 +498,166 @@
         </ul>
       </div>
     </section>
+      <!-- ============================================================ 6. PARA QUIÉN ES -->
+    <section class="vista" id="v-usuarios" data-vista="usuarios">
+      <div class="cabecera corta" style="--img:url(/static/img/marte_atardecer.jpg)">
+        <div class="contenedor">
+          <p class="kicker">06 · Who it's for</p>
+          <h1>Built for the people who test before flying</h1>
+          <p class="lead">Anyone who needs to choose <b>where on Earth</b> to test a rover, an instrument, a habitat or a procedure meant for the Moon or Mars, with a method that is systematic, transparent and reproducible.</p>
+        </div>
+      </div>
+      <div class="contenedor">
+        <div class="usuarios">
+          <article>
+            <span class="num-u">01</span><h3>Universities and student teams</h3>
+            <p>Rover competitions, CubeSat and instrument projects, and research groups that need a field site but cannot afford trial and error.</p>
+            <p class="ejemplo"><b>Example:</b> a student rover team looks for a dry, windy place in the Americas to see how dust covers its solar panels.</p>
+          </article>
+          <article>
+            <span class="num-u">02</span><h3>Space start-ups and industry</h3>
+            <p>Companies developing rovers, landers, drills, power systems or sensors that must prove their hardware in conditions close to the target world.</p>
+            <p class="ejemplo"><b>Example:</b> a start-up checks where its camera-based navigation will face ground as dark as lunar regolith and strong day–night cycles.</p>
+          </article>
+          <article>
+            <span class="num-u">03</span><h3>Analog research programs</h3>
+            <p>Field stations and analog missions that want to justify a site with data, or discover new candidate sites beyond the famous ones.</p>
+            <p class="ejemplo"><b>Example:</b> a program compares where a new site ranks against Haughton Crater or the Atacama for the same mission.</p>
+          </article>
+          <article>
+            <span class="num-u">04</span><h3>Space agencies and mission planners</h3>
+            <p>Teams that plan test campaigns for Artemis-era lunar systems or Mars hardware and need a transparent first screening of candidate regions.</p>
+            <p class="ejemplo"><b>Example:</b> a planner explores which regions keep their rank when the weights of the mission change (robustness).</p>
+          </article>
+          <article>
+            <span class="num-u">05</span><h3>Teachers and science communicators</h3>
+            <p>A visual way to explain what makes the Moon and Mars different from Earth, and why no single place on Earth can reproduce them.</p>
+            <p class="ejemplo"><b>Example:</b> a class colors the map by day–night temperature range and discusses why deserts and high plateaus stand out.</p>
+          </article>
+        </div>
+
+        <div class="titulo-seccion"><h2>What you get</h2></div>
+        <div class="tarjetas-param tres">
+          <article><h3>A ranked list of places</h3><p>The best places in the Americas for your mission, on a map, with the optimal site highlighted and how robust its first place is.</p></article>
+          <article><h3>The reasons, with numbers</h3><p>For each place: its measured values against the targets, the parameters that match and the ones that do not, and an AI-written profile built only from data.</p></article>
+          <article><h3>Honest limits</h3><p>What Earth cannot reproduce (gravity, vacuum, radiation) and a clear warning when no place gets close to every target.</p></article>
+        </div>
+        <a class="banda" href="#/mision" style="--img:url(/static/img/mision.jpg)">
+          <span class="num">06</span>
+          <div><h3>Try it with your mission</h3><p>Pick a preset mission, set your own targets and weights, or describe it in your own words.</p></div>
+          <i class="punto-flecha"></i>
+        </a>
+      </div>
+    </section>
+
+    <!-- ============================================================ 7. CÓMO FUNCIONA (TUTORIAL) -->
+    <section class="vista" id="v-tutorial" data-vista="tutorial">
+      <div class="cabecera corta" style="--img:url(/static/img/mision.jpg)">
+        <div class="contenedor">
+          <p class="kicker">07 · How it works</p>
+          <h1>From a mission to a place, in six steps</h1>
+          <p class="lead">A short guide to get a recommendation and understand it. Each step has a link to try it.</p>
+        </div>
+      </div>
+      <div class="contenedor">
+        <ol class="tutorial">
+          <li>
+            <div class="paso-num">1</div>
+            <div>
+              <h3>Choose your mission</h3>
+              <p>Open <b>Plan a mission</b>. You have three ways to start:</p>
+              <ul>
+                <li><b>Preset:</b> three ready-made missions (lunar rover navigation, thermal testing for Mars, structures against Martian dust).</li>
+                <li><b>Custom:</b> start from a destination and add the parameters you need.</li>
+                <li><b>AI assistant:</b> describe the mission in your own words; the AI translates it into targets and weights that you can review.</li>
+              </ul>
+              <a class="btn chico" href="#/mision">Open Plan a mission <i class="flecha"></i></a>
+            </div>
+          </li>
+          <li>
+            <div class="paso-num">2</div>
+            <div>
+              <h3>Set a target and a weight for each parameter</h3>
+              <p>The <b>target</b> is the value you want to reproduce; by default it is the destination's value. When the Moon or Mars is beyond anything on Earth, the target is the most extreme value in the Americas. If you type a value outside what exists on the continent, it is clipped to the maximum or minimum.</p>
+              <p>The <b>weight</b> (1 to 100) says how much each parameter matters. Only the proportions count: the bar under each parameter shows its share of the total.</p>
+            </div>
+          </li>
+          <li>
+            <div class="paso-num">3</div>
+            <div>
+              <h3>Read the map and the ranking</h3>
+              <p>Every 1° square of the Americas is colored by how well it matches your settings: <b>bright blue = better match</b>. The map flies to the <b>optimal site</b> and numbers the top 10. The ranking lists them with their score (lower = better) and the parameter that decides it.</p>
+            </div>
+          </li>
+          <li>
+            <div class="paso-num">4</div>
+            <div>
+              <h3>Open the site profile</h3>
+              <p>Click a place in the ranking or any square on the map. You will see:</p>
+              <ul>
+                <li>its values compared with the targets, with the <b>gap</b> of each parameter (green close, yellow partial, red far);</li>
+                <li>where it is, its climate and a Wikipedia summary of the area;</li>
+                <li>an AI-written argument of <b>why it is an analog for your mission</b>, what you could test there and where it falls short;</li>
+                <li>the measured data maps of your mission's parameters.</li>
+              </ul>
+            </div>
+          </li>
+          <li>
+            <div class="paso-num">5</div>
+            <div>
+              <h3>Check how good the result is</h3>
+              <ul>
+                <li><b>Best compromise:</b> a yellow warning appears when even the optimal site is far from some target. Lower the weight of what matters less, or accept that Earth cannot reproduce it.</li>
+                <li><b>Robustness:</b> how often the place stays first when the weights change a little. Low robustness means you should also look at the next places.</li>
+                <li><b>Positive control:</b> where well-known analogs (Haughton, Atacama, Meteor Crater…) rank with your settings.</li>
+              </ul>
+            </div>
+          </li>
+          <li>
+            <div class="paso-num">6</div>
+            <div>
+              <h3>Explore on your own</h3>
+              <p>In <b>Analogs</b>, color the whole map by a measured parameter or by a preset mission, and click any square to see its values and its rank in every mission. In <b>Science</b> you will find the science and mathematics behind the method.</p>
+              <div class="botones-fila"><a class="btn chico" href="#/analogos">Open Analogs <i class="flecha"></i></a><a class="btn chico" href="#/datos">Read the science <i class="flecha"></i></a></div>
+            </div>
+          </li>
+        </ol>
+
+        <div class="titulo-seccion"><h2>Tips</h2></div>
+        <div class="tarjetas-param tres">
+          <article><h3>Fewer parameters, clearer answers</h3><p>Two or three parameters give a sharper ranking. With many at once, almost every place becomes a reasonable compromise.</p></article>
+          <article><h3>The decisive parameter</h3><p>It is the one that limits the score. If it is not what your mission cares about, lower its weight and watch the ranking change.</p></article>
+          <article><h3>A region, not a spot</h3><p>Each result is a 1° square (about 110 km). Use it to choose a region, then survey sites inside it.</p></article>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================================ 8. ACERCA DE NOSOTROS -->
+    <section class="vista" id="v-nosotros" data-vista="nosotros">
+      <div class="cabecera corta" style="--img:url(/static/img/luna_superficie.jpg)">
+        <div class="contenedor">
+          <p class="kicker">08 · About us</p>
+          <h1>The team</h1>
+          <p class="lead">We are five engineering students from <b>Universidad EAFIT</b> in Medellín, Colombia. We built <span class="siglas">S.E.I.A.T</span> for the NASA Space Apps Challenge 2026, challenge <i>"Identify Earth Locations that Analog the Permanent Moon Base Locations and Mars"</i>.</p>
+        </div>
+      </div>
+      <div class="contenedor">
+        <div class="equipo">
+          <article><div class="iniciales">DE</div><h3>Daniel Elejalde</h3><p class="carrera">Mathematical Engineering</p><p class="inst">Universidad EAFIT</p><p>Mathematical model: Pareto front, weighted Chebyshev and robustness; the measured grid of the Americas.</p></article>
+          <article><div class="iniciales">SM</div><h3>Samuel Mendez</h3><p class="carrera">Mechanical Engineering</p><p class="inst">Universidad EAFIT</p><p>Candidate sites and known analogs, coordination of the weighting and team communication.</p></article>
+          <article><div class="iniciales">SP</div><h3>Samuel Pulgarin</h3><p class="carrera">Systems Engineering</p><p class="inst">Universidad EAFIT</p><p>Data processing, the web application, the AI integration and deployment.</p></article>
+          <article><div class="iniciales">AS</div><h3>Alejandro Sanchez</h3><p class="carrera">Mechanical Engineering</p><p class="inst">Universidad EAFIT</p><p>Mission research: what each mission needs to test and the engineering requirements behind its weights.</p></article>
+          <article><div class="iniciales">VV</div><h3>Valerin Velasquez</h3><p class="carrera">Mechanical Engineering</p><p class="inst">Universidad EAFIT</p><p>Physical conditions of the Moon, Mars and Earth, destination targets and the limits of Earth analogs.</p></article>
+        </div>
+        <div class="titulo-seccion"><h2>The project</h2></div>
+        <div class="ciencia-intro">
+          <p><span class="siglas">S.E.I.A.T</span> stands for <b>Sistema Eafitense de Identificación Análoga Terrestre</b> (EAFIT Terrestrial Analog Identification System).</p>
+          <p>Our goal: help teams choose where on Earth to test a mission to the Moon or Mars, explaining with data why a place works, how well, and what it cannot reproduce.</p>
+          <p>The source code is open: <a href="https://github.com/SamuPulga/earth-analogs" target="_blank" rel="noopener">github.com/SamuPulga/earth-analogs</a>.</p>
+        </div>
+      </div>
+    </section>
+
   </main>
 
   <footer class="pie">

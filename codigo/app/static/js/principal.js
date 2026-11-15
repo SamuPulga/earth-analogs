@@ -1,4 +1,4 @@
-// Arranque de la página: navegación entre los 5 apartados, reloj, estrellas y carga de datos.
+// Arranque de la página: navegación entre los apartados, reloj, estrellas y carga de datos.
 //   GET /api/inicio → destinos, variables, misiones y la grilla de Daniel
 // Cada apartado tiene su archivo: analogos.js, mision.js, datos_extra.js. Luna y Marte son HTML + globo.js.
 // Dueño: Samuel (app/).
@@ -10,7 +10,7 @@ import { iniciarMision, mostrarMision } from "./mision.js";
 import { iniciarDatosExtra } from "./datos_extra.js";
 import { configurarIA } from "./lugar.js";
 
-const VISTAS = ["inicio", "analogos", "luna", "marte", "mision", "datos"];
+const VISTAS = ["inicio", "analogos", "luna", "marte", "mision", "datos", "usuarios", "tutorial", "nosotros"];
 let INICIO = null;
 const globos = {};
 
@@ -41,8 +41,9 @@ function irA() {
   $("#nav").classList.remove("abierta");
   $("#menu-btn").setAttribute("aria-expanded", "false");
   window.scrollTo({ top: 0, behavior: "instant" });
-  document.title = { inicio: "Earth Analogs", analogos: "Analogs · Earth Analogs", luna: "The Moon · Earth Analogs",
-    marte: "Mars · Earth Analogs", mision: "Plan a mission · Earth Analogs", datos: "More data · Earth Analogs" }[vista];
+  document.title = { inicio: "S.E.I.A.T · Earth analogs of the Moon and Mars", analogos: "Analogs · S.E.I.A.T", luna: "The Moon · S.E.I.A.T",
+    marte: "Mars · S.E.I.A.T", mision: "Plan a mission · S.E.I.A.T", datos: "Science · S.E.I.A.T", usuarios: "Who it's for · S.E.I.A.T",
+    tutorial: "How it works · S.E.I.A.T", nosotros: "About us · S.E.I.A.T" }[vista];
 
   if (vista === "inicio") asegurarGlobo("tierra");
   if (vista === "luna") asegurarGlobo("luna");

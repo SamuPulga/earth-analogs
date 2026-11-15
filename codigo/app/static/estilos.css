@@ -729,3 +729,40 @@ summary { cursor: pointer; color: var(--suave); padding: 6px 0; }
 .marca span.siglas { font-size: 19px; }
 .siglas-hero { font-size: clamp(34px, 5vw, 58px); line-height: 1; margin: 0 0 14px; text-shadow: 0 0 28px rgba(252, 61, 33, .35); }
 .pie .siglas { font-size: 14px; }
+
+/* ---------- Apartados: para quién es, tutorial y equipo */
+.mini-tarjetas { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; margin-top: 20px; }
+.mini-tarjetas a { position: relative; display: grid; gap: 6px; padding: 22px 48px 22px 22px; border: 1px solid var(--linea); border-radius: 16px;
+  background: rgba(15, 17, 23, .6); color: var(--texto); text-decoration: none; transition: border-color .2s, transform .2s; }
+.mini-tarjetas a:hover { border-color: var(--acento); transform: translateY(-2px); }
+.mini-tarjetas .num { font: 500 12px ui-monospace, Consolas, monospace; color: var(--acento); letter-spacing: .2em; }
+.mini-tarjetas h3 { font-size: 26px; }
+.mini-tarjetas p { margin: 0; font-size: 13px; color: var(--suave); }
+.mini-tarjetas .punto-flecha { position: absolute; right: 20px; top: 50%; }
+.usuarios { display: grid; grid-template-columns: repeat(auto-fill, minmax(215px, 1fr)); gap: 16px; margin-top: 56px; }
+.usuarios article { border: 1px solid var(--linea); border-radius: 16px; padding: 24px; background: rgba(15, 17, 23, .6); }
+.usuarios .num-u { font: 500 12px ui-monospace, Consolas, monospace; color: var(--acento); letter-spacing: .2em; }
+.usuarios h3 { font-size: 23px; margin: 8px 0 10px; }
+.usuarios p { margin: 0 0 12px; color: #c9ced8; font-size: 14px; line-height: 1.6; }
+.usuarios .ejemplo { margin: 0; font-size: 13px; color: var(--suave); border-top: 1px solid var(--linea); padding-top: 12px; }
+.usuarios .ejemplo b { color: var(--acento-2); }
+.tutorial { list-style: none; padding: 0; margin: 56px 0 0; display: grid; gap: 14px; counter-reset: none; }
+.tutorial > li { display: grid; grid-template-columns: 64px 1fr; gap: 20px; border: 1px solid var(--linea); border-radius: 18px; padding: 26px; background: rgba(15, 17, 23, .6); }
+.tutorial .paso-num { width: 52px; height: 52px; border-radius: 50%; border: 1px solid var(--acento); color: var(--acento-2); display: grid; place-items: center; font: 700 24px var(--titulo); }
+.tutorial h3 { font-size: 28px; margin: 4px 0 10px; }
+.tutorial p, .tutorial li li { color: #c9ced8; font-size: 15px; line-height: 1.65; }
+.tutorial p { margin: 0 0 10px; }
+.tutorial ul { margin: 0 0 14px; padding-left: 20px; display: grid; gap: 6px; }
+.botones-fila { display: flex; flex-wrap: wrap; gap: 10px; }
+.equipo { display: grid; grid-template-columns: repeat(auto-fill, minmax(210px, 1fr)); gap: 16px; margin-top: 56px; }
+.equipo article { border: 1px solid var(--linea); border-radius: 18px; padding: 24px; background: rgba(15, 17, 23, .6); text-align: left; }
+.equipo .iniciales { width: 64px; height: 64px; border-radius: 50%; display: grid; place-items: center; font: 400 22px var(--siglas); color: #fff;
+  background: radial-gradient(circle at 30% 30%, rgba(252, 61, 33, .9), rgba(120, 20, 10, .9)); margin-bottom: 16px; letter-spacing: .06em; }
+.equipo h3 { font-size: 26px; }
+.equipo .carrera { margin: 6px 0 0; color: var(--acento-2); font-weight: 600; font-size: 14px; }
+.equipo .inst { margin: 2px 0 12px; color: var(--suave); font-size: 13px; }
+.equipo p:last-child { margin: 0; color: #c9ced8; font-size: 13px; line-height: 1.55; border-top: 1px solid var(--linea); padding-top: 12px; }
+@media (max-width: 860px) {
+  .mini-tarjetas { grid-template-columns: 1fr; }
+  .tutorial > li { grid-template-columns: 1fr; }
+}
