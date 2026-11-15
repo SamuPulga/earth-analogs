@@ -50,7 +50,31 @@ def _leer_config() -> dict:
     for k in cfg:  # las variables de entorno mandan sobre el archivo
         if os.environ.get(k):
             cfg[k] = os.environ[k]
+    # Limpiar errores comunes al pegar la clave (en Render, por ejemplo): espacios, comillas o "IA_CLAVE=" delante
+    clave = cfg["IA_CLAVE"].strip().strip('"').strip("'").strip()
+    if clave.upper().startswith("IA_CLAVE="):
+        clave = clave.split("=", 1)[1].strip().strip('"').strip("'")
+    cfg["IA_CLAVE"] = clave
     return cfg
+
+
+async def probar_ia() -> dict:
+    """Diagnóstico: una llamada mínima a la IA. Devuelve el código de respuesta, nunca la clave."""
+    clave = CONFIG["IA_CLAVE"]
+    info = {"configurada": bool(clave), "empieza_bien": clave.startswith("gsk_"), "largo": len(clave),
+            "modelo": CONFIG["IA_MODELO"], "proveedor": CONFIG["IA_URL"].split("//")[-1].split("/")[0]}
+    if not clave:
+        return {**info, "ok": False, "mensaje": "No hay clave (variable IA_CLAVE vacía)."}
+    cuerpo = {"model": CONFIG["IA_MODELO"], "max_tokens": 5,
+              "messages": [{"role": "user", "content": "Say OK"}]}
+    try:
+        async with httpx.AsyncClient(timeout=httpx.Timeout(20.0, connect=5.0)) as c:
+            r = await c.post(f"{CONFIG['IA_URL'].rstrip('/')}/chat/completions", json=cuerpo,
+                             headers={"Authorization": f"Bearer {clave}"})
+        return {**info, "ok": r.status_code == 200, "status": r.status_code,
+                "mensaje": "" if r.status_code == 200 else r.text[:300].replace(clave, "***")}
+    except httpx.HTTPError as e:
+        return {**info, "ok": False, "mensaje": f"Sin conexión con el proveedor: {type(e).__name__}"}
 
 
 CONFIG = _leer_config()

@@ -208,6 +208,12 @@ async def api_lugar(lat: float = Query(ge=-90, le=90), lon: float = Query(ge=-18
     return await lugar.hechos(lat, lon)
 
 
+@app.get("/api/ia/prueba")
+async def api_ia_prueba():
+    """Diagnóstico de la IA (sin mostrar la clave): ¿hay clave y qué responde el proveedor?"""
+    return await lugar.probar_ia()
+
+
 class ConsultaResumen(BaseModel):
     lat: float = Field(ge=-90, le=90)
     lon: float = Field(ge=-180, le=180)
