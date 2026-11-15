@@ -288,9 +288,21 @@
           <div class="pestanas" role="tablist">
             <button class="pestana activa" data-modo="predefinida">Preset</button>
             <button class="pestana" data-modo="personalizada">Custom</button>
-            <button class="pestana" data-modo="ia" disabled title="Phase 3">AI assistant <em>soon</em></button>
+            <button class="pestana" data-modo="ia">AI assistant</button>
           </div>
           <div id="lista-misiones" class="lista-misiones"></div>
+          <div id="panel-ia" class="panel-ia" hidden>
+            <label class="campo">Describe your mission in your own words
+              <textarea id="ia-texto" rows="5" maxlength="1500" placeholder="Example: We are building a small Mars rover and want to see how dust covers its solar panels in very dry, windy places."></textarea>
+            </label>
+            <div class="ia-ejemplos" id="ia-ejemplos"></div>
+            <label class="campo">Destination
+              <select id="ia-destino"><option value="">Let the AI choose</option></select>
+            </label>
+            <button id="ia-traducir" class="btn" type="button">Translate into settings <i class="flecha"></i></button>
+            <p class="ayuda">The AI only <b>translates</b> your description into parameters, tolerances and constraints, each with its reason. You can edit them below. The site is always picked by the mathematical model, not by the AI.</p>
+            <div id="ia-resultado" class="ia-resultado" aria-live="polite"></div>
+          </div>
 
           <label class="campo">Destination
             <select id="sel-destino"></select>

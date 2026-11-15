@@ -55,6 +55,7 @@ export function iniciarMision(inicio) {
   $("#btn-agregar-parametro").addEventListener("click", agregarParametro);
   $("#btn-agregar-restriccion").addEventListener("click", agregarRestriccion);
   $$(".pestana").forEach((b) => b.addEventListener("click", () => cambiarModo(b.dataset.modo)));
+  iniciarAsistente(inicio);
   pintarMisiones();
 }
 
@@ -115,6 +116,12 @@ function cargarMision(id) {
 
 function cambiarModo(modo) {
   E.modo = modo;
+  if (modo === "ia") {
+    marcarPestana();
+    if (E.mision) pintarConfig();
+    $("#ia-texto").focus();
+    return;
+  }
   if (modo === "personalizada") {
     if (!E.mision) {
       const d = E.inicio.destinos[0];
@@ -134,8 +141,9 @@ function cambiarModo(modo) {
 
 function pintarConfig() {
   const m = E.mision;
-  const pers = E.modo === "personalizada";
+  const pers = E.modo !== "predefinida";
   $("#lista-misiones").hidden = pers;
+  $("#panel-ia").hidden = E.modo !== "ia";
   $("#sel-destino").disabled = !pers;
   $("#sel-destino").value = m.destino;
   const d = destino(m.destino);
@@ -244,7 +252,7 @@ function agregarRestriccion() {
 
 // Agregar o quitar reglas a una predefinida la vuelve personalizada (la predefinida queda intacta)
 function pasarAPersonalizada() {
-  if (E.modo !== "personalizada") { E.modo = "personalizada"; cambiarModo("personalizada"); }
+  if (E.modo === "predefinida") { E.modo = "personalizada"; cambiarModo("personalizada"); }
 }
 
 // Cualquier cambio en la configuración recalcula (con una pequeña espera)
@@ -611,4 +619,60 @@ function pintarFicha() {
     mapasMedidos(s),
     fuera.length ? el("p", { class: "nota" }, `Not compared at this destination: ${fuera.map((p) => nombre(p.variable)).join(", ")}.`) : null,
     ...limites, fuente);
+}
+
+// ---------------------------------------------------------------- asistente de IA (AGENTS.md §7)
+// El usuario describe su misión; la IA la TRADUCE a parámetros, tolerancias y restricciones (cada uno con
+// su razón), el servidor la valida y aquí se carga como configuración editable. El sitio lo escoge el modelo.
+const EJEMPLOS = [
+  ["Rover cameras at the lunar pole", "We want to test the navigation cameras and batteries of a lunar rover: bright ground like regolith and big day–night temperature swings, as near the lunar south pole."],
+  ["Dust on Mars solar panels", "Our team built a small Mars rover and we need to see how dust covers its solar panels in very dry and windy places."],
+  ["Cold-weather Mars habitat", "We will test the insulation and heaters of an inflatable Mars habitat module; the coldest, driest place with strong daily temperature cycles."],
+];
+
+function iniciarAsistente(inicio) {
+  $("#ia-destino").append(...inicio.destinos.map((d) => el("option", { value: d.id }, `${d.nombre} (${{ luna: "Moon", marte: "Mars" }[d.cuerpo] || d.cuerpo})`)));
+  $("#ia-ejemplos").replaceChildren(...EJEMPLOS.map(([t, texto]) =>
+    el("button", { type: "button", onclick: () => { $("#ia-texto").value = texto; $("#ia-texto").focus(); } }, t)));
+  $("#ia-traducir").addEventListener("click", traducirIA);
+  $("#ia-texto").addEventListener("keydown", (e) => { if (e.key === "Enter" && (e.ctrlKey || e.metaKey)) traducirIA(); });
+  if (!inicio.ia?.activa) {
+    $("#ia-traducir").disabled = true;
+    $("#ia-resultado").replaceChildren(el("p", { class: "nota" }, "The AI is not configured on this server, so the assistant is off. Use Preset or Custom."));
+  }
+}
+
+async function traducirIA() {
+  const texto = $("#ia-texto").value.trim();
+  const caja = $("#ia-resultado");
+  if (texto.length < 10) { caja.replaceChildren(el("p", { class: "error" }, "Describe the mission in at least a sentence.")); return; }
+  const btn = $("#ia-traducir");
+  btn.disabled = true;
+  caja.replaceChildren(el("div", { class: "cargando" }, el("i"), el("i"), el("i"), el("span", {}, "The AI is reading your mission…")));
+  try {
+    const r = await fetch("/api/ia/mision", { method: "POST", headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ texto, destino: $("#ia-destino").value || null }) });
+    const datos = await r.json();
+    if (!r.ok) throw new Error(Array.isArray(datos.detail) ? datos.detail.map((d) => d.msg).join("; ") : datos.detail);
+    E.mision = datos.mision;
+    E.base = {};
+    E.mision.parametros.forEach((p) => { E.base[p.variable] = p.valor; });
+    E.sel = null;
+    pintarConfig();
+    calcular();
+    const d = destino(datos.mision.destino);
+    caja.replaceChildren(...[
+      el("h4", {}, "How the AI read your mission"),
+      el("p", {}, el("b", {}, datos.mision.nombre), ` → ${d.nombre || datos.mision.destino}. ${datos.resumen || ""}`),
+      el("p", { class: "nota" }, `Settings loaded below: ${datos.mision.parametros.map((p) => `${nombre(p.variable)} (±${p.valor})`).join(", ")}${datos.mision.restricciones.length ? ` and ${datos.mision.restricciones.length} constraint(s)` : ""}. Review and edit them: the ranking updates by itself.`),
+      datos.no_disponible.length ? [el("h4", {}, "Needed but not in the app's data"),
+        el("ul", {}, ...datos.no_disponible.map((x) => el("li", {}, el("b", {}, x.need), x.reason ? ` — ${x.reason}` : "")))] : null,
+      datos.avisos.length ? el("ul", { class: "aviso-ia" }, ...datos.avisos.map((t) => el("li", {}, `Checked by the app: ${t}`))) : null,
+      el("p", { class: "nota" }, "AI suggestion: the settings are a starting point, not a verified requirement."),
+    ].flat().filter(Boolean));
+  } catch (e) {
+    caja.replaceChildren(el("p", { class: "error" }, `Could not translate the mission: ${e.message}`));
+  } finally {
+    btn.disabled = false;
+  }
 }

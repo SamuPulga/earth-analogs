@@ -9,6 +9,8 @@ Dueño: Samuel (app/).
 from __future__ import annotations
 
 import importlib
+
+import httpx
 import sys
 from pathlib import Path
 from typing import Literal
@@ -28,6 +30,7 @@ sys.path.insert(1, str(CODIGO))  # para poder importar el paquete modelo/ de Dan
 import datos  # noqa: E402
 import lugar  # noqa: E402
 import rejilla  # noqa: E402
+import asistente  # noqa: E402
 
 # --- Modelo de Daniel (codigo/modelo/recomendar.py) y su grilla (codigo/modelo/datos_sitios.csv) ----
 # Se importa como paquete (modelo.recomendar), así Daniel puede repartir su código en varios archivos.
@@ -238,6 +241,29 @@ def _optimos_predefinidos() -> list[tuple[float, float]]:
 async def api_lugar(lat: float = Query(ge=-90, le=90), lon: float = Query(ge=-180, le=180)):
     """Paso 1 (rápido, sin IA): nombre del lugar, Wikipedia y elevación."""
     return await lugar.hechos(lat, lon)
+
+
+class ConsultaAsistente(BaseModel):
+    texto: str = Field(min_length=10, max_length=1500)   # la misión, con las palabras del usuario
+    destino: str | None = None                            # None = que la IA proponga el destino
+
+
+@app.post("/api/ia/mision")
+async def api_ia_mision(c: ConsultaAsistente):
+    """Asistente: traduce la descripción a una configuración validada. NO escoge el sitio (AGENTS.md §7)."""
+    destinos, _ = datos.cargar_destinos()
+    variables, _ = datos.cargar_variables()
+    misiones, _, _ = datos.cargar_misiones(variables, destinos)
+    if c.destino and c.destino not in destinos.index:
+        raise HTTPException(400, f"Unknown destination: {c.destino}")
+    try:
+        return await asistente.traducir(c.texto.strip(), c.destino, destinos, variables, misiones)
+    except RuntimeError as e:
+        raise HTTPException(503, str(e))
+    except ValueError as e:
+        raise HTTPException(422, str(e))
+    except httpx.HTTPError:
+        raise HTTPException(503, "Could not reach the AI provider. Try again.")
 
 
 @app.get("/api/ia/prueba")

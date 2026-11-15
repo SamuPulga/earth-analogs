@@ -739,5 +739,118 @@
  },
  "-11.500,-76.500|v5|Thermal testing of equipment for Mars|8734a89cd1": {
   "resumen": "**What it is:** This site in the San Pedro de Laraos area of Lima, Peru, at 4,695 m elevation, is evaluated for thermal testing of Mars equipment.  \n\n**Why it is an analog for this mission:** The temperature is 9.4 °C, the lowest on Earth, while the Mars target is –25 °C (difference 34.4 °C, outside the 15 °C tolerance). Temperature variation is 21.3 °C versus the Mars target 28.8 °C (difference 7.5 °C, outside the 5 °C tolerance). Wind speed is 4.6 m/s, close to the Mars target of 4 m/s and within tolerance. The point ranks 1st of 171 on the Pareto front, making it the top candidate for the mission’s weighted priorities.  \n\n**What it does not reproduce:** Earth’s gravity, vacuum, atmosphere and radiation differ from Mars."
+ },
+ "-11.500,-76.500|v5|Lunar rover navigation (cameras and thermal cycles)|2eb0710c56": {
+  "resumen": "**What it is:** A high‑altitude site in the Andes of Peru, at 4,695 m elevation, evaluated for lunar rover navigation.\n\n**Why it is an analog for this mission:** Its surface reflectance (albedo 0.154) is close to the lunar target of 0.12 and falls within the 0.05 tolerance, matching the mission’s emphasis on optical similarity (60 % weight). Temperature variation (21.3 °C) approaches the Moon’s highest‑on‑Earth target of 28.8 °C but exceeds the 5 °C tolerance, giving the site rank 1 of 357 on the Pareto front. The decisive parameter is temperature, which is still far from the lunar low of –25 °C.\n\n**What it does not reproduce:** Earth’s gravity, vacuum, and radiation environment."
+ },
+ "57.500,-112.500": {
+  "hechos": {
+   "lat": 57.5,
+   "lon": -112.5,
+   "lugar": {
+    "nombre": "Wood Buffalo",
+    "region": "Alberta",
+    "pais": "Canada",
+    "descripcion": "Wood Buffalo, Alberta, Canada"
+   },
+   "wikipedia": null,
+   "elevacion_m": 752.0,
+   "fuentes": [
+    "OpenStreetMap Nominatim (© OpenStreetMap contributors, ODbL)",
+    "Wikipedia (CC BY-SA)",
+    "Open-Meteo (elevation)"
+   ],
+   "segundos": 3.47
+  }
+ },
+ "57.500,-112.500|v5|Mars habitat thermal test|3a4909a461": {
+  "resumen": "**What it is:** This site in Wood Buffalo, Alberta, Canada is ranked 1 of 174 on the Pareto front for a Mars habitat thermal test.  \n\n**Why it is an analog for this mission:** Its temperature is –0.9 °C (target –25 °C), humidity 42 % RH (target 19.9 % RH), and temperature variation 10.4 °C (target 28.8 °C). The user’s settings give the highest weight (38 %) to temperature, making this parameter decisive, and the site holds the top rank.  \n\n**Where it falls short:** Temperature, humidity, and variation all exceed the 5 °C/5 % RH/12 °C tolerances, and Earth cannot reproduce Martian gravity, vacuum, or radiation."
+ },
+ "58.500,-102.500": {
+  "hechos": {
+   "lat": 58.5,
+   "lon": -102.5,
+   "lugar": {
+    "nombre": "Unorganized Division No. 18",
+    "region": "Saskatchewan",
+    "pais": "Canada",
+    "descripcion": "Unorganized Division No. 18, Saskatchewan, Canada"
+   },
+   "wikipedia": null,
+   "elevacion_m": 422.0,
+   "fuentes": [
+    "OpenStreetMap Nominatim (© OpenStreetMap contributors, ODbL)",
+    "Wikipedia (CC BY-SA)",
+    "Open-Meteo (elevation)"
+   ],
+   "segundos": 2.9
+  }
+ },
+ "72.500,-25.500": {
+  "hechos": {
+   "lat": 72.5,
+   "lon": -25.5,
+   "lugar": {
+    "nombre": "Greenland",
+    "region": "",
+    "pais": "Greenland",
+    "descripcion": "Greenland"
+   },
+   "wikipedia": null,
+   "elevacion_m": 1279.0,
+   "fuentes": [
+    "OpenStreetMap Nominatim (© OpenStreetMap contributors, ODbL)",
+    "Wikipedia (CC BY-SA)",
+    "Open-Meteo (elevation)"
+   ],
+   "segundos": 2.11
+  }
+ },
+ "-50.500,-72.500": {
+  "hechos": {
+   "lat": -50.5,
+   "lon": -72.5,
+   "lugar": {
+    "nombre": "Lago Argentino",
+    "region": "Santa Cruz",
+    "pais": "Argentina",
+    "descripcion": "Lago Argentino, Santa Cruz, Argentina"
+   },
+   "wikipedia": null,
+   "elevacion_m": 880.0,
+   "fuentes": [
+    "OpenStreetMap Nominatim (© OpenStreetMap contributors, ODbL)",
+    "Wikipedia (CC BY-SA)",
+    "Open-Meteo (elevation)"
+   ],
+   "segundos": 1.38
+  }
+ },
+ "46.500,-95.500": {
+  "hechos": {
+   "lat": 46.5,
+   "lon": -95.5,
+   "lugar": {
+    "nombre": "Otter Tail County",
+    "region": "Minnesota",
+    "pais": "United States",
+    "descripcion": "Otter Tail County, Minnesota, United States"
+   },
+   "wikipedia": {
+    "titulo": "Otto Township, Otter Tail County, Minnesota",
+    "extracto": "Otto Township is a township in Otter Tail County, Minnesota, United States. The population was 600 at the 2020 census.",
+    "url": "https://en.wikipedia.org/wiki/Otto_Township%2C_Otter_Tail_County%2C_Minnesota",
+    "imagen": "",
+    "idioma": "en",
+    "distancia_km": 1.2
+   },
+   "elevacion_m": 408.0,
+   "fuentes": [
+    "OpenStreetMap Nominatim (© OpenStreetMap contributors, ODbL)",
+    "Wikipedia (CC BY-SA)",
+    "Open-Meteo (elevation)"
+   ],
+   "segundos": 1.8
+  }
  }
 }
