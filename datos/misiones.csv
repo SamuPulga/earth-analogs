@@ -1,6 +1,5 @@
 mision_id,tipo,destino,variable,operador,valor,unidad,metodo,peso,texto,fuente,estado
 rover_lunar,mision,shackleton,,,,,,,Lunar rover navigation (cameras and thermal cycles),,borrador
-rover_lunar,restriccion,,pendiente_p95,<=,25,degrees,,,Maximum slope the rover can climb (ILLUSTRATIVE),TO BE VERIFIED,borrador
 rover_lunar,parametro,,reflectancia,,,share of the weight,ahp,0.60,Ground as bright as regolith: navigation cameras see similar contrast,TO BE VERIFIED,borrador
 rover_lunar,parametro,,variacion_temperatura,,,share of the weight,ahp,0.24,Strong day/night cycle to test batteries and electronics,TO BE VERIFIED,borrador
 rover_lunar,parametro,,temperatura,,,share of the weight,ahp,0.16,Similar cold background; low weight because Earth never reaches lunar temperatures,TO BE VERIFIED,borrador
@@ -12,7 +11,6 @@ termica_marte,parametro,,variacion_temperatura,,,share of the weight,ahp,0.41,Da
 termica_marte,parametro,,viento,,,share of the weight,ahp,0.31,Wind changes how much heat the equipment loses by convection,TO BE VERIFIED,borrador
 termica_marte,limite_tierra,,,,,,,,Without vacuum heat moves by convection: good for thermal cycling but not for thermal vacuum,,borrador
 polvo_marte,mision,jezero,,,,,,,Structures against Martian dust,,borrador
-polvo_marte,restriccion,,precipitacion_anual_mm,<=,200,mm/yr,,,Very dry site (ILLUSTRATIVE),TO BE VERIFIED,borrador
 polvo_marte,parametro,,humedad,,,share of the weight,ahp,0.22,Very dry air: dust does not clump,TO BE VERIFIED,borrador
 polvo_marte,parametro,,viento,,,share of the weight,ahp,0.18,Wind that lifts and deposits dust,TO BE VERIFIED,borrador
 polvo_marte,parametro,,reflectancia,,,share of the weight,ahp,0.60,Ground as bright as Martian dust,TO BE VERIFIED,borrador

@@ -698,3 +698,34 @@ summary { cursor: pointer; color: var(--suave); padding: 6px 0; }
 .cuota::before { content: ""; position: absolute; top: 0; left: 0; height: 3px; width: var(--x, 0%); background: var(--acento); border-radius: 2px; transition: width .2s; }
 .fila .control:not(.tres):not(.objetivo) { grid-template-columns: 52px 1fr 80px; }
 .etq.medio { color: #f5c451; border-color: rgba(245,196,81,.5); }
+
+/* ---------- More data: base científica y matemática */
+.ciencia-intro { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 28px; }
+.ciencia-intro p { margin: 0; color: #c9ced8; line-height: 1.65; }
+.tarjetas-param { display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 14px; }
+.tarjetas-param.tres { grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); }
+.tarjetas-param article { border: 1px solid var(--linea); border-radius: 16px; padding: 20px; background: rgba(15, 17, 23, .55); }
+.tarjetas-param h3 { font-size: 22px; margin-bottom: 8px; }
+.tarjetas-param p { margin: 0 0 10px; font-size: 14px; color: #c9ced8; line-height: 1.55; }
+.tarjetas-param .ref { margin: 0; font-size: 12px; color: var(--acento-2); border-top: 1px solid var(--linea); padding-top: 10px; }
+.pasos-mate { list-style: none; padding: 0; margin: 0; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; }
+.pasos-mate li { border: 1px solid var(--linea); border-radius: 16px; padding: 24px; background: rgba(15, 17, 23, .55); }
+.pasos-mate span { font: 500 12px ui-monospace, Consolas, monospace; color: var(--acento); letter-spacing: .2em; }
+.pasos-mate h3 { margin: 8px 0 10px; font-size: 26px; }
+.pasos-mate p { margin: 0 0 10px; font-size: 14px; color: #c9ced8; line-height: 1.6; }
+.formula { font: italic 17px/1.5 "Cambria Math", "Times New Roman", serif; color: #fff; background: rgba(47, 123, 255, .08);
+  border: 1px solid rgba(47, 123, 255, .3); border-radius: 12px; padding: 12px 16px; margin: 4px 0 12px; overflow-x: auto; white-space: nowrap; }
+.limites-metodo { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px 28px; padding-left: 18px; color: #c9ced8; line-height: 1.6; }
+.ia-uso { margin-top: 48px; }
+.ia-uso p { color: #c9ced8; font-size: 14px; line-height: 1.6; margin: 0; }
+.referencias li { line-height: 1.55; }
+@media (max-width: 860px) {
+  .ciencia-intro, .pasos-mate, .limites-metodo { grid-template-columns: 1fr; }
+}
+
+/* ---------- Marca S.E.I.A.T: siglas en rojo NASA (#FC3D21), fuente de estilo espacial */
+:root { --rojo-nasa: #fc3d21; --siglas: "Audiowide", "Barlow Condensed", system-ui, sans-serif; }
+.siglas { font-family: var(--siglas) !important; color: var(--rojo-nasa); letter-spacing: .12em !important; font-weight: 400 !important; }
+.marca span.siglas { font-size: 19px; }
+.siglas-hero { font-size: clamp(34px, 5vw, 58px); line-height: 1; margin: 0 0 14px; text-shadow: 0 0 28px rgba(252, 61, 33, .35); }
+.pie .siglas { font-size: 14px; }

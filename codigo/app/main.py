@@ -92,7 +92,7 @@ async def _ciclo(app):
     tarea.cancel()
 
 
-app = FastAPI(title="Análogos Tierra — Luna y Marte", lifespan=_ciclo)
+app = FastAPI(title="S.E.I.A.T — Sistema Eafitense de Identificación Análoga Terrestre", lifespan=_ciclo)
 app.add_middleware(GZipMiddleware, minimum_size=1000)  # la grilla pesa ~200 KB sin comprimir
 
 
@@ -191,9 +191,8 @@ def _recomendar_rejilla(mision: dict) -> dict:
     if no_aplica:
         raise HTTPException(400, f"Not applicable at this destination: {', '.join(no_aplica)}")
 
-    # Restricciones sin datos en la grilla (p. ej. la pendiente): no se aplican y se avisa
-    aplicables = [r for r in mision["restricciones"] if r["variable"] in rejilla.VARIABLES]
-    omitidas = [r["variable"] for r in mision["restricciones"] if r["variable"] not in rejilla.VARIABLES]
+    # Sin restricciones (decisión del 15/11/2026): la misión se define solo con objetivos y pesos
+    aplicables, omitidas = [], []
     m = rejilla.a_unidades_del_modelo({**mision, "restricciones": aplicables})
 
     clave = rejilla.firma({"d": destino, "p": m["parametros"], "r": aplicables, "o": pedidos})

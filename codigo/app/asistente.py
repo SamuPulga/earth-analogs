@@ -24,7 +24,6 @@ import httpx
 import lugar
 import rejilla
 
-MIN_PUNTOS = 20      # una restricción que deja menos puntos que esto se descarta: no habría ranking útil
 MAX_PARAMETROS = 3   # pocas dimensiones a la vez: con muchas, casi todo queda en el frente (AGENTS.md §5.3)
 
 SISTEMA = """You turn a description of a field-test mission into the settings of an app that ranks places in the
@@ -45,9 +44,7 @@ How the settings work:
   "destinations"). Only if the description clearly asks for a different value (for example "around 0 °C"),
   add "target" in the parameter's unit, inside the Earth range.
 - Choose 1 to 3 parameters, only from the ones that exist for the chosen destination.
-- "constraints" rule out places before comparing (for example temperature <= 0 °C). Prefer weights: use at
-  most ONE constraint, only when the mission clearly needs a hard limit, on the app's parameters and with a value
-  inside the Earth range. Remember that extremes rarely coincide on Earth (the coldest places are humid).
+- There are no constraints: a mission is defined only by targets and weights.
 - If the mission needs something the app does not have (slope, radiation, vacuum, gravity, soil, ice,
   mineralogy...), list it in "not_available" with a short reason. Never invent parameters.
 - "earth_limits": 1 or 2 short sentences about what no place on Earth can reproduce for this mission.
@@ -58,7 +55,6 @@ Answer ONLY with this JSON object:
  "name": "<short mission name, max 60 characters>",
  "summary": "<one or two sentences: how you read the mission and what the settings prioritize>",
  "parameters": [{"variable": "<parameter id>", "weight": <1-100>, "target": <number or null>, "reason": "<why>"}],
- "constraints": [{"variable": "<parameter id>", "operator": "<=" or ">=", "value": <number>, "reason": "<why>"}],
  "not_available": [{"need": "<what>", "reason": "<why it matters>"}],
  "earth_limits": ["<sentence>"]}"""
 
@@ -160,26 +156,7 @@ def validar(propuesta: dict, destino_pedido: str | None, destinos, variables) ->
     if not parametros:
         raise ValueError("The AI did not propose any parameter that exists for this destination. Try describing what the mission needs to test (temperature, wind, dust, light...).")
 
-    restricciones = []
-    quedan = base.index == base.index   # puntos que cumplen todas las restricciones aceptadas hasta ahora
-    for r in propuesta.get("constraints") or []:
-        v, op = r.get("variable"), r.get("operator")
-        try:
-            val = float(r.get("value"))
-        except (TypeError, ValueError):
-            continue
-        if v not in rejilla.VARIABLES or op not in ("<=", ">="):
-            avisos.append(f"Dropped a constraint on '{v}': not a parameter the app has.")
-            continue
-        cumple = (base[v] <= val) if op == "<=" else (base[v] >= val)
-        if int((quedan & cumple).sum()) < MIN_PUNTOS:
-            avisos.append(f"Dropped the constraint {v} {op} {val:g}: together with the others it would leave fewer "
-                          f"than {MIN_PUNTOS} places in the Americas.")
-            continue
-        quedan = quedan & cumple
-        restricciones.append({"variable": v, "operador": op, "valor": float(f"{val:.4g}"),
-                              "unidad": variables.loc[v, "unidad"] if v in variables.index else "",
-                              "texto": _corto(r.get("reason")) or "Proposed by the AI", "fuente": "AI suggestion: review it"})
+    restricciones = []  # sin restricciones (15/11/2026): la misión es solo objetivos y pesos
 
     no_disp = [{"need": _corto(x.get("need"), 80), "reason": _corto(x.get("reason"), 200)}
                for x in (propuesta.get("not_available") or []) if isinstance(x, dict) and x.get("need")][:5]

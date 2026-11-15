@@ -111,8 +111,9 @@ function avisos() {
   av.replaceChildren();
   const partes = [], detalle = [];
   const vacias = Object.entries(INICIO.fuentes).filter(([, f]) => f !== "real").map(([t]) => t);
-  if (vacias.length) { partes.push("Missing tables"); detalle.push(`Empty tables in datos/: ${vacias.join(", ")}.`); }
-  if (INICIO.errores_misiones.length) { partes.push(`${INICIO.errores_misiones.length} errors in misiones.csv`); detalle.push(...INICIO.errores_misiones); }
+  // Avisos para el equipo (tablas vacías, errores en misiones.csv): solo en la consola, no al usuario
+  if (vacias.length) console.warn("Tablas vacías en datos/:", vacias.join(", "));
+  if (INICIO.errores_misiones.length) console.warn("Errores en misiones.csv:", INICIO.errores_misiones);
   if (!partes.length) return;
   const caja = el("details", { class: "aviso" }, el("summary", {}, el("b", {}, partes.join(" · "))),
     el("ul", {}, ...detalle.map((t) => el("li", {}, t))));
@@ -137,9 +138,8 @@ function pintarInicio() {
       el("div", { class: "coords" }, coordenadas(d.lat, d.lon)),
       d.por_que ? el("p", {}, d.por_que) : null,
       el("a", { class: "btn chico", href: `#/mision?destino=${d.id}` }, "Find analogs ", el("i", { class: "flecha" })),
-    )) : [el("p", { class: "nota" }, "No destinations in destinos.csv yet.")]));
+    )) : [el("p", { class: "nota" }, "No destinations available.")]));
   }
-  $("#pie-modelo").textContent = `Model: ${INICIO.modelo.startsWith("oficial") ? "final" : "provisional"}`;
 }
 
 // ---------------------------------------------------------------- arranque

@@ -3,12 +3,12 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Earth Analogs</title>
-  <meta name="description" content="Find places on Earth to test missions to the Moon and Mars.">
+  <title>S.E.I.A.T · Earth analogs of the Moon and Mars</title>
+  <meta name="description" content="S.E.I.A.T (Sistema Eafitense de Identificación Análoga Terrestre): find places on Earth to test missions to the Moon and Mars.">
   <link rel="icon" type="image/svg+xml" href="/static/favicon.svg">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=Inter:wght@400;500;600&display=swap">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Audiowide&family=Barlow+Condensed:wght@500;600;700&family=Inter:wght@400;500;600&display=swap">
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
   <link rel="stylesheet" href="/static/estilos.css">
 </head>
@@ -17,13 +17,13 @@
 
   <!-- ============================================================ NAVEGACIÓN -->
   <header class="nav" id="nav">
-    <a class="marca" href="#/inicio" aria-label="Earth Analogs, home">
+    <a class="marca" href="#/inicio" aria-label="S.E.I.A.T, home">
       <svg viewBox="0 0 40 40" aria-hidden="true">
         <circle cx="20" cy="20" r="7" fill="currentColor"/>
         <ellipse cx="20" cy="20" rx="17" ry="7" fill="none" stroke="currentColor" stroke-width="1.6" transform="rotate(-25 20 20)"/>
         <circle cx="34.5" cy="13" r="2.4" fill="var(--acento)"/>
       </svg>
-      <span>EARTH<b>ANALOGS</b></span>
+      <span class="siglas">S.E.I.A.T</span>
     </a>
     <button class="menu-btn" id="menu-btn" aria-label="Open menu" aria-expanded="false"><span></span><span></span></button>
     <nav class="enlaces" id="enlaces">
@@ -43,7 +43,8 @@
     <section class="vista" id="v-inicio" data-vista="inicio">
       <div class="hero">
         <div class="hero-texto">
-          <p class="kicker">NASA Space Apps Challenge 2026</p>
+          <p class="siglas siglas-hero">S.E.I.A.T</p>
+          <p class="kicker">Sistema Eafitense de Identificación Análoga Terrestre · NASA Space Apps Challenge 2026</p>
           <h1>The Moon and Mars,<br>right here on Earth</h1>
           <p class="lead">Choose what you want to test and we show you where to do it: the places in the Americas that best match your destination in what matters for your mission, and where they fall short.</p>
           <div class="botones">
@@ -318,14 +319,6 @@
             <button id="btn-agregar-parametro" class="btn chico">+ Parameter</button>
           </div>
 
-          <div class="paso"><span>3</span><h2>Constraints</h2></div>
-          <p class="ayuda">They rule out sites before comparing.</p>
-          <div id="lista-restricciones"></div>
-          <div class="agregar">
-            <select id="sel-nueva-restriccion" aria-label="Constraint to add"></select>
-            <button id="btn-agregar-restriccion" class="btn chico">+ Constraint</button>
-          </div>
-
           <div class="paso"><span>!</span><h2>What Earth cannot reproduce</h2></div>
           <ul id="lista-limites" class="limites"></ul>
         </aside>
@@ -339,19 +332,17 @@
               <span class="degradado"><i></i>Better match → worse</span>
               <span><i class="pto frente"></i>Top 10 (number = rank)</span>
               <span><i class="pto conocido"></i>Known analog</span>
-              <span><i class="pto descartado"></i>Ruled out</span>
             </div>
           </div>
 
           <div class="dos">
             <div class="panel">
-              <div class="paso"><span>4</span><h2>Ranking</h2></div>
+              <div class="paso"><span>3</span><h2>Ranking</h2></div>
               <p id="filtro-nota" class="nota" hidden></p>
               <p id="error" class="error" hidden></p>
               <div id="aviso-calidad" class="aviso-calidad" hidden></div>
               <ol id="ranking" class="ranking"></ol>
               <details id="det-dominados"><summary>Dominated (<span id="n-dom">0</span>)</summary><ul id="dominados" class="lista-chica"></ul></details>
-              <details id="det-descartados"><summary>Ruled out (<span id="n-desc">0</span>)</summary><ul id="descartados" class="lista-chica"></ul></details>
               <div class="control-positivo">
                 <h3>Positive control: known analogs</h3>
                 <p class="ayuda">Places already used by NASA and field teams. With good settings, they should rank high. Rank = position by score among all grid points.</p>
@@ -360,7 +351,7 @@
               </div>
             </div>
             <div class="panel ficha" id="ficha">
-              <div class="paso"><span>5</span><h2>Site profile</h2></div>
+              <div class="paso"><span>4</span><h2>Site profile</h2></div>
               <p class="nota">Pick a site from the ranking or the map.</p>
             </div>
           </div>
@@ -373,50 +364,116 @@
       <div class="cabecera corta" style="--img:url(/static/img/datos.jpg)">
         <div class="contenedor">
           <p class="kicker">05 · More data</p>
-          <h1>How it works inside</h1>
-          <p class="lead">The method, the data it uses and its limits. Everything you need to check or reproduce a result.</p>
+          <h1>The science behind it</h1>
+          <p class="lead">What a terrestrial analog is, why these parameters, the mathematics that ranks the places, and the limits of the method.</p>
         </div>
       </div>
       <div class="contenedor">
-        <div class="titulo-seccion"><h2>How the model decides</h2></div>
-        <p class="ayuda">Scope: the <b>Americas</b> only, from Canada to Patagonia. Downloading and processing data for the whole planet is not feasible with the team's tools; the Americas have enough deserts, salt flats, volcanoes and craters to cover the missions.</p>
-        <ol class="pasos-metodo">
-          <li><span>01</span><h3>Distances</h3><p>For each site we compute how different it is from the destination in each parameter: f<sub>i</sub>(x) ≥ 0, where 0 means identical.</p></li>
-          <li><span>02</span><h3>Constraints</h3><p>Sites that do not meet the minimum are ruled out, for example a slope the rover cannot climb.</p></li>
-          <li><span>03</span><h3>Pareto front</h3><p>Only the sites that no other site beats in every parameter at once remain.</p></li>
-          <li><span>04</span><h3>Weighted Chebyshev</h3><p>They are ranked by the worst weighted difference, max<sub>i</sub> w<sub>i</sub>·f<sub>i</sub>, where w<sub>i</sub> is the mission's weight and f<sub>i</sub> the gap to the target as a share of the range in the Americas. Lower = better.</p></li>
-          <li><span>05</span><h3>Robustness</h3><p>We repeat it with slightly different weights and count how often each site comes first.</p></li>
+        <!-- ---------- 1. La ciencia: qué es un análogo -->
+        <div class="titulo-seccion"><h2>The science: what a terrestrial analog is</h2></div>
+        <div class="ciencia-intro">
+          <p>A <b>terrestrial analog</b> is a place on Earth whose conditions resemble those of another world <b>in some measurable dimensions</b>, so that equipment, procedures and people can be tested there before flying. NASA and other agencies have used analogs since the Apollo era: impact craters and lava fields to train astronauts in geology, polar and desert sites to test rovers, habitats and instruments.</p>
+          <p>No place on Earth reproduces the Moon or Mars as a whole: gravity, vacuum or a very thin atmosphere, and the radiation environment cannot be recreated in the field. An analog is therefore always <b>partial</b>, and its value depends on <b>what the mission needs to test</b>. That is the idea behind S.E.I.A.T: instead of a single "similarity" score, each mission defines which parameters matter and how much, and the model finds the places that best match those priorities.</p>
+          <p>Scope: the <b>Americas</b>, from the Canadian Arctic to Patagonia. The continent spans polar deserts, hyper-arid deserts, high plateaus, volcanic fields and salt flats, enough contrast to cover the missions while keeping the data volume manageable.</p>
+        </div>
+
+        <!-- ---------- 2. Los parámetros -->
+        <div class="titulo-seccion"><h2>Why these five parameters</h2></div>
+        <div class="tarjetas-param">
+          <article><h3>Surface temperature</h3><p>Sets the thermal design of every system: batteries, electronics, lubricants, seals and materials must work in the cold of the target world.</p><p class="ref">Moon: about −173 °C to +127 °C at the equator, far colder in polar shadows · Mars: mean about −63 °C.</p></article>
+          <article><h3>Day–night temperature range</h3><p>Repeated heating and cooling causes thermal fatigue in joints, solar panels and structures. Large daily swings are what thermal-cycling tests look for.</p><p class="ref">Moon: about 300 °C between day and night at the equator · Mars: about 60 °C at the Viking 1 site (−89 °C to −31 °C).</p></article>
+          <article><h3>Relative humidity</h3><p>Water vapour changes how dust sticks and clumps, corrodes metals and affects electronics. Mars is extremely dry; the driest places on Earth are the closest match.</p><p class="ref">Moon: no atmosphere (not applicable) · Mars: water vapour about 0.02 % of the atmosphere.</p></article>
+          <article><h3>Wind speed</h3><p>Wind lifts, carries and deposits dust, abrades surfaces and covers solar panels. On Mars the air is about 1 % as dense as on Earth, so the same speed pushes far less: wind is an analog for dust transport, not for wind loads.</p><p class="ref">Moon: no atmosphere (not applicable) · Mars: about 2–10 m/s at the Viking sites, 17–30 m/s in dust storms.</p></article>
+          <article><h3>Surface albedo</h3><p>How bright the ground is controls the light that cameras and navigation sensors see, and how much sunlight the surface absorbs. A rover's vision system trained on a dark, regolith-like surface behaves more like it will on the Moon.</p><p class="ref">Moon: geometric albedo about 0.12 · Mars: Bond albedo about 0.25.</p></article>
+        </div>
+        <p class="nota">Reference values (rounded) from the NASA NSSDCA Moon and Mars Fact Sheets and LRO Diviner. They describe each world, not the exact destination site.</p>
+
+        <div class="titulo-seccion"><h2>Destination targets</h2></div>
+        <p class="ayuda">For each destination, the value each parameter tries to reproduce. When the real value lies beyond anything that exists on Earth (the Moon is colder than any place in the Americas), the target is the most extreme value found on the continent: the closest Earth can get. In Plan a mission, each target can be changed; values outside the range of the Americas are clipped to its minimum or maximum.</p>
+        <div class="tabla-caja"><table class="tabla" id="tabla-objetivos"></table></div>
+
+        <!-- ---------- 3. La matemática -->
+        <div class="titulo-seccion"><h2>The mathematical model</h2></div>
+        <p class="ayuda">Choosing an analog is a <b>multi-objective optimization</b> problem: we want to be close to the target in several parameters at once, and those goals compete (the coldest places in the Americas are also humid). The model works in four steps.</p>
+        <ol class="pasos-mate">
+          <li>
+            <span>01</span><h3>Normalized gap</h3>
+            <p>For each grid point <i>x</i> and parameter <i>i</i>, the distance to the target <i>v<sub>i</sub></i> is divided by the range of that parameter in the Americas, so every parameter is unitless and comparable:</p>
+            <div class="formula">f<sub>i</sub>(x) = |x<sub>i</sub> − v<sub>i</sub>| / (max<sub>i</sub> − min<sub>i</sub>) &nbsp;∈ [0, 1]</div>
+            <p>0 means identical to the target; 1 means as far as the whole continental range. A target outside the range is first clipped to it: <i>v<sub>i</sub></i> = min(max(<i>v<sub>i</sub></i>, min<sub>i</sub>), max<sub>i</sub>).</p>
+          </li>
+          <li>
+            <span>02</span><h3>Pareto front</h3>
+            <p>Point <i>a</i> <b>dominates</b> point <i>b</i> if it is at least as close to the target in every parameter and strictly closer in at least one:</p>
+            <div class="formula">a ≻ b &nbsp;⇔&nbsp; f<sub>i</sub>(a) ≤ f<sub>i</sub>(b) ∀i &nbsp;and&nbsp; ∃j: f<sub>j</sub>(a) &lt; f<sub>j</sub>(b)</div>
+            <p>The <b>Pareto front</b> is the set of points that no other point dominates. A dominated point is never recommended: another place beats it in everything. Computing it compares every pair of points, O(k·N²) with N = 3,857 points.</p>
+          </li>
+          <li>
+            <span>03</span><h3>Weighted Chebyshev</h3>
+            <p>The mission's weights <i>w<sub>i</sub></i> (normalized so that Σ<i>w<sub>i</sub></i> = 1) decide which points of the front are best. Each point is scored by its <b>worst</b> weighted gap:</p>
+            <div class="formula">s(x) = max<sub>i</sub> w<sub>i</sub> · f<sub>i</sub>(x) &nbsp;&nbsp;→&nbsp;&nbsp; optimal site = argmin<sub>x</sub> s(x)</div>
+            <p>The parameter that sets the maximum is the <b>decisive parameter</b>: it is what keeps that place from being a better match. Unlike a weighted sum, every point of the Pareto front can be the optimum for some choice of weights (Steuer &amp; Choo, 1983; Miettinen, 1999), so balanced places are never hidden.</p>
+          </li>
+          <li>
+            <span>04</span><h3>Robustness</h3>
+            <p>Weights are judgements, so the result must not hinge on their exact value. The calculation is repeated 500 times with each weight perturbed at random:</p>
+            <div class="formula">w̃<sub>i</sub> = w<sub>i</sub> · e<sup>ε</sup>, &nbsp;&nbsp; ε ~ N(0, 0.2²)</div>
+            <p><b>Robustness</b> is the share of those runs in which a place comes first. A high value means the recommendation holds even if the weights are somewhat off. The random seed is fixed, so every result is reproducible.</p>
+          </li>
         </ol>
 
         <div class="bloque-info">
           <div class="bloque-texto">
             <p class="kicker">Why Chebyshev and not an average</p>
             <h2>Don't hide the balanced sites</h2>
-            <p>With five sites A(1, 8), B(2, 5), C(4.2, 4.2), D(5, 2) and E(8, 1), a weighted sum <b>never</b> picks C, with any weights, because C lies in a "sunken" part of the front.</p>
-            <p>Chebyshev with equal weights does pick it: its worst difference is 4.2, versus 5 for B and D. A site that is acceptable in everything should not lose to one that is excellent in one thing and poor in another.</p>
+            <p>With five sites A(1, 8), B(2, 5), C(4.2, 4.2), D(5, 2) and E(8, 1), a weighted sum <b>never</b> picks C, with any weights, because C lies in a "sunken" (non-convex) part of the front (Das &amp; Dennis, 1997).</p>
+            <p>Chebyshev with equal weights does pick it: its worst gap is 4.2, versus 5 for B and D. A site that is acceptable in everything should not lose to one that is excellent in one thing and poor in another.</p>
           </div>
           <figure class="panel grafico-pareto"><svg id="grafico-pareto" viewBox="0 0 360 300" role="img" aria-label="Example Pareto front with sites A to E"></svg>
             <figcaption>Lower = more similar on each axis.</figcaption></figure>
         </div>
 
-        <div class="titulo-seccion"><h2>The parameters</h2></div>
-        <p class="ayuda">The five parameters the team chose to weight, and the data products for each body. Cells marked "not applicable" are turned off automatically in the app.</p>
-        <div class="tabla-caja"><table class="tabla" id="tabla-variables"></table></div>
+        <div class="titulo-seccion"><h2>Reading a result</h2></div>
+        <div class="tarjetas-param tres">
+          <article><h3>Gap per parameter</h3><p>Shown as a percentage of the range in the Americas: up to 10 % is a <b>close</b> match, up to 25 % <b>partial</b>, above 25 % <b>far</b>.</p></article>
+          <article><h3>Best compromise</h3><p>If even the optimal site is far from some target, no place in the Americas reproduces that combination. The app says so instead of presenting it as a full analog.</p></article>
+          <article><h3>Positive control</h3><p>Places already used by NASA and field teams (Haughton Crater, Atacama, Meteor Crater…) should rank high when the settings describe the mission well. Their rank is shown as a check of the method.</p></article>
+        </div>
 
-        <div class="titulo-seccion"><h2>Measured data across the Americas</h2></div>
+        <!-- ---------- 4. Datos -->
+        <div class="titulo-seccion"><h2>The measured data</h2></div>
+        <p class="ayuda">The Americas are divided into land cells of 1° × 1° (about 110 km on a side at the equator). Each cell holds the five surface parameters; only cells with data for all five are compared.</p>
         <div class="tabla-caja"><table class="tabla" id="tabla-atributos"></table></div>
         <div class="mapas-medidos grandes" id="mapas-datos"></div>
 
-        <div class="dos-col">
-          <div class="panel">
-            <h3>Data status</h3>
-            <ul class="estado-datos" id="estado-datos"></ul>
-          </div>
-          <div class="panel">
-            <h3>Use of artificial intelligence</h3>
-            <p class="nota">Space Apps asks teams to declare their use of AI. TO BE COMPLETED by the team: which tools were used, for which parts, and how their output was reviewed. In the app, AI only writes short place summaries from open data and translates mission descriptions into settings; the site is always chosen by the math.</p>
-          </div>
+        <div class="titulo-seccion"><h2>The parameters by world</h2></div>
+        <p class="ayuda">Data products for each body. Cells marked "not applicable" are turned off automatically in the app.</p>
+        <div class="tabla-caja"><table class="tabla" id="tabla-variables"></table></div>
+
+        <!-- ---------- 5. Límites -->
+        <div class="titulo-seccion"><h2>Limits of the method</h2></div>
+        <ul class="limites-metodo">
+          <li><b>Resolution.</b> A 1° cell averages coast and mountains, valleys and peaks. The result points to a region; a field test needs a site survey inside it.</li>
+          <li><b>Surface, not everything.</b> The five parameters describe climate and surface brightness. Slope, rock abundance, soil texture, mineralogy and ice are not in the model yet.</li>
+          <li><b>Earth's limits.</b> No place reproduces lunar or Martian gravity, vacuum or the thin Martian atmosphere, nor the radiation environment. Every recommendation is a partial analog.</li>
+          <li><b>Weights are choices.</b> They express what a mission prioritizes. Robustness shows how much the result depends on them.</li>
+        </ul>
+
+        <div class="panel ia-uso">
+          <h3>Use of artificial intelligence</h3>
+          <p>Artificial intelligence is used in two places, and never to choose a site. (1) It writes the profile of a place from open data (OpenStreetMap, Wikipedia, ERA5 climate) and from the model's own numbers, and is instructed to state only facts present in that data. (2) In Plan a mission, it can translate a mission described in plain language into targets and weights; the app validates that proposal and the user can edit it. The ranking always comes from the mathematical model. Model: openai/gpt-oss-120b via Groq.</p>
         </div>
+
+        <div class="titulo-seccion"><h2>References</h2></div>
+        <ul class="creditos referencias">
+          <li>NASA NSSDCA. <i>Moon Fact Sheet</i> and <i>Mars Fact Sheet</i>. nssdc.gsfc.nasa.gov/planetary/factsheet</li>
+          <li>Williams, J.-P., Paige, D. A., Greenhagen, B. T., Sefton-Nash, E. (2017). The global surface temperatures of the Moon as measured by the Diviner Lunar Radiometer Experiment. <i>Icarus</i>, 283, 300–325.</li>
+          <li>Preston, L. J., Dartnell, L. R. (2014). Planetary habitability: lessons learned from terrestrial analogues. <i>International Journal of Astrobiology</i>, 13(1), 81–98.</li>
+          <li>Miettinen, K. (1999). <i>Nonlinear Multiobjective Optimization</i>. Kluwer Academic Publishers.</li>
+          <li>Steuer, R. E., Choo, E.-U. (1983). An interactive weighted Tchebycheff procedure for multiple objective programming. <i>Mathematical Programming</i>, 26, 326–344.</li>
+          <li>Das, I., Dennis, J. E. (1997). A closer look at drawbacks of minimizing weighted sums of objectives for Pareto set generation in multicriteria optimization problems. <i>Structural Optimization</i>, 14, 63–69.</li>
+          <li>Hersbach, H. et al. (2020). The ERA5 global reanalysis. <i>Quarterly Journal of the Royal Meteorological Society</i>, 146, 1999–2049.</li>
+        </ul>
 
         <div class="titulo-seccion"><h2>Image credits</h2></div>
         <ul class="creditos">
@@ -437,8 +494,8 @@
 
   <footer class="pie">
     <div class="contenedor pie-dentro">
-      <span>EARTH<b>ANALOGS</b> · NASA Space Apps Challenge 2026</span>
-      <span id="pie-modelo"></span>
+      <span><b class="siglas">S.E.I.A.T</b> · Sistema Eafitense de Identificación Análoga Terrestre</span>
+      <span>Universidad EAFIT · NASA Space Apps Challenge 2026</span>
     </div>
   </footer>
 

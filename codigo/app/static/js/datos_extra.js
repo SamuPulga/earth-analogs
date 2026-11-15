@@ -14,19 +14,36 @@ function svg(tag, attrs = {}, texto) {
 
 export function iniciarDatosExtra(inicio) {
   tablaVariables(inicio);
+  tablaObjetivos(inicio);
   tablaAtributos(inicio);
-  estado(inicio);
   graficoPareto();
 }
 
 function tablaVariables(inicio) {
   const params = inicio.variables.filter((v) => !/^(valor del sitio|restricción|site value)/i.test(v.metrica || ""));
-  const celda = (t) => el("td", { class: /^(no aplica|not applicable)/i.test(t || "") ? "no-aplica" : "" }, t || "—");
+  const limpio = (t) => (t || "—").replace(/\s*\(TO BE VERIFIED\)/gi, "");
+  const celda = (t) => el("td", { class: /^(no aplica|not applicable)/i.test(t || "") ? "no-aplica" : "" }, limpio(t));
   $("#tabla-variables").replaceChildren(
-    el("thead", {}, el("tr", {}, ...["Parameter", "Unit", "Earth", "Moon", "Mars", "How it is compared", "Status"].map((h) => el("th", {}, h)))),
+    el("thead", {}, el("tr", {}, ...["Parameter", "Unit", "Earth", "Moon", "Mars", "How it is compared"].map((h) => el("th", {}, h)))),
     el("tbody", {}, ...params.map((v) => el("tr", {},
       el("td", {}, nombre(v.variable)), el("td", {}, v.unidad || "—"), celda(v.tierra), celda(v.luna), celda(v.marte),
-      el("td", {}, v.metrica || "—"), el("td", {}, { "en proceso": "in progress", disponible: "available", "no disponible": "not available" }[v.estado] || v.estado || "—")))));
+      el("td", {}, v.metrica || "—")))));
+}
+
+// Valor objetivo de cada parámetro en cada destino
+function tablaObjetivos(inicio) {
+  const vars = inicio.rejilla.variables;
+  const unidad = (c) => ((inicio.variables.find((v) => v.variable === c) || {}).unidad || "").replace(/\s*\(.*\)$/, "").replace(/^albedo$/, "");
+  const regla = { min: "lowest in the Americas", max: "highest in the Americas", fijo: "value of the destination" };
+  $("#tabla-objetivos").replaceChildren(
+    el("thead", {}, el("tr", {}, el("th", {}, "Destination"), ...vars.map((v) => el("th", {}, `${nombre(v)}${unidad(v) ? ` (${unidad(v)})` : ""}`)))),
+    el("tbody", {}, ...inicio.destinos.map((d) => el("tr", {},
+      el("td", {}, el("b", {}, d.nombre), el("br"), el("small", {}, { luna: "Moon", marte: "Mars" }[d.cuerpo] || d.cuerpo)),
+      ...vars.map((v) => {
+        const o = d.objetivos?.[v];
+        return o ? el("td", { class: "num-t" }, String(+o.valor.toPrecision(3)), el("br"), el("small", {}, regla[o.regla] || ""))
+          : el("td", { class: "no-aplica" }, "not applicable");
+      })))));
 }
 
 // Resumen de la grilla de Daniel (mínimo, mediana y máximo de cada parámetro) y los mapas medidos
@@ -45,17 +62,6 @@ function tablaAtributos(inicio) {
     el("a", { class: "mapa-medido", href: `/static/img/mapas/${v}.png`, target: "_blank", rel: "noopener" },
       el("img", { src: `/static/img/mapas/${v}.png`, alt: `${MAPAS[v]} across the Americas`, loading: "lazy" }),
       el("span", {}, el("b", {}, MAPAS[v])))));
-}
-
-function estado(inicio) {
-  const nombres = { destinos: "Destinations (destinos.csv)", variables: "Variables (variables.csv)", misiones: "Missions (misiones.csv)" };
-  const filas = Object.entries(inicio.fuentes).map(([k, f]) =>
-    el("li", {}, el("span", {}, nombres[k] || k),
-      el("span", { class: `etq ${f === "real" ? "bien" : "mal"}` }, f === "real" ? "team draft" : "empty")));
-  filas.push(el("li", {}, el("span", {}, `Measured grid (${inicio.rejilla.puntos.length.toLocaleString("en")} points)`), el("span", { class: "etq bien" }, "Daniel's data")));
-  filas.push(el("li", {}, el("span", {}, "Mathematical model"),
-    el("span", { class: `etq ${inicio.modelo.startsWith("oficial") ? "bien" : "mal"}` }, inicio.modelo.startsWith("oficial") ? "final" : "provisional")));
-  $("#estado-datos").replaceChildren(...filas);
 }
 
 // Ejemplo A–E: la suma ponderada nunca escoge C; Chebyshev con pesos iguales sí.

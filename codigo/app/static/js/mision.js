@@ -52,7 +52,6 @@ export function iniciarMision(inicio) {
   $("#sel-destino").append(...inicio.destinos.map((d) => el("option", { value: d.id }, `${d.nombre} (${{ luna: "Moon", marte: "Mars" }[d.cuerpo] || d.cuerpo})`)));
   $("#sel-destino").addEventListener("change", (e) => { E.mision.destino = e.target.value; cambio(true); });
   $("#btn-agregar-parametro").addEventListener("click", agregarParametro);
-  $("#btn-agregar-restriccion").addEventListener("click", agregarRestriccion);
   $$(".pestana").forEach((b) => b.addEventListener("click", () => cambiarModo(b.dataset.modo)));
   iniciarAsistente(inicio);
   pintarMisiones();
@@ -94,7 +93,7 @@ function pintarMisiones() {
       el("span", { class: "astro", style: `--tex:url(${TEXTURA[d.cuerpo] || TEXTURA.tierra})` }),
       el("span", {}, el("b", {}, m.nombre), el("small", {}, `${d.nombre || m.destino} · ${m.parametros.length} parameters`)));
   }));
-  if (!E.inicio.misiones.length) caja.append(el("p", { class: "nota" }, "No missions in misiones.csv."));
+  if (!E.inicio.misiones.length) caja.append(el("p", { class: "nota" }, "No preset missions available."));
 }
 
 function marcarPestana() {
@@ -144,7 +143,7 @@ function pintarConfig() {
   $("#sel-destino").disabled = !pers;
   $("#sel-destino").value = m.destino;
   const d = destino(m.destino);
-  $("#nota-mision").textContent = `${pers ? m.nombre + ". " : ""}${d.por_que || ""}` + (m.estado ? ` · status: ${ESTADO[m.estado] || m.estado}` : "");
+  $("#nota-mision").textContent = `${pers ? m.nombre + ". " : ""}${d.por_que || ""}`;
 
   // parámetros
   const lp = $("#lista-parametros");
@@ -152,23 +151,13 @@ function pintarConfig() {
   setTimeout(actualizarCuotas);
   if (!m.parametros.length) lp.append(el("p", { class: "nota" }, "Add at least one parameter."));
 
-  // restricciones
-  const lr = $("#lista-restricciones");
-  lr.replaceChildren(...m.restricciones.map((r, i) => filaRestriccion(r, i)));
-  if (!m.restricciones.length) lr.append(el("p", { class: "nota" }, "No constraints."));
-
   // selects para agregar: parámetros = variables con distancia f; restricciones = valores del sitio
   const usadosP = new Set(m.parametros.map((p) => p.variable));
-  const usadosR = new Set(m.restricciones.map((r) => r.variable));
   const opcP = E.inicio.variables.filter((v) => !esValorDeSitio(v.variable) && !usadosP.has(v.variable))
     .map((v) => el("option", { value: v.variable, disabled: !disponible(v.variable) },
       `${nombre(v.variable)}${disponible(v.variable) ? "" : " (not applicable at this destination)"}`));
-  const opcR = (E.inicio.restricciones_disponibles || []).filter((v) => !usadosR.has(v))
-    .map((v) => el("option", { value: v }, `${nombre(v)} (${variable(v).unidad || "—"})`));
   $("#sel-nuevo-parametro").replaceChildren(...opcP);
-  $("#sel-nueva-restriccion").replaceChildren(...opcR);
   $("#btn-agregar-parametro").disabled = !opcP.some((o) => !o.disabled);
-  $("#btn-agregar-restriccion").disabled = !opcR.length;
   const primeraLibre = opcP.find((o) => !o.disabled);
   if (primeraLibre) $("#sel-nuevo-parametro").value = primeraLibre.value;
 
@@ -313,7 +302,7 @@ async function calcular() {
   try {
     const r = await fetch("/api/recomendar", {
       method: "POST", headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ ...E.mision, parametros }), signal: peticion.signal,
+      body: JSON.stringify({ ...E.mision, parametros, restricciones: [] }), signal: peticion.signal,
     });
     const datos = await r.json();
     if (!r.ok) {
@@ -432,17 +421,14 @@ function pintarResultado(conMapa = true) {
   }
   const nota = $("#filtro-nota");
   const partes = [];
-  if (tot) partes.push(`${tot.puntos.toLocaleString("en")} points of Daniel's grid · ${tot.frente.toLocaleString("en")} on the Pareto front${tot.frente > R.ranking.length ? ` (top ${R.ranking.length} shown; click the map for any other)` : ""}.`);
-  if (R.restricciones_omitidas?.length) partes.push(`Not applied, no data in the grid yet: ${R.restricciones_omitidas.map(nombre).join(", ")}.`);
+  if (tot) partes.push(`${tot.puntos.toLocaleString("en")} grid points · ${tot.frente.toLocaleString("en")} on the Pareto front${tot.frente > R.ranking.length ? ` (top ${R.ranking.length} shown; click the map for any other)` : ""}.`);
   nota.hidden = !partes.length;
   nota.textContent = partes.join(" ");
 
   $("#n-dom").textContent = (tot?.dominados ?? R.dominados.length).toLocaleString("en");
   $("#dominados").replaceChildren(...R.dominados.map((d) =>
     el("li", { onclick: () => seleccionar(d.sitio_id) }, `${sitio(d.sitio_id).nombre} — beaten by ${sitio(d.dominado_por).nombre}`)));
-  $("#n-desc").textContent = (tot?.descartados ?? R.descartados.length).toLocaleString("en");
-  $("#descartados").replaceChildren(...R.descartados.map((d) =>
-    el("li", { onclick: () => seleccionar(d.sitio_id) }, `${sitio(d.sitio_id).nombre} — ${d.motivo}`)));
+  if ($("#n-desc")) $("#n-desc").textContent = (tot?.descartados ?? R.descartados.length).toLocaleString("en");
 
   pintarAvisoCalidad();
   pintarControl();
@@ -497,7 +483,7 @@ function pintarControl() {
     const k = a.celda != null ? E.G.idx.get(a.celda) : undefined;
     if (k === undefined) {
       return { a, html: el("li", {}, el("span", {}, el("b", {}, a.nombre)), el("span", { class: "pos nd" }, "no data"),
-        el("small", {}, "Its 1° square is not in Daniel's grid (a parameter is missing there, likely humidity), so it cannot be ranked.")) };
+        el("small", {}, "Its 1° square has no measurements for every parameter yet, so it cannot be ranked.")) };
     }
     const g = puestoGlobal(k);
     const [s, est] = E.resultado.puntos[k];
@@ -511,7 +497,7 @@ function pintarControl() {
   $("#control-positivo").replaceChildren(...filas.map((f) => f.html));
   const evaluables = filas.filter((f) => f.g);
   veredicto.className = "control-veredicto";
-  if (!lista.length) veredicto.textContent = "No known analogs for this destination in sitios.csv.";
+  if (!lista.length) veredicto.textContent = "No known analogs listed for this destination.";
   else if (!evaluables.length) { veredicto.classList.add("mal"); veredicto.textContent = `Cannot check: none of the ${lista.length} known analogs for this destination is in the grid yet.`; }
   else {
     const mejor = Math.min(...evaluables.map((f) => f.g.frac));
@@ -680,7 +666,7 @@ function tablaAnalogo(ev) {
 function pintarFicha() {
   const caja = $("#ficha");
   const f = { replaceChildren: (...xs) => caja.replaceChildren(...xs.flat(Infinity).filter((x) => x !== null && x !== undefined)) };
-  const titulo = el("div", { class: "paso" }, el("span", {}, "5"), el("h2", {}, "Site profile"));
+  const titulo = el("div", { class: "paso" }, el("span", {}, "4"), el("h2", {}, "Site profile"));
   if (!E.sel) { f.replaceChildren(titulo, el("p", { class: "nota" }, "Pick a site.")); return; }
   const s = sitio(E.sel);
   const st = estadoDe(E.sel);
@@ -688,8 +674,8 @@ function pintarFicha() {
     el("span", { class: "pais" }, `${s.pais ? s.pais + " · " : ""}${coordenadas(s.lat, s.lon)}`));
   const hipotesis = s.por_que ? el("p", { class: "nota" }, `Hypothesis: ${s.por_que}`) : null;
   const fuente = s.rejilla
-    ? el("p", { class: "nota" }, "Source: Daniel's grid (1° × 1°, 5 measured parameters) · targets: research team (TO BE VERIFIED)")
-    : el("p", { class: "nota" }, `Source: ${s.fuente || "—"} · status: ${ESTADO[s.estado] || s.estado || "—"}`);
+    ? el("p", { class: "nota" }, "Source: measured grid of the Americas (1° × 1°, 5 surface parameters). Destination targets: see More data.")
+    : el("p", { class: "nota" }, `Source: ${s.fuente || "—"}`);
   const limites = [el("h3", {}, "What Earth cannot reproduce"),
     el("ul", {}, ...E.mision.limites_tierra.map((t) => el("li", {}, t)), ...LIMITES_SIEMPRE.map((t) => el("li", {}, t)))];
 
@@ -737,7 +723,7 @@ function pintarFicha() {
 }
 
 // ---------------------------------------------------------------- asistente de IA (AGENTS.md §7)
-// El usuario describe su misión; la IA la TRADUCE a parámetros (objetivo y peso) y restricciones (cada uno con
+// El usuario describe su misión; la IA la TRADUCE a parámetros (objetivo y peso) (cada uno con
 // su razón), el servidor la valida y aquí se carga como configuración editable. El sitio lo escoge el modelo.
 const EJEMPLOS = [
   ["Rover cameras at the lunar pole", "We want to test the navigation cameras and batteries of a lunar rover: bright ground like regolith and big day–night temperature swings, as near the lunar south pole."],
@@ -777,7 +763,7 @@ async function traducirIA() {
     caja.replaceChildren(...[
       el("h4", {}, "How the AI read your mission"),
       el("p", {}, el("b", {}, datos.mision.nombre), ` → ${d.nombre || datos.mision.destino}. ${datos.resumen || ""}`),
-      el("p", { class: "nota" }, `Settings loaded below: ${datos.mision.parametros.map((p) => `${nombre(p.variable)} (weight ${Math.round(p.peso * 100)}${p.objetivo != null ? `, target ${+p.objetivo.toPrecision(3)}` : ""})`).join(", ")}${datos.mision.restricciones.length ? ` and ${datos.mision.restricciones.length} constraint(s)` : ""}. Review and edit them: the ranking updates by itself.`),
+      el("p", { class: "nota" }, `Settings loaded below: ${datos.mision.parametros.map((p) => `${nombre(p.variable)} (weight ${Math.round(p.peso * 100)}${p.objetivo != null ? `, target ${+p.objetivo.toPrecision(3)}` : ""})`).join(", ")}. Review and edit them: the ranking updates by itself.`),
       datos.no_disponible.length ? [el("h4", {}, "Needed but not in the app's data"),
         el("ul", {}, ...datos.no_disponible.map((x) => el("li", {}, el("b", {}, x.need), x.reason ? ` — ${x.reason}` : "")))] : null,
       datos.avisos.length ? el("ul", { class: "aviso-ia" }, ...datos.avisos.map((t) => el("li", {}, `Checked by the app: ${t}`))) : null,

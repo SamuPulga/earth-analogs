@@ -1,8 +1,8 @@
 variable,unidad,tierra,luna,marte,metrica,estado
-temperatura,°C,"Daniel's grid of the Americas, 1° × 1° (source TO BE VERIFIED)",Diviner,THEMIS / MCS,difference in mean surface temperature,disponible
-humedad,% RH,"Daniel's grid of the Americas, 1° × 1° (source TO BE VERIFIED)",not applicable (no atmosphere),MCS / REMS (TO BE VERIFIED),difference in relative humidity,disponible
-viento,m/s,"Daniel's grid of the Americas, 1° × 1° (source TO BE VERIFIED)",not applicable (no atmosphere),MCD / REMS (TO BE VERIFIED),difference in mean speed,disponible
-variacion_temperatura,°C (day − night),"Daniel's grid of the Americas, 1° × 1° (source TO BE VERIFIED)",Diviner,THEMIS,difference in day–night temperature range,disponible
-reflectancia,albedo (0–1),"Daniel's grid of the Americas, 1° × 1° (source TO BE VERIFIED)",LROC WAC / Diviner,TES albedo,difference in albedo,disponible
+temperatura,°C,"Measured grid of the Americas, 1° × 1°",Diviner,THEMIS / MCS,difference in mean surface temperature,disponible
+humedad,% RH,"Measured grid of the Americas, 1° × 1°",not applicable (no atmosphere),MCS / REMS (TO BE VERIFIED),difference in relative humidity,disponible
+viento,m/s,"Measured grid of the Americas, 1° × 1°",not applicable (no atmosphere),MCD / REMS (TO BE VERIFIED),difference in mean speed,disponible
+variacion_temperatura,°C (day − night),"Measured grid of the Americas, 1° × 1°",Diviner,THEMIS,difference in day–night temperature range,disponible
+reflectancia,albedo (0–1),"Measured grid of the Americas, 1° × 1°",LROC WAC / Diviner,TES albedo,difference in albedo,disponible
 pendiente_p95,degrees,Copernicus DEM GLO-30,—,—,site value (constraint),no disponible
 precipitacion_anual_mm,mm/yr,GPM IMERG,—,—,site value (constraint),no disponible
