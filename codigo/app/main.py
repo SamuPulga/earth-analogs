@@ -234,6 +234,11 @@ async def api_lugar_resumen(c: ConsultaResumen):
 app.mount("/static", StaticFiles(directory=AQUI / "static"), name="static")
 
 
+@app.get("/favicon.ico", include_in_schema=False)
+def favicon():
+    return FileResponse(AQUI / "static" / "favicon.svg", media_type="image/svg+xml")
+
+
 @app.get("/")
 def pagina():
     return FileResponse(AQUI / "static" / "index.html")
