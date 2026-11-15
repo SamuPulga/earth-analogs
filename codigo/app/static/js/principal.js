@@ -1,5 +1,5 @@
 // Arranque de la página: navegación entre los 5 apartados, reloj, estrellas y carga de datos.
-//   GET /api/inicio → destinos, sitios, variables, misiones, atributos
+//   GET /api/inicio → destinos, variables, misiones y la grilla de Daniel
 // Cada apartado tiene su archivo: analogos.js, mision.js, datos_extra.js. Luna y Marte son HTML + globo.js.
 // Dueño: Samuel (app/).
 
@@ -110,9 +110,8 @@ function avisos() {
   const av = $("#avisos");
   av.replaceChildren();
   const partes = [], detalle = [];
-  const prueba = Object.entries(INICIO.fuentes).filter(([, f]) => f !== "real").map(([t]) => t);
-  if (prueba.length) { partes.push("Test data"); detalle.push(`Test tables: ${prueba.join(", ")}. Results are not real.`); }
-  if (INICIO.modelo.startsWith("provisional")) { partes.push("Provisional model"); detalle.push("The final model (codigo/modelo/recomendar.py) is not connected yet."); }
+  const vacias = Object.entries(INICIO.fuentes).filter(([, f]) => f !== "real").map(([t]) => t);
+  if (vacias.length) { partes.push("Missing tables"); detalle.push(`Empty tables in datos/: ${vacias.join(", ")}.`); }
   if (INICIO.errores_misiones.length) { partes.push(`${INICIO.errores_misiones.length} errors in misiones.csv`); detalle.push(...INICIO.errores_misiones); }
   if (!partes.length) return;
   const caja = el("details", { class: "aviso" }, el("summary", {}, el("b", {}, partes.join(" · "))),
@@ -124,10 +123,9 @@ function avisos() {
 function cifra(valor, texto) { return el("div", {}, el("dt", {}, String(valor)), el("dd", {}, texto)); }
 
 function pintarInicio() {
-  const paises = new Set(INICIO.sitios.map((s) => s.pais).filter(Boolean));
   $("#cifras-hero").replaceChildren(
-    cifra(INICIO.sitios.length, "candidate sites"),
-    cifra(paises.size, "countries"),
+    cifra(INICIO.rejilla.puntos.length.toLocaleString("en"), "points measured"),
+    cifra(INICIO.rejilla.variables.length, "parameters"),
     cifra(INICIO.misiones.length, "missions"),
     cifra(INICIO.destinos.length, "destinations"));
 

@@ -2,6 +2,7 @@
 // y el gráfico del ejemplo de Pareto (AGENTS.md §5.4).
 
 import { $, el, fmt, nombre } from "./util.js";
+import { prepararRejilla, MAPAS } from "./rejilla.js";
 
 const NS = "http://www.w3.org/2000/svg";
 function svg(tag, attrs = {}, texto) {
@@ -28,22 +29,30 @@ function tablaVariables(inicio) {
       el("td", {}, v.metrica || "—"), el("td", {}, { "en proceso": "in progress", disponible: "available", "no disponible": "not available" }[v.estado] || v.estado || "—")))));
 }
 
+// Resumen de la grilla de Daniel (mínimo, mediana y máximo de cada parámetro) y los mapas medidos
 function tablaAtributos(inicio) {
-  const cols = inicio.restricciones_disponibles || [];
-  const unidad = (c) => (inicio.variables.find((v) => v.variable === c) || {}).unidad || "";
-  const nom = (id) => (inicio.sitios.find((s) => s.id === id) || {}).nombre || id;
+  const G = prepararRejilla(inicio.rejilla);
+  const unidad = (c) => ((inicio.variables.find((v) => v.variable === c) || {}).unidad || "").replace(/\s*\(.*\)$/, "");
+  const mediana = (xs) => { const o = xs.filter((x) => x != null).sort((a, b) => a - b); return o[Math.floor(o.length / 2)]; };
+  const n = (x) => String(+(+x).toPrecision(3));
   $("#tabla-atributos").replaceChildren(
-    el("thead", {}, el("tr", {}, el("th", {}, "Sitio"), ...cols.map((c) => el("th", { class: "num-t" }, `${nombre(c)}${unidad(c) ? ` (${unidad(c)})` : ""}`)))),
-    el("tbody", {}, ...inicio.atributos.map((a) => el("tr", {}, el("td", {}, nom(a.sitio_id)),
-      ...cols.map((c) => el("td", { class: "num-t" }, a[c] == null ? "—" : String(+fmt(a[c], 2))))))));
+    el("thead", {}, el("tr", {}, ...["Parameter", "Unit", "Minimum", "Median", "Maximum", "Points"].map((h, i) => el("th", { class: i > 1 ? "num-t" : "" }, h)))),
+    el("tbody", {}, ...G.variables.map((v) => el("tr", {},
+      el("td", {}, nombre(v)), el("td", {}, unidad(v) || "—"),
+      el("td", { class: "num-t" }, n(G.min[v])), el("td", { class: "num-t" }, n(mediana(G.val[v]))), el("td", { class: "num-t" }, n(G.max[v])),
+      el("td", { class: "num-t" }, G.val[v].filter((x) => x != null).length.toLocaleString("en"))))));
+  $("#mapas-datos").replaceChildren(...G.variables.filter((v) => MAPAS[v]).map((v) =>
+    el("a", { class: "mapa-medido", href: `/static/img/mapas/${v}.png`, target: "_blank", rel: "noopener" },
+      el("img", { src: `/static/img/mapas/${v}.png`, alt: `${MAPAS[v]} across the Americas`, loading: "lazy" }),
+      el("span", {}, el("b", {}, MAPAS[v])))));
 }
 
 function estado(inicio) {
-  const nombres = { sitios: "Sites (sitios.csv)", destinos: "Destinations (destinos.csv)", variables: "Variables (variables.csv)",
-    misiones: "Missions (misiones.csv)", atributos: "Site values (atributos_sitios.csv)" };
+  const nombres = { destinos: "Destinations (destinos.csv)", variables: "Variables (variables.csv)", misiones: "Missions (misiones.csv)" };
   const filas = Object.entries(inicio.fuentes).map(([k, f]) =>
     el("li", {}, el("span", {}, nombres[k] || k),
-      el("span", { class: `etq ${f === "real" ? "bien" : "mal"}` }, f === "real" ? "real" : "test data")));
+      el("span", { class: `etq ${f === "real" ? "bien" : "mal"}` }, f === "real" ? "team draft" : "empty")));
+  filas.push(el("li", {}, el("span", {}, `Measured grid (${inicio.rejilla.puntos.length.toLocaleString("en")} points)`), el("span", { class: "etq bien" }, "Daniel's data")));
   filas.push(el("li", {}, el("span", {}, "Mathematical model"),
     el("span", { class: `etq ${inicio.modelo.startsWith("oficial") ? "bien" : "mal"}` }, inicio.modelo.startsWith("oficial") ? "final" : "provisional")));
   $("#estado-datos").replaceChildren(...filas);

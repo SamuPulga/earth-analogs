@@ -4,6 +4,7 @@
 
 import { $, $$, el, fmt, pct, coordenadas, nombre, TEXTURA, LIMITES_SIEMPRE, mapaAmerica, hudCoordenadas } from "./util.js";
 import { investigarLugar } from "./lugar.js";
+import { prepararRejilla, puntoRejilla, pedirNombre, alNombrar, nombres, MAPAS, colorCelda } from "./rejilla.js";
 
 const E = {
   inicio: null,
@@ -22,14 +23,10 @@ const E = {
 
 const ESTADO = { borrador: "draft", verificado: "verified" };
 
-// Sitio del catálogo; si el modelo devolvió un punto que no está en sitios.csv (p. ej. una celda de grilla),
-// se arma con la lat/lon/nombre que trae el propio ranking.
+// Cada punto del ranking es un punto de la grilla de Daniel
 function sitio(id) {
   if (E.G?.idx.has(id)) return puntoRejilla(id);
-  const s = E.inicio.sitios.find((x) => x.id === id);
-  if (s) return s;
-  const r = E.resultado?.ranking.find((x) => x.sitio_id === id) || {};
-  return { id, nombre: r.nombre || (r.lat != null ? `Punto ${coordenadas(r.lat, r.lon)}` : id), lat: r.lat, lon: r.lon };
+  return { id, nombre: id, lat: null, lon: null };
 }
 const variable = (v) => E.inicio.variables.find((x) => x.variable === v) || {};
 const destino = (id) => E.inicio.destinos.find((d) => d.id === id) || {};
@@ -51,6 +48,8 @@ function motivoNoDisponible(v) {
 export function iniciarMision(inicio) {
   E.inicio = inicio;
   E.G = prepararRejilla(inicio.rejilla);
+  E.nombres = nombres;
+  alNombrar(() => { if (E.resultado) pintarResultado(false); });
   $("#sel-destino").append(...inicio.destinos.map((d) => el("option", { value: d.id }, `${d.nombre} (${{ luna: "Moon", marte: "Mars" }[d.cuerpo] || d.cuerpo})`)));
   $("#sel-destino").addEventListener("change", (e) => { E.mision.destino = e.target.value; cambio(true); });
   $("#btn-agregar-parametro").addEventListener("click", agregarParametro);
@@ -68,6 +67,8 @@ export function mostrarMision(params) {
   }
   setTimeout(() => { E.mapa.invalidateSize(); if (E.resultado) pintarOptimo(); }, 50);
 
+  const pedidaM = params?.get("mision");
+  if (pedidaM && E.inicio.misiones.some((m) => m.id === pedidaM)) { E.modo = "predefinida"; marcarPestana(); cargarMision(pedidaM); return; }
   const pedido = params?.get("destino");
   if (pedido) {
     const d = E.inicio.destinos.find((x) => x.id === pedido) || E.inicio.destinos.find((x) => x.cuerpo === pedido);
@@ -286,7 +287,7 @@ async function calcular() {
     // Al cambiar el óptimo se selecciona; si el usuario escogió otro punto que sigue existiendo, se respeta
     if (!E.sel || !estadoDe(E.sel) || (cambioOptimo && E.selEsOptimo)) { E.sel = datos.optimo?.sitio_id ?? datos.ranking[0]?.sitio_id ?? null; E.selEsOptimo = true; }
     pintarResultado();
-    if (datos.rejilla) datos.ranking.slice(0, 5).forEach((x) => pedirNombre(x.sitio_id));
+    datos.ranking.slice(0, 5).forEach((x) => pedirNombre(x.sitio_id));
   } catch (e) {
     if (e.name === "AbortError") return;
     err.hidden = false;
@@ -297,53 +298,6 @@ async function calcular() {
 const paramsActivos = () => (E.mision?.parametros || []).filter((p) => disponible(p.variable));
 
 // ---------------------------------------------------------------- grilla de Daniel (puntos de 1° x 1°)
-function prepararRejilla(r) {
-  if (!r) return null;
-  const G = { ids: [], idx: new Map(), lat: [], lon: [], val: {}, rango: {}, variables: r.variables };
-  r.variables.forEach((v) => (G.val[v] = []));
-  r.puntos.forEach((p, i) => {
-    G.ids.push(p[0]); G.idx.set(p[0], i); G.lat.push(p[1]); G.lon.push(p[2]);
-    r.variables.forEach((v, j) => G.val[v].push(p[3 + j]));
-  });
-  for (const v of r.variables) {
-    const xs = G.val[v].filter((x) => x != null);
-    G.rango[v] = Math.max(...xs) - Math.min(...xs);
-  }
-  return G;
-}
-
-// Nombre del lugar (OpenStreetMap, vía /api/lugar). Se piden en fila: el servidor hace máximo 1 por segundo.
-const cola = [];
-let colaOcupada = false;
-function pedirNombre(id) {
-  if (!E.G?.idx.has(id) || E.nombres[id] || cola.includes(id)) return;
-  cola.push(id);
-  procesarCola();
-}
-async function procesarCola() {
-  if (colaOcupada) return;
-  colaOcupada = true;
-  while (cola.length) {
-    const id = cola.shift();
-    const k = E.G.idx.get(id);
-    try {
-      const h = await (await fetch(`/api/lugar?lat=${E.G.lat[k]}&lon=${E.G.lon[k]}`)).json();
-      const l = h.lugar || {};
-      if (h.lugar) E.nombres[id] = { nombre: l.nombre || l.region || "", region: [l.nombre ? l.region : "", l.pais].filter(Boolean).join(", ") };
-      if (E.resultado) pintarResultado(false);
-    } catch { /* sin nombre: se queda con las coordenadas */ }
-  }
-  colaOcupada = false;
-}
-
-function puntoRejilla(id) {
-  const k = E.G.idx.get(id);
-  const n = E.nombres[id];
-  const coords = coordenadas(E.G.lat[k], E.G.lon[k]);
-  return { id, k, lat: E.G.lat[k], lon: E.G.lon[k], rejilla: true,
-    nombre: n?.nombre || coords, pais: n ? n.region : "1° grid cell" };
-}
-
 // Evaluación de un punto con la configuración actual (la misma cuenta del modelo: Chebyshev ponderado)
 function evaluar(k) {
   const obj = E.resultado.objetivos;
@@ -395,7 +349,7 @@ function estadoDe(id) {
   const R = E.resultado;
   const i = R.ranking.findIndex((x) => x.sitio_id === id);
   if (i >= 0) return { tipo: "frente", puesto: i + 1, dato: R.ranking[i], eval: R.ranking[i] };
-  if (R.rejilla && E.G?.idx.has(id)) {
+  if (E.G?.idx.has(id)) {
     const k = E.G.idx.get(id);
     const est = R.puntos[k][1];
     if (est === 2) return { tipo: "descartado", dato: { sitio_id: id, motivo: motivoDescarte(k) } };
@@ -403,10 +357,6 @@ function estadoDe(id) {
     if (est === 0) return { tipo: "frente", puesto: puestoFrente(k), dato: ev, eval: ev };
     return { tipo: "dominado", dato: { sitio_id: id, dominado_por: dominador(k) }, eval: ev };
   }
-  const d = R.dominados.find((x) => x.sitio_id === id);
-  if (d) return { tipo: "dominado", dato: d };
-  const x = R.descartados.find((x) => x.sitio_id === id);
-  if (x) return { tipo: "descartado", dato: x };
   return null;
 }
 
@@ -483,13 +433,7 @@ function volarA(p, zoom) {
 function pintarMapa() {
   if (!E.mapa) return;
   E.capa.clearLayers();
-  if (E.resultado.rejilla) { pintarRejilla(); return; }
-  for (const s of E.inicio.sitios) {
-    if (s.lat == null || s.lon == null) continue;
-    const st = estadoDe(s.id);
-    if (!st) continue;
-    marcador(s, st);
-  }
+  pintarRejilla();
 }
 
 function marcador(s, st) {
@@ -520,7 +464,7 @@ function pintarRejilla() {
     const est = R.puntos[i][1], t = perc[i];
     const sel = G.ids[i] === E.sel;
     if (est === 2) c.setStyle({ fillColor: "#ff5d6c", fillOpacity: 0.16, weight: sel ? 2 : 0, color: "#fff" });
-    else c.setStyle({ fillColor: `hsl(${195 + 35 * t}, ${90 - 50 * t}%, ${68 - 40 * t}%)`,
+    else c.setStyle({ fillColor: colorCelda(t),
       fillOpacity: est === 0 ? 0.85 - 0.45 * t : 0.6 - 0.5 * t, weight: sel ? 2 : 0, color: "#fff" });
   });
   R.ranking.slice(0, 10).forEach((x, i) => marcador(sitio(x.sitio_id), { tipo: "frente", puesto: i + 1 }));
@@ -544,10 +488,8 @@ function sobreElLugar(s, st) {
     clearTimeout(E._lugarEspera);
     if (s.lat == null) { nodo.replaceChildren(el("p", { class: "nota" }, "This point has no coordinates.")); }
     else {
-      const atr = E.inicio.atributos.find((a) => a.sitio_id === s.id) || {};
       const d = destino(E.mision.destino);
       E._lugarEspera = setTimeout(() => investigarLugar(nodo, { lat: s.lat, lon: s.lon,
-        sitio: E.inicio.sitios.some((x) => x.id === s.id) ? { ...s, ...atr } : null,
         destino: d.nombre ? { nombre: d.nombre, cuerpo: d.cuerpo } : null, mision: E.mision.nombre, evaluacion: ev }),
       mismoSitio ? 900 : 100);
     }
@@ -581,9 +523,6 @@ function paraIA(st) {
   };
 }
 
-// Mapas medidos por el equipo (IMAGENES-DATOS): se muestran los de los parámetros de la misión
-const MAPAS = { temperatura: "Surface temperature (°C)", humedad: "Surface relative humidity (%)", viento: "Wind speed (m/s)",
-  variacion_temperatura: "Day–night surface temperature range (°C)", reflectancia: "Surface albedo (%)" };
 function mapasMedidos(s) {
   const vs = E.parametrosCalculo.map((p) => p.variable).filter((v) => MAPAS[v]);
   if (!vs.length) return null;
@@ -640,7 +579,7 @@ function pintarFicha() {
     f.replaceChildren(titulo, cab,
       el("p", {}, `Dominated by ${quien}: that point is equal or better in every mission parameter and better in at least one. That is why it is not recommended.`),
       hipotesis, st.eval ? [el("h3", {}, "Compared with the destination"), tablaAnalogo(st.eval)] : null,
-      sobreElLugar(s, st), s.rejilla ? mapasMedidos(s) : null, fuente);
+      sobreElLugar(s, st), mapasMedidos(s), fuente);
     return;
   }
 
@@ -669,7 +608,7 @@ function pintarFicha() {
     el("h3", {}, "Weighted difference per parameter"),
     el("p", { class: "ayuda" }, "Difference ÷ tolerance. The white line marks 1: to its left, within tolerance. The longest bar sets the score."),
     ...barras,
-    s.rejilla ? mapasMedidos(s) : null,
+    mapasMedidos(s),
     fuera.length ? el("p", { class: "nota" }, `Not compared at this destination: ${fuera.map((p) => nombre(p.variable)).join(", ")}.`) : null,
     ...limites, fuente);
 }

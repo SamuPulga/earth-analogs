@@ -29,15 +29,12 @@ import datos  # noqa: E402
 import lugar  # noqa: E402
 import rejilla  # noqa: E402
 
-# --- Modelo: el oficial de Daniel si existe; si no, el provisional --------------------
-# Se importa como paquete (modelo.recomendar), así Daniel puede repartir su código en
-# varios archivos de modelo/ e importarlos con "from modelo.pareto import ..." o "from .pareto import ...".
-if (CODIGO / "modelo" / "recomendar.py").exists():
-    recomendar = importlib.import_module("modelo.recomendar").recomendar
-    MODELO = "oficial (codigo/modelo/recomendar.py, Daniel)"
-else:
-    from modelo_provisional import recomendar  # noqa: E402
-    MODELO = "provisional (codigo/app/modelo_provisional.py)"
+# --- Modelo de Daniel (codigo/modelo/recomendar.py) y su grilla (codigo/modelo/datos_sitios.csv) ----
+# Se importa como paquete (modelo.recomendar), así Daniel puede repartir su código en varios archivos.
+recomendar = importlib.import_module("modelo.recomendar").recomendar
+MODELO = "oficial (codigo/modelo/recomendar.py, Daniel)"
+if not rejilla.disponible():
+    raise SystemExit("Falta la grilla de Daniel: codigo/modelo/datos_sitios.csv")
 
 
 # --- Formato de una misión (el mismo que produce el lector de misiones.csv) -----------
@@ -77,25 +74,15 @@ class Mision(BaseModel):
     limites_tierra: list[str] = []
 
 
-class Consulta(Mision):
-    """Lo que manda la página: la misión + filtros de búsqueda que no son de la misión."""
-    # None = todos los continentes. Si hay lista, solo se comparan sitios de esos continentes
-    # (se aplica ANTES del frente de Pareto, como una restricción más).
-    continentes: list[str] | None = None
-
-
 from contextlib import asynccontextmanager  # noqa: E402
 import asyncio  # noqa: E402
 
 
 @asynccontextmanager
 async def _ciclo(app):
-    # Al arrancar: investigar en segundo plano los sitios del catálogo (caché de "Sobre este lugar")
-    sitios, _ = datos.cargar_sitios()
-    puntos = [(float(r.lat), float(r.lon)) for r in sitios.itertuples() if r.lat == r.lat and r.lon == r.lon] if len(sitios) else []
-    if rejilla.disponible():
-        # Primero el lugar óptimo de cada misión predefinida: es lo primero que se abre
-        puntos = _optimos_predefinidos() + puntos
+    # Al arrancar: investigar en segundo plano los lugares óptimos de las misiones predefinidas
+    # (caché de "About this place"), que es lo primero que se abre
+    puntos = _optimos_predefinidos()
     tarea = asyncio.create_task(lugar.precalentar(puntos))
     yield
     tarea.cancel()
@@ -115,60 +102,33 @@ def _registros(df):
 
 @app.get("/api/inicio")
 def inicio():
-    """Todo lo que la página necesita al abrir: destinos, sitios, variables y misiones."""
-    sitios, f_sitios = datos.cargar_sitios()
+    """Todo lo que la página necesita al abrir: destinos, variables, misiones y la grilla de Daniel."""
     destinos, f_destinos = datos.cargar_destinos()
     variables, f_variables = datos.cargar_variables()
     misiones, errores, f_misiones = datos.cargar_misiones(variables, destinos)
-    atributos, f_atr = datos.cargar_atributos()
-    conteo = sitios["continente"].value_counts() if len(sitios) else {}
-    continentes = [{"nombre": c, "sitios": int(conteo.get(c, 0))}
-                   for c in datos.CONTINENTES + [datos.SIN_CONTINENTE] if conteo.get(c, 0)]
 
-    # Para cada destino: qué parámetros tienen distancia calculada (columnas f_<variable> de F).
-    # Los que no están (p. ej. humedad y viento en la Luna, que no tiene atmósfera) se desactivan en la app.
+    # Para cada destino: qué parámetros tienen valor objetivo. Los que no (p. ej. humedad y viento en
+    # la Luna, que no tiene atmósfera) se desactivan en la app.
     lista_destinos = _registros(destinos)
-    con_rejilla = rejilla.disponible()
     for d in lista_destinos:
-        F = rejilla.F(d["id"]) if con_rejilla else datos.cargar_F(d["id"])[0]
-        d["variables_disponibles"] = [c.removeprefix("f_") for c in F.columns if c.startswith("f_")]
-        if con_rejilla:
-            d["objetivos"] = rejilla.objetivos(d["id"])
-    restricciones = (rejilla.VARIABLES if con_rejilla else list(atributos.columns) if len(atributos) else [])
+        d["variables_disponibles"] = [c.removeprefix("f_") for c in rejilla.F(d["id"]).columns]
+        d["objetivos"] = rejilla.objetivos(d["id"])
     return {
-        "continentes": continentes,
         "modelo": MODELO,
         "ia": lugar.estado_ia(),
-        "fuentes": {"sitios": f_sitios, "destinos": f_destinos,
-                    "variables": f_variables, "misiones": f_misiones, "atributos": f_atr},
+        "fuentes": {"destinos": f_destinos, "variables": f_variables, "misiones": f_misiones},
         "destinos": lista_destinos,
-        "atributos": _registros(atributos),
-        "restricciones_disponibles": restricciones,
-        # Grilla de Daniel: [lat, lon, temperatura, humedad, viento, variacion_temperatura, reflectancia]
-        "rejilla": {"variables": rejilla.VARIABLES, "puntos": rejilla.puntos_json()} if con_rejilla else None,
-        "sitios": _registros(sitios),
+        "restricciones_disponibles": rejilla.VARIABLES,
+        # Grilla de Daniel: [id, lat, lon, temperatura, humedad, viento, variacion_temperatura, reflectancia]
+        "rejilla": {"variables": rejilla.VARIABLES, "puntos": rejilla.puntos_json()},
         "variables": _registros(variables),
         "misiones": misiones,
         "errores_misiones": errores,
     }
 
 
-def _ubicar(resultado: dict, sitios) -> None:
-    """Completa lat/lon/nombre de cada sitio del ranking y el campo "optimo" (el lugar óptimo).
-
-    El modelo de Daniel puede devolver puntos que NO están en sitios.csv (por ejemplo, una celda
-    de una grilla): en ese caso trae su propia lat/lon y aquí no se toca. Si el modelo ya trae
-    "optimo", se respeta; si no, el óptimo es el primero del ranking.
-    """
-    for x in resultado.get("ranking", []):
-        sid = x.get("sitio_id")
-        if sid in sitios.index:
-            fila = sitios.loc[sid]
-            x.setdefault("lat", None if fila["lat"] != fila["lat"] else float(fila["lat"]))
-            x.setdefault("lon", None if fila["lon"] != fila["lon"] else float(fila["lon"]))
-            x.setdefault("nombre", fila.get("nombre", sid))
-        else:
-            x.setdefault("nombre", sid or "Unnamed point")
+def _ubicar(resultado: dict) -> None:
+    """Campo "optimo" (el lugar óptimo): si el modelo no lo trae, es el primero del ranking."""
     if not resultado.get("optimo") and resultado.get("ranking"):
         p = resultado["ranking"][0]
         resultado["optimo"] = {k: p.get(k) for k in ("sitio_id", "nombre", "lat", "lon", "puntuacion")}
@@ -176,43 +136,11 @@ def _ubicar(resultado: dict, sitios) -> None:
 
 
 @app.post("/api/recomendar")
-def api_recomendar(consulta: Consulta):
+def api_recomendar(mision: Mision):
     destinos, _ = datos.cargar_destinos()
-    if consulta.destino not in destinos.index:
-        raise HTTPException(400, f"Unknown destination: {consulta.destino}")
-    if rejilla.disponible():
-        return _recomendar_rejilla(consulta.model_dump(exclude={"continentes"}))
-    sitios, f_sitios = datos.cargar_sitios()
-    F, f_F = datos.cargar_F(consulta.destino)
-    if not len(F):
-        raise HTTPException(400, f"No distances computed for {consulta.destino}")
-    atributos, f_atr = datos.cargar_atributos()
-
-    # Filtro por continente: el modelo solo recibe los sitios de los continentes elegidos
-    if consulta.continentes is None:
-        ids = list(sitios.index)
-    else:
-        validos = set(datos.CONTINENTES) | {datos.SIN_CONTINENTE}
-        elegidos = {datos.normalizar_continente(c) for c in consulta.continentes} & validos
-        desconocidos = [c for c in consulta.continentes
-                        if c != datos.SIN_CONTINENTE and datos.normalizar_continente(c) == datos.SIN_CONTINENTE]
-        if desconocidos:
-            raise HTTPException(400, f"Unknown continent: {', '.join(desconocidos)}")
-        ids = list(sitios.index[sitios["continente"].isin(elegidos)])
-
-    mision = consulta.model_dump(exclude={"continentes"})
-    if not ids:
-        resultado = {"ranking": [], "dominados": [], "descartados": []}
-    else:
-        try:
-            resultado = recomendar(mision, F, atributos, ids)
-        except ValueError as e:
-            raise HTTPException(400, str(e))
-    _ubicar(resultado, sitios)
-    resultado["filtro"] = {"continentes": consulta.continentes, "sitios": len(ids), "total": len(sitios)}
-    resultado["fuentes"] = {"sitios": f_sitios, "distancias": f_F, "atributos": f_atr}
-    resultado["modelo"] = MODELO
-    return resultado
+    if mision.destino not in destinos.index:
+        raise HTTPException(400, f"Unknown destination: {mision.destino}")
+    return _recomendar_rejilla(mision.model_dump())
 
 
 # --- Recomendar sobre la grilla de Daniel ------------------------------------------------
@@ -284,7 +212,7 @@ def _recomendar_rejilla(mision: dict) -> dict:
         "modelo": MODELO,
         "fuentes": {"grilla": "real"},
     }
-    _ubicar(resultado, datos.cargar_sitios()[0])
+    _ubicar(resultado)
     return resultado
 
 
@@ -321,17 +249,19 @@ async def api_ia_prueba():
 class ConsultaResumen(BaseModel):
     lat: float = Field(ge=-90, le=90)
     lon: float = Field(ge=-180, le=180)
-    sitio: dict | None = None     # fila de sitios.csv + atributos, si el punto es un sitio del catálogo
+    sitio: dict | None = None     # fila de sitios.csv, si el punto es un sitio con nombre del equipo
     destino: dict | None = None   # destino de la misión (nombre, cuerpo)
     mision: str | None = None     # nombre de la misión
     evaluacion: dict | None = None  # cómo quedó el punto con la configuración actual (puesto, parámetros, pesos)
+    medidas: dict | None = None     # apartado Analogs: valores medidos del punto y su puesto en cada misión
 
 
 @app.post("/api/lugar/resumen")
 async def api_lugar_resumen(c: ConsultaResumen):
     """Paso 2 (IA, en streaming): ficha breve en español hecha solo con los hechos del paso 1."""
     h = await lugar.hechos(c.lat, c.lon)
-    contexto = {"sitio": c.sitio, "destino": c.destino, "mision": c.mision, "evaluacion": c.evaluacion}
+    contexto = {"sitio": c.sitio, "destino": c.destino, "mision": c.mision, "evaluacion": c.evaluacion,
+                "medidas": c.medidas}
     return StreamingResponse(lugar.resumen(h, contexto), media_type="text/plain; charset=utf-8",
                              headers={"Cache-Control": "no-store", "X-Accel-Buffering": "no"})
 

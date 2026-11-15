@@ -1,11 +1,10 @@
 """Verifica que codigo/modelo/recomendar.py cumple el contrato con la app.
 
 No revisa si la matemática es correcta (eso es de Daniel): revisa que la SALIDA tenga
-el formato que la app necesita. Usa los datos de prueba de codigo/app/datos_prueba/.
+el formato que la app necesita. Usa la grilla de Daniel y las misiones de datos/misiones.csv.
 
 Uso (con el venv activado), desde la carpeta codigo/:
-    python app/verificar_modelo.py               # verifica el modelo de Daniel
-    python app/verificar_modelo.py --provisional # verifica el provisional (para comparar)
+    python app/verificar_modelo.py
 
 Dueño: Samuel (app/).
 """
@@ -94,62 +93,55 @@ def verificar_salida(nombre: str, mision: dict, salida, sitios_ids: list[str]) -
 
 
 def main() -> None:
-    ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
-    ap.add_argument("--provisional", action="store_true", help="verificar el modelo provisional de la app")
-    args = ap.parse_args()
+    import rejilla
+    if not (AQUI.parent / "modelo" / "recomendar.py").exists():
+        sys.exit("No existe codigo/modelo/recomendar.py todavía.")
+    if not rejilla.disponible():
+        sys.exit("No existe la grilla codigo/modelo/datos_sitios.csv.")
+    recomendar = importlib.import_module("modelo.recomendar").recomendar
+    print("Verificando: codigo/modelo/recomendar.py con la grilla de Daniel y las misiones de datos/misiones.csv")
 
-    if args.provisional:
-        from modelo_provisional import recomendar
-        print("Verificando: codigo/app/modelo_provisional.py")
-    else:
-        if not (AQUI.parent / "modelo" / "recomendar.py").exists():
-            sys.exit("No existe codigo/modelo/recomendar.py todavía.")
-        recomendar = importlib.import_module("modelo.recomendar").recomendar
-        print("Verificando: codigo/modelo/recomendar.py")
-
-    P = datos.PRUEBA
-    leer = lambda f: pd.read_csv(P / f).set_index("sitio_id")  # noqa: E731
-    sitios_ids = list(pd.read_csv(P / "sitios.csv")["id"])
-    atributos = leer("atributos.csv")
-    variables = pd.read_csv(P / "variables.csv").set_index("variable")
-    destinos = pd.read_csv(P / "destinos.csv").set_index("id")
-
-    # Leer las misiones de prueba aunque datos/misiones.csv ya tenga datos reales
-    real = datos.DATOS
-    datos.DATOS = P.parent / "_no_existe"
+    variables, _ = datos.cargar_variables()
+    destinos, _ = datos.cargar_destinos()
     misiones, errores, _ = datos.cargar_misiones(variables, destinos)
-    datos.DATOS = real
-    revisar(not errores, f"las misiones de prueba tienen errores: {errores}")
+    revisar(not errores, f"datos/misiones.csv tiene errores: {errores}")
+    revisar(bool(misiones), "datos/misiones.csv no tiene misiones")
+    atributos, ids = rejilla.atributos(), rejilla.ids()
 
-    for m in misiones:
-        F = leer(f"F_{m['destino']}.csv")
+    def preparar(m):
+        """Igual que la app: solo parámetros con objetivo en el destino y restricciones con datos."""
+        obj = rejilla.objetivos(m["destino"])
+        m = {**copy.deepcopy(m), "parametros": [q for q in m["parametros"] if q["variable"] in obj],
+             "restricciones": [r for r in m["restricciones"] if r["variable"] in rejilla.VARIABLES]}
+        return m, rejilla.a_unidades_del_modelo(m)
+
+    for m0 in misiones:
+        m, mm = preparar(m0)
+        F = rejilla.F(m["destino"])
         try:
-            salida = recomendar(copy.deepcopy(m), F, atributos, sitios_ids)
+            salida = recomendar(copy.deepcopy(mm), F, atributos, ids)
         except Exception as e:  # noqa: BLE001
             fallas.append(f"[{m['id']}] lanzó {type(e).__name__}: {e}")
             continue
-        verificar_salida(m["id"], m, salida, sitios_ids)
-        otra = recomendar(copy.deepcopy(m), F, atributos, sitios_ids)
+        verificar_salida(m["id"], m, salida, ids)
+        otra = recomendar(copy.deepcopy(mm), F, atributos, ids)
         revisar(otra == salida, f"[{m['id']}] dos llamadas iguales dan resultados distintos (¿falta semilla fija?)")
-        print(f"  {m['id']}: ranking = {[r.get('sitio_id') for r in salida.get('ranking', [])]}")
+        print(f"  {m['id']}: óptimo = {salida['ranking'][0]['sitio_id'] if salida['ranking'] else '—'} "
+              f"({len(salida['ranking'])} en el frente)")
 
-    # Filtro por continente: la app puede pasar solo una parte de los sitios.
-    # El modelo debe trabajar únicamente con esos (aunque F tenga más filas).
-    sitios = pd.read_csv(P / "sitios.csv").set_index("id")
-    for m in misiones:
-        sub = [s for s in sitios_ids if sitios.loc[s, "continente"] in ("América del Norte", "América del Sur")]
+        # Solo debe trabajar con sitios_ids, aunque F tenga más filas
+        sub = ids[::7]
         try:
-            salida = recomendar(copy.deepcopy(m), leer(f"F_{m['destino']}.csv"), atributos, sub)
-            verificar_salida(f"{m['id']} solo América", m, salida, sub)
+            verificar_salida(f"{m['id']} subconjunto", m, recomendar(copy.deepcopy(mm), F, atributos, sub), sub)
         except Exception as e:  # noqa: BLE001
-            fallas.append(f"[{m['id']} solo América] lanzó {type(e).__name__}: {e}")
+            fallas.append(f"[{m['id']} subconjunto] lanzó {type(e).__name__}: {e}")
 
     # Debe avisar con ValueError si falta una columna f_<variable>
-    m = copy.deepcopy(misiones[0])
-    m["parametros"].append({"variable": "no_existe", "metodo": "tolerancia", "valor": 1.0, "peso": None,
-                            "unidad": "", "texto": "", "fuente": ""})
+    m, mm = preparar(misiones[0])
+    mm["parametros"].append({"variable": "no_existe", "metodo": "tolerancia", "valor": 1.0, "peso": None,
+                             "unidad": "", "texto": "", "fuente": ""})
     try:
-        recomendar(m, leer(f"F_{m['destino']}.csv"), atributos, sitios_ids)
+        recomendar(mm, rejilla.F(m["destino"]), atributos, ids)
         fallas.append("Con una variable sin columna en F debería lanzar ValueError, y no lanzó nada")
     except ValueError:
         pass

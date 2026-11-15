@@ -1,8 +1,8 @@
-"""Carga de las tablas compartidas (AGENTS.md §9) con respaldo de datos de prueba.
+"""Carga de las tablas compartidas del equipo (AGENTS.md §9), de la carpeta datos/.
 
-Regla: si la tabla real (datos/*.csv, resultados/*.csv) existe y tiene filas, se usa.
-Si no, se usa la copia de codigo/app/datos_prueba/ y se marca la fuente como "prueba",
-para que la app muestre el aviso de DATOS DE PRUEBA.
+Ya no hay datos de prueba: los puntos que se comparan son la grilla de Daniel (rejilla.py) y estas
+tablas dan la configuración (destinos, misiones y nombres/unidades de las variables).
+Si una tabla está vacía, su fuente queda como "sin datos" y la app lo avisa.
 
 Dueño: Samuel (app/).
 """
@@ -14,22 +14,18 @@ import pandas as pd
 
 RAIZ = Path(__file__).resolve().parents[2]  # carpeta NASA2026
 DATOS = RAIZ / "datos"
-RESULTADOS = RAIZ / "resultados"
-PRUEBA = Path(__file__).resolve().parent / "datos_prueba"
 
 TIPOS_MISION = {"mision", "restriccion", "parametro", "limite_tierra"}
 OPERADORES = {"<=", ">="}
 METODOS = {"tolerancia", "ahp"}
 
 
-def _leer(real: Path, prueba: Path) -> tuple[pd.DataFrame, str]:
-    """Lee la tabla real si tiene filas; si no, la de prueba. Devuelve (tabla, fuente)."""
+def _leer(real: Path) -> tuple[pd.DataFrame, str]:
+    """Lee la tabla del equipo. Devuelve (tabla, fuente) con fuente "real" o "sin datos"."""
     if real.exists():
         df = pd.read_csv(real, dtype=str, keep_default_na=False)
         if len(df):
             return df, "real"
-    if prueba.exists():
-        return pd.read_csv(prueba, dtype=str, keep_default_na=False), "prueba"
     return pd.DataFrame(), "sin datos"
 
 
@@ -43,40 +39,18 @@ def _numero(texto: str) -> float | None:
         return None
 
 
-# Continentes aceptados en sitios.csv (columna "continente"). Criterio GEOGRÁFICO:
-# América Central y el Caribe cuentan como América del Norte.
-CONTINENTES = ["África", "América del Norte", "América del Sur", "Antártida", "Asia", "Europa", "Oceanía"]
-SIN_CONTINENTE = "Sin continente"
-
-
-def _clave(texto: str) -> str:
-    """Minúsculas y sin tildes, para aceptar 'america del sur', 'Antartida', etc."""
-    import unicodedata
-    t = unicodedata.normalize("NFKD", texto or "").encode("ascii", "ignore").decode()
-    return " ".join(t.lower().split())
-
-
-_CONTINENTE_POR_CLAVE = {_clave(c): c for c in CONTINENTES}
-
-
-def normalizar_continente(texto: str) -> str:
-    return _CONTINENTE_POR_CLAVE.get(_clave(texto), SIN_CONTINENTE)
-
-
 def cargar_sitios() -> tuple[pd.DataFrame, str]:
-    df, fuente = _leer(DATOS / "sitios.csv", PRUEBA / "sitios.csv")
+    """Sitios con nombre (datos/sitios.csv). Opcional: hoy la app compara la grilla de Daniel."""
+    df, fuente = _leer(DATOS / "sitios.csv")
     if len(df):
         df["lat"] = pd.to_numeric(df["lat"], errors="coerce")
         df["lon"] = pd.to_numeric(df["lon"], errors="coerce")
-        if "continente" not in df.columns:
-            df["continente"] = ""
-        df["continente"] = df["continente"].map(normalizar_continente)
         df = df.set_index("id")
     return df, fuente
 
 
 def cargar_destinos() -> tuple[pd.DataFrame, str]:
-    df, fuente = _leer(DATOS / "destinos.csv", PRUEBA / "destinos.csv")
+    df, fuente = _leer(DATOS / "destinos.csv")
     if len(df):
         df["lat"] = pd.to_numeric(df["lat"], errors="coerce")
         df["lon"] = pd.to_numeric(df["lon"], errors="coerce")
@@ -85,25 +59,9 @@ def cargar_destinos() -> tuple[pd.DataFrame, str]:
 
 
 def cargar_variables() -> tuple[pd.DataFrame, str]:
-    df, fuente = _leer(DATOS / "variables.csv", PRUEBA / "variables.csv")
+    df, fuente = _leer(DATOS / "variables.csv")
     if len(df):
         df = df.set_index("variable")
-    return df, fuente
-
-
-def cargar_atributos() -> tuple[pd.DataFrame, str]:
-    """Valores propios de cada sitio que usan las restricciones (por ejemplo pendiente_p95)."""
-    df, fuente = _leer(RESULTADOS / "atributos_sitios.csv", PRUEBA / "atributos.csv")
-    if len(df):
-        df = df.set_index("sitio_id").apply(pd.to_numeric, errors="coerce")
-    return df, fuente
-
-
-def cargar_F(destino: str) -> tuple[pd.DataFrame, str]:
-    """Distancias f_i de cada sitio al destino (AGENTS.md §9.5). Columnas f_<variable>."""
-    df, fuente = _leer(RESULTADOS / f"F_{destino}.csv", PRUEBA / f"F_{destino}.csv")
-    if len(df):
-        df = df.set_index("sitio_id").apply(pd.to_numeric, errors="coerce")
     return df, fuente
 
 
@@ -114,7 +72,7 @@ def cargar_misiones(variables: pd.DataFrame | None = None,
     Devuelve (misiones, errores, fuente). Una misión con errores no se incluye;
     sus errores se reportan para que el equipo los corrija en la hoja.
     """
-    df, fuente = _leer(DATOS / "misiones.csv", PRUEBA / "misiones.csv")
+    df, fuente = _leer(DATOS / "misiones.csv")
     errores: list[str] = []
     misiones: list[dict] = []
     if not len(df):

@@ -100,33 +100,26 @@
         <div class="contenedor">
           <p class="kicker">01 · Analogs</p>
           <h1>Places in the Americas<br>that mimic other worlds</h1>
-          <p class="lead">We focus on the Americas, from Canada to Patagonia. Each point is a candidate site. None of them matches the Moon or Mars in everything: each matches in some ways, and that decides which mission it is good for.</p>
+          <p class="lead">We focus on the Americas, from Canada to Patagonia. Each square is a 1° point of our grid with five measured parameters. None of them matches the Moon or Mars in everything: each matches in some ways, and that decides which mission it is good for.</p>
           <dl class="cifras-hero" id="cifras-analogos"></dl>
         </div>
       </div>
       <div class="contenedor">
-        <div class="filtros" id="filtros-analogos">
-          <div class="segmentado" id="filtro-destino" role="group" aria-label="Suggested destination">
-            <button data-d="todos" class="activo">All</button>
-            <button data-d="luna">Moon</button>
-            <button data-d="marte">Mars</button>
-            <button data-d="ambos">Both</button>
-          </div>
-          <input type="search" id="filtro-texto" placeholder="Search site or country" aria-label="Search site or country">
+        <div class="filtros capas" id="filtros-analogos">
+          <div><span class="etq-capa">Color by measurement</span>
+            <div class="segmentado" id="capa-medida" role="group" aria-label="Color the map by a measured parameter"></div></div>
+          <div><span class="etq-capa">Best places for a mission</span>
+            <div class="segmentado" id="capa-mision" role="group" aria-label="Color the map by a preset mission"></div></div>
         </div>
         <div class="mapa-y-lugar">
         <div class="mapa-caja">
           <div id="mapa-analogos" class="mapa grande"></div>
           <div class="hud hud-coords" id="coords-analogos">LAT —  ·  LON —</div>
-          <div class="hud hud-leyenda">
-            <span><i class="pto luna"></i>Moon</span>
-            <span><i class="pto marte"></i>Mars</span>
-            <span><i class="pto ambos"></i>Both</span>
-          </div>
+          <div class="hud hud-leyenda" id="leyenda-analogos"></div>
         </div>
           <aside class="panel panel-lugar" id="panel-lugar">
             <p class="kicker">About this place</p>
-            <div id="info-lugar"><p class="nota">Tap a site, or <b>any point on the map</b>, to look up that place by its latitude and longitude.</p></div>
+            <div id="info-lugar"><p class="nota">Tap <b>any square on the map</b> to see what was measured there, how it ranks in each mission, and what the place is.</p></div>
           </aside>
         </div>
         <div class="rejilla-sitios" id="lista-analogos"></div>
@@ -389,8 +382,9 @@
         <p class="ayuda">The five parameters the team chose to weight, and the data products for each body. Cells marked "not applicable" are turned off automatically in the app.</p>
         <div class="tabla-caja"><table class="tabla" id="tabla-variables"></table></div>
 
-        <div class="titulo-seccion"><h2>Site values (for constraints)</h2></div>
+        <div class="titulo-seccion"><h2>Measured data across the Americas</h2></div>
         <div class="tabla-caja"><table class="tabla" id="tabla-atributos"></table></div>
+        <div class="mapas-medidos grandes" id="mapas-datos"></div>
 
         <div class="dos-col">
           <div class="panel">

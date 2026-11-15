@@ -208,7 +208,7 @@ async def hechos(lat: float, lon: float) -> dict:
 
 
 # ---------------------------------------------------------------- paso 2: resumen con IA
-VERSION_PROMPT = 4  # súbela al cambiar SISTEMA: así no se reutilizan resúmenes viejos de la caché
+VERSION_PROMPT = 5  # súbela al cambiar SISTEMA: así no se reutilizan resúmenes viejos de la caché
 
 SISTEMA = """You are the assistant of an app that finds places on Earth to test missions to the Moon and Mars.
 Write a VERY short profile of the place in clear English for engineering students (at most 100 words).
@@ -219,7 +219,9 @@ How to read the data:
   never say the site is that city, county or region.
 - "nearest_wikipedia_article" is the article closest to the point, which may be about something else nearby.
   Use it only if it clearly describes the site or its immediate surroundings; otherwise ignore it.
-- If there is no "site" and no "mission_evaluation" (a random point on the map), describe it only through its area and
+- "measured_point" (when present) has the values the team measured at this point of a 1° grid and how the point
+  ranks in each preset mission ("rank" null = not on the Pareto front of that mission). Use it as evidence.
+- If there is no "site", no "mission_evaluation" and no "measured_point" (a random point on the map), describe it only through its area and
   elevation, and in "Why it could work" say that the team has not evaluated this point yet, so its value as an analog is unknown.
 - "mission_evaluation" is how the app's mathematical model rated this point for the user's mission settings. Each parameter
   has the value measured at this point, the destination target, their difference, the tolerance the user chose (smaller
@@ -235,6 +237,11 @@ If there is a "mission_evaluation" (at most 130 words):
 which of them the user's settings prioritize, and its rank.
 **Where it falls short:** one or two sentences: parameters outside tolerance or the decisive parameter, and what Earth
 cannot reproduce (for example gravity, vacuum or radiation).
+If there is a "measured_point" but no "mission_evaluation" (at most 120 words):
+**What it is:** one sentence.
+**What the measurements show:** two sentences with the most telling measured values (with units) and, if it is on
+the Pareto front of a preset mission, which one and its rank.
+**What it does not reproduce:** one sentence (for example gravity, vacuum, atmosphere or radiation).
 Otherwise:
 **What it is:** one or two sentences.
 **Why it could work:** one or two sentences linked to the mission and destination (or, if there is no mission, to "suggested_for").
@@ -258,6 +265,7 @@ def _mensaje_usuario(h: dict, contexto: dict) -> str:
                                       "extract": w.get("extracto")} if w.get("titulo") else None,
         "mission": contexto.get("mision"),
         "mission_evaluation": contexto.get("evaluacion"),
+        "measured_point": contexto.get("medidas"),
         "destination": ({"name": d.get("nombre"), "body": {"luna": "Moon", "marte": "Mars"}.get(d.get("cuerpo"), d.get("cuerpo"))}
                         if d else None),
     }
@@ -285,6 +293,9 @@ def resumen_sin_ia(h: dict, contexto: dict) -> str:
     sitio = contexto.get("sitio") or {}
     if sitio.get("por_que"):
         partes.append(f"**Team hypothesis:** {sitio['por_que']}.")
+    med = contexto.get("medidas") or {}
+    if med.get("values"):
+        partes.append("**Measured here:** " + "; ".join(f"{v['name']} {v['value']} {v['unit']}" for v in med["values"]) + ".")
     ev = contexto.get("evaluacion") or {}
     if ev.get("parameters"):
         si = [p["name"] for p in ev["parameters"] if p.get("within_tolerance")]
@@ -297,7 +308,7 @@ def resumen_sin_ia(h: dict, contexto: dict) -> str:
 
 async def resumen(h: dict, contexto: dict):
     """Paso 2, en streaming: va devolviendo trozos de texto a medida que la IA los escribe."""
-    ev = json.dumps(contexto.get("evaluacion"), sort_keys=True) if contexto.get("evaluacion") else ""
+    ev = json.dumps([contexto.get("evaluacion"), contexto.get("medidas")], sort_keys=True)         if (contexto.get("evaluacion") or contexto.get("medidas")) else ""
     k = f'{clave(h["lat"], h["lon"])}|v{VERSION_PROMPT}|{(contexto.get("mision") or "")[:80]}|{hash_corto(ev)}'
     guardado = _cache.get(k, {}).get("resumen")
     if guardado:

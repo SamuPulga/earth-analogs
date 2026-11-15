@@ -659,5 +659,85 @@
    ],
    "segundos": 1.39
   }
+ },
+ "36.500,-118.500": {
+  "hechos": {
+   "lat": 36.5,
+   "lon": -118.5,
+   "lugar": {
+    "nombre": "Tulare County",
+    "region": "California",
+    "pais": "United States",
+    "descripcion": "Tulare County, California, United States"
+   },
+   "wikipedia": {
+    "titulo": "Mount Kaweah",
+    "extracto": "Mount Kaweah is a mountain in California's Sequoia National Park and forms part of the Kaweah Peaks Ridge, a spur of the Great Western Divide which extends south from Triple Divide Peak. It has a summit elevation of 13,807 ft (4,208 m), the highest along the Kaweah Peaks Ridge.",
+    "url": "https://en.wikipedia.org/wiki/Mount_Kaweah",
+    "imagen": "https://thumb.wikimedia.org/wikipedia/commons/thumb/0/06/Mt_Kaweah.jpg/330px-Mt_Kaweah.jpg?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail",
+    "idioma": "en",
+    "distancia_km": 3.5
+   },
+   "elevacion_m": 2857.0,
+   "fuentes": [
+    "OpenStreetMap Nominatim (© OpenStreetMap contributors, ODbL)",
+    "Wikipedia (CC BY-SA)",
+    "Open-Meteo (elevation)"
+   ],
+   "segundos": 1.42
+  }
+ },
+ "-49.500,-70.500": {
+  "hechos": {
+   "lat": -49.5,
+   "lon": -70.5,
+   "lugar": {
+    "nombre": "Corpen Aike",
+    "region": "Santa Cruz",
+    "pais": "Argentina",
+    "descripcion": "Corpen Aike, Santa Cruz, Argentina"
+   },
+   "wikipedia": null,
+   "elevacion_m": 215.0,
+   "fuentes": [
+    "OpenStreetMap Nominatim (© OpenStreetMap contributors, ODbL)",
+    "Wikipedia (CC BY-SA)",
+    "Open-Meteo (elevation)"
+   ],
+   "segundos": 1.27
+  }
+ },
+ "-15.500,-73.500": {
+  "hechos": {
+   "lat": -15.5,
+   "lon": -73.5,
+   "lugar": {
+    "nombre": "Cahuacho",
+    "region": "Arequipa",
+    "pais": "Peru",
+    "descripcion": "Cahuacho, Province of Caravelí, Arequipa, Peru"
+   },
+   "wikipedia": {
+    "titulo": "Distrito de Cahuacho",
+    "extracto": "El distrito de Cahuacho es uno de los trece distritos de la Provincia de Caravelí, ubicada en el Departamento de Arequipa, bajo la administración del Gobierno regional de Arequipa, en el sur del Perú.",
+    "url": "https://es.wikipedia.org/wiki/Distrito_de_Cahuacho",
+    "imagen": "https://thumb.wikimedia.org/wikipedia/commons/thumb/8/8d/Location_of_the_province_Caravel%C3%AD_in_Arequipa.svg/langes-330px-Location_of_the_province_Caravel%C3%AD_in_Arequipa.svg.png?utm_source=es.wikipedia.org&utm_campaign=api&utm_content=thumbnail",
+    "idioma": "es",
+    "distancia_km": 2.3
+   },
+   "elevacion_m": 3400.0,
+   "fuentes": [
+    "OpenStreetMap Nominatim (© OpenStreetMap contributors, ODbL)",
+    "Wikipedia (CC BY-SA)",
+    "Open-Meteo (elevation)"
+   ],
+   "segundos": 1.33
+  }
+ },
+ "-11.500,-76.500|v5||39f4ed2be8": {
+  "resumen": "**What it is:** A high‑altitude site in the Andes of Peru, at about 4,700 m elevation.  \n\n**What the measurements show:** The average temperature is 9 °C with a daily variation of 21 °C, humidity sits at 61 % RH, wind speed is modest at 4.6 m/s, and surface albedo is 0.15. It ranks 1st of 357 on the Pareto front for Lunar rover navigation (cameras and thermal cycles) and 1st of 171 for Thermal testing of equipment for Mars.  \n\n**What it does not reproduce:** Earth’s gravity, vacuum, and radiation environment."
+ },
+ "-11.500,-76.500|v5|Thermal testing of equipment for Mars|8734a89cd1": {
+  "resumen": "**What it is:** This site in the San Pedro de Laraos area of Lima, Peru, at 4,695 m elevation, is evaluated for thermal testing of Mars equipment.  \n\n**Why it is an analog for this mission:** The temperature is 9.4 °C, the lowest on Earth, while the Mars target is –25 °C (difference 34.4 °C, outside the 15 °C tolerance). Temperature variation is 21.3 °C versus the Mars target 28.8 °C (difference 7.5 °C, outside the 5 °C tolerance). Wind speed is 4.6 m/s, close to the Mars target of 4 m/s and within tolerance. The point ranks 1st of 171 on the Pareto front, making it the top candidate for the mission’s weighted priorities.  \n\n**What it does not reproduce:** Earth’s gravity, vacuum, atmosphere and radiation differ from Mars."
  }
 }

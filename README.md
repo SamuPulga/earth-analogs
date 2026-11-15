@@ -21,5 +21,5 @@ Then open http://127.0.0.1:7860. Optional: set `IA_CLAVE` (a Groq API key) to en
 ## Structure
 
 - `codigo/app/` — FastAPI server (`main.py`) and web page (`static/`)
-- `codigo/modelo/` — the mathematical model (when available)
-- `datos/`, `resultados/` — team data tables and model outputs; if empty, the app uses `codigo/app/datos_prueba/` (test data)
+- `codigo/modelo/` — the mathematical model and the measured 1° grid of the Americas (`datos_sitios.csv`)
+- `datos/` — mission settings: destinations, missions and variables (drafts, values TO BE VERIFIED)
