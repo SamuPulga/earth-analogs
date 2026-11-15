@@ -14,7 +14,23 @@ function markdown(texto) {
   return seguro
     .replace(/\*\*(.+?)\*\*/g, "<b>$1</b>")
     .replace(/(^|\s)_(.+?)_(?=\s|$|[.,;:])/g, "$1<em>$2</em>")
-    .split(/\n{2,}/).map((p) => `<p>${p.replace(/\n/g, "<br>")}</p>`).join("");
+    .split(/\n{2,}/).map(bloque).join("");
+}
+
+// Un bloque de texto: párrafo, o lista si sus líneas empiezan con "- " / "* " / "1. "
+function bloque(p) {
+  const lineas = p.split("\n");
+  const lista = (re, tag) => {
+    const items = [];
+    let antes = "";
+    for (const l of lineas) {
+      if (re.test(l.trim())) items.push(l.trim().replace(re, ""));
+      else if (items.length) items[items.length - 1] += " " + l.trim();
+      else antes += (antes ? "<br>" : "") + l;
+    }
+    return items.length ? `${antes ? `<p>${antes}</p>` : ""}<${tag}>${items.map((x) => `<li>${x}</li>`).join("")}</${tag}>` : null;
+  };
+  return lista(/^[-*•]\s+/, "ul") || lista(/^\d+[.)]\s+/, "ol") || `<p>${p.replace(/\n/g, "<br>")}</p>`;
 }
 
 const cargando = (texto) => el("div", { class: "cargando" }, el("i"), el("i"), el("i"), el("span", {}, texto));
@@ -53,20 +69,29 @@ export function investigarLugar(caja, { lat, lon, sitio = null, destino = null, 
       return;
     }
     const l = h.lugar || {};
-    const donde = [l.nombre, l.region, l.pais].filter(Boolean);
+    const c = h.clima;
+    const dato = (t, v) => (v == null || v === "" ? null : el("div", {}, el("dt", {}, t), el("dd", {}, v)));
     zonaLugar.replaceChildren(
-      el("b", { class: "lugar-nombre" }, donde[0] || "Unnamed point"),
-      el("span", { class: "lugar-region" }, donde.slice(1).join(" · ")),
-      el("dl", { class: "lugar-datos" },
-        el("div", {}, el("dt", {}, "Elevation"), el("dd", {}, h.elevacion_m != null ? `${Math.round(h.elevacion_m).toLocaleString("en")} m` : "—")),
-        el("div", {}, el("dt", {}, "Response"), el("dd", {}, h.cache ? "instant (cached)" : `${h.segundos} s`))));
-    const w = h.wikipedia;
-    if (w?.titulo) {
-      zonaWiki.replaceChildren(el("a", { class: "wiki", href: w.url || "#", target: "_blank", rel: "noopener" },
-        w.imagen ? el("img", { src: w.imagen, alt: "", loading: "lazy" }) : null,
-        el("span", {}, el("small", {}, `Wikipedia${w.distancia_km != null ? ` · ${w.distancia_km} km away` : ""}`), el("b", {}, w.titulo))));
-    }
-    pie.textContent = `Sources: ${h.fuentes.join(" · ")}${IA.activa ? ` · Summary: ${IA.modelo} (${IA.proveedor})` : ""}.`;
+      el("b", { class: "lugar-nombre" }, l.nombre || "Unnamed point"),
+      el("span", { class: "lugar-region" }, [l.condado !== l.nombre ? l.condado : "", l.region, l.pais].filter(Boolean).join(" · ")),
+      el("dl", { class: "lugar-datos" }, ...[
+        dato("Elevation", h.elevacion_m != null ? `${Math.round(h.elevacion_m).toLocaleString("en")} m` : null),
+        dato("Coordinates", coordenadas(lat, lon)),
+        c ? dato(`Mean temp. ${c.anio}`, `${c.temp_media_c} °C`) : null,
+        c ? dato("Daily range", `${c.oscilacion_diaria_media_c} °C`) : null,
+        c ? dato("Min / max", `${c.temp_min_c} / ${c.temp_max_c} °C`) : null,
+        c ? dato("Rain per year", c.lluvia_anual_mm != null ? `${c.lluvia_anual_mm.toLocaleString("en")} mm` : null) : null,
+        c ? dato("Dry days", c.dias_secos_pct != null ? `${c.dias_secos_pct} %` : null) : null,
+      ].filter(Boolean)));
+    const tarjeta = (w, etiqueta) => el("a", { class: "wiki", href: w.url || "#", target: "_blank", rel: "noopener" },
+      w.imagen ? el("img", { src: w.imagen, alt: "", loading: "lazy" }) : null,
+      el("span", {}, el("small", {}, etiqueta), el("b", {}, w.titulo),
+        w.extracto ? el("em", {}, w.extracto.length > 180 ? w.extracto.slice(0, 180) + "…" : w.extracto) : null));
+    zonaWiki.replaceChildren(...[
+      h.wikipedia_area?.titulo ? tarjeta(h.wikipedia_area, "Wikipedia · the area") : null,
+      h.wikipedia?.titulo ? tarjeta(h.wikipedia, `Wikipedia · nearby${h.wikipedia.distancia_km != null ? `, ${h.wikipedia.distancia_km} km away` : ""}`) : null,
+    ].filter(Boolean));
+    pie.textContent = `${h.cache ? "Cached" : `Looked up in ${h.segundos} s`}. Sources: ${h.fuentes.join(" · ")}${IA.activa ? ` · Summary: ${IA.modelo} (${IA.proveedor})` : ""}.`;
 
     // ---- paso 2: resumen (streaming)
     zonaIA.replaceChildren(cargando(IA.activa ? "The AI is writing…" : "Building the summary…"));

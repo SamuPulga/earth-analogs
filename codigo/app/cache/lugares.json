@@ -437,6 +437,50 @@
     "Open-Meteo (elevation)"
    ],
    "segundos": 1.9
+  },
+  "hechos2": {
+   "lat": -11.5,
+   "lon": -76.5,
+   "lugar": {
+    "nombre": "San Pedro de Laraos",
+    "condado": "Province of Huarochirí",
+    "region": "Lima",
+    "pais": "Peru",
+    "tipo": "village",
+    "descripcion": "San Pedro de Laraos, Province of Huarochirí, Lima, Peru"
+   },
+   "wikipedia": {
+    "titulo": "Tarapu",
+    "extracto": "Tarapu is a mountain in the Andes of Peru which reaches an altitude of approximately 5,000 metres (16,404 ft). It is located in the Lima Region, Canta Province, Canta District, and in the Huarochirí Province, Laraos District. Tarapu lies southwest of a lake named Qiwllaqucha.",
+    "url": "https://en.wikipedia.org/wiki/Tarapu",
+    "imagen": "",
+    "idioma": "en",
+    "distancia_km": 1.9
+   },
+   "wikipedia_area": {
+    "titulo": "Huarochirí province",
+    "extracto": "Huarochirí is a province of the department of Lima, Peru. From the administrative point of view of the Catholic Church in Peru, it forms part of the Territorial Prelature of Yauyos. Its capital is Matucana. The western section is part of the Lima Metropolitan Area.",
+    "url": "https://en.wikipedia.org/wiki/Huarochir%C3%AD_province",
+    "imagen": "https://thumb.wikimedia.org/wikipedia/commons/thumb/f/ff/FCCA_GE_C30-7_Chinchan_-_Ticlio.jpg/330px-FCCA_GE_C30-7_Chinchan_-_Ticlio.jpg?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail",
+    "idioma": "en"
+   },
+   "elevacion_m": 4695.0,
+   "clima": {
+    "anio": 2025,
+    "temp_media_c": 2.8,
+    "oscilacion_diaria_media_c": 9.1,
+    "temp_min_c": -6.0,
+    "temp_max_c": 10.8,
+    "lluvia_anual_mm": 1587,
+    "dias_secos_pct": 32,
+    "viento_max_medio_kmh": 16.0
+   },
+   "fuentes": [
+    "OpenStreetMap Nominatim (© OpenStreetMap contributors, ODbL)",
+    "Wikipedia (CC BY-SA)",
+    "Open-Meteo (elevation; ERA5 climate reanalysis, Copernicus/ECMWF)"
+   ],
+   "segundos": 2.88
   }
  },
  "33.500,-114.500": {
@@ -457,6 +501,43 @@
     "Open-Meteo (elevation)"
    ],
    "segundos": 0.84
+  },
+  "hechos2": {
+   "lat": 33.5,
+   "lon": -114.5,
+   "lugar": {
+    "nombre": "La Paz County",
+    "condado": "La Paz County",
+    "region": "Arizona",
+    "pais": "United States",
+    "tipo": "county",
+    "descripcion": "La Paz County, Arizona, United States"
+   },
+   "wikipedia": null,
+   "wikipedia_area": {
+    "titulo": "La Paz County, Arizona",
+    "extracto": "La Paz County is the 15th county in the U.S. state of Arizona, located in the western part of the state. As of the 2020 census, its population was 16,557, making it the second-least populous county in Arizona. The county seat is Parker. The name of the county is the Spanish word for \"the peace\", and is taken from the early settlement of La Paz along the Colorado River.",
+    "url": "https://en.wikipedia.org/wiki/La_Paz_County%2C_Arizona",
+    "imagen": "https://thumb.wikimedia.org/wikipedia/commons/thumb/f/f8/View_of_Trigo_Mountains_Wilderness%2C_AZ.jpg/330px-View_of_Trigo_Mountains_Wilderness%2C_AZ.jpg?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail",
+    "idioma": "en"
+   },
+   "elevacion_m": 158.0,
+   "clima": {
+    "anio": 2025,
+    "temp_media_c": 24.8,
+    "oscilacion_diaria_media_c": 12.7,
+    "temp_min_c": 2.9,
+    "temp_max_c": 47.3,
+    "lluvia_anual_mm": 134,
+    "dias_secos_pct": 94,
+    "viento_max_medio_kmh": 18.8
+   },
+   "fuentes": [
+    "OpenStreetMap Nominatim (© OpenStreetMap contributors, ODbL)",
+    "Wikipedia (CC BY-SA)",
+    "Open-Meteo (elevation; ERA5 climate reanalysis, Copernicus/ECMWF)"
+   ],
+   "segundos": 2.32
   }
  },
  "-36.500,-71.500": {
@@ -484,6 +565,50 @@
     "Open-Meteo (elevation)"
    ],
    "segundos": 1.52
+  },
+  "hechos2": {
+   "lat": -36.5,
+   "lon": -71.5,
+   "lugar": {
+    "nombre": "San Fabián",
+    "condado": "Provincia de Punilla",
+    "region": "Nuble Region",
+    "pais": "Chile",
+    "tipo": "city",
+    "descripcion": "San Fabián, Provincia de Punilla, Nuble Region, Chile"
+   },
+   "wikipedia": {
+    "titulo": "San Fabián",
+    "extracto": "San Fabián is the easternmost of 21 communes in the Punilla Province of central Chile's. Ñuble Region. The capital is the town of San Fabián de Alico. The commune spans an area of 1,568.3 km2 (606 sq mi).",
+    "url": "https://en.wikipedia.org/wiki/San_Fabi%C3%A1n",
+    "imagen": "https://thumb.wikimedia.org/wikipedia/commons/thumb/c/c4/Comuna_de_San_Fabi%C3%A1n.svg/330px-Comuna_de_San_Fabi%C3%A1n.svg.png?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail",
+    "idioma": "en",
+    "distancia_km": 7.1
+   },
+   "wikipedia_area": {
+    "titulo": "San Fabián de Alico",
+    "extracto": "San Fabián de Alico is a town in San Fabián, Ñuble Region, Chile.",
+    "url": "https://en.wikipedia.org/wiki/San_Fabi%C3%A1n_de_Alico",
+    "imagen": "https://thumb.wikimedia.org/wikipedia/commons/thumb/7/7b/Comuna_San_Fabi%C3%A1n.png/330px-Comuna_San_Fabi%C3%A1n.png?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail",
+    "idioma": "en"
+   },
+   "elevacion_m": 1238.0,
+   "clima": {
+    "anio": 2025,
+    "temp_media_c": 9.5,
+    "oscilacion_diaria_media_c": 13.4,
+    "temp_min_c": -14.5,
+    "temp_max_c": 36.1,
+    "lluvia_anual_mm": 1367,
+    "dias_secos_pct": 76,
+    "viento_max_medio_kmh": 11.8
+   },
+   "fuentes": [
+    "OpenStreetMap Nominatim (© OpenStreetMap contributors, ODbL)",
+    "Wikipedia (CC BY-SA)",
+    "Open-Meteo (elevation; ERA5 climate reanalysis, Copernicus/ECMWF)"
+   ],
+   "segundos": 1.87
   }
  },
  "-24.500,-70.500": {
@@ -511,6 +636,50 @@
     "Open-Meteo (elevation)"
    ],
    "segundos": 0.85
+  },
+  "hechos2": {
+   "lat": -24.5,
+   "lon": -70.5,
+   "lugar": {
+    "nombre": "Antofagasta",
+    "condado": "Provincia de Antofagasta",
+    "region": "Antofagasta Region",
+    "pais": "Chile",
+    "tipo": "city",
+    "descripcion": "Antofagasta, Provincia de Antofagasta, Antofagasta Region, Chile"
+   },
+   "wikipedia": {
+    "titulo": "Quebrada Botija",
+    "extracto": "La quebrada Botija es un lecho seco se desarrolla en la costa de la Región de Antofagasta.",
+    "url": "https://es.wikipedia.org/wiki/Quebrada_Botija",
+    "imagen": "https://thumb.wikimedia.org/wikipedia/commons/thumb/7/74/Cuenca-028-029-B.svg/langes-330px-Cuenca-028-029-B.svg.png?utm_source=es.wikipedia.org&utm_campaign=api&utm_content=thumbnail",
+    "idioma": "es",
+    "distancia_km": 6.7
+   },
+   "wikipedia_area": {
+    "titulo": "Antofagasta plc",
+    "extracto": "Antofagasta plc is a London-based Chilean multinational conglomerate. It is one of the larger conglomerates of Chile with equity participation in Antofagasta Minerals, the railroad from Antofagasta to Bolivia, Twin Metals in Minnesota, and other exploration joint ventures in different parts from the world. Antofagasta is listed on the London Stock Exchange and is a constituent of the FTSE 100 Index.",
+    "url": "https://en.wikipedia.org/wiki/Antofagasta_plc",
+    "imagen": "",
+    "idioma": "en"
+   },
+   "elevacion_m": 1276.0,
+   "clima": {
+    "anio": 2025,
+    "temp_media_c": 15.7,
+    "oscilacion_diaria_media_c": 7.7,
+    "temp_min_c": 4.0,
+    "temp_max_c": 27.7,
+    "lluvia_anual_mm": 11,
+    "dias_secos_pct": 99,
+    "viento_max_medio_kmh": 12.1
+   },
+   "fuentes": [
+    "OpenStreetMap Nominatim (© OpenStreetMap contributors, ODbL)",
+    "Wikipedia (CC BY-SA)",
+    "Open-Meteo (elevation; ERA5 climate reanalysis, Copernicus/ECMWF)"
+   ],
+   "segundos": 1.87
   }
  },
  "-11.500,-76.500|v4|Lunar rover navigation (cameras and thermal cycles)|b85bc5bbe2": {
@@ -534,6 +703,37 @@
     "Open-Meteo (elevation)"
    ],
    "segundos": 1.69
+  },
+  "hechos2": {
+   "lat": -45.5,
+   "lon": -68.5,
+   "lugar": {
+    "nombre": "Departamento Sarmiento",
+    "condado": "Departamento Sarmiento",
+    "region": "Chubut",
+    "pais": "Argentina",
+    "tipo": "state_district",
+    "descripcion": "Departamento Sarmiento, Chubut, Argentina"
+   },
+   "wikipedia": null,
+   "wikipedia_area": null,
+   "elevacion_m": 310.0,
+   "clima": {
+    "anio": 2025,
+    "temp_media_c": 11.3,
+    "oscilacion_diaria_media_c": 9.0,
+    "temp_min_c": -8.3,
+    "temp_max_c": 32.5,
+    "lluvia_anual_mm": 222,
+    "dias_secos_pct": 85,
+    "viento_max_medio_kmh": 31.2
+   },
+   "fuentes": [
+    "OpenStreetMap Nominatim (© OpenStreetMap contributors, ODbL)",
+    "Wikipedia (CC BY-SA)",
+    "Open-Meteo (elevation; ERA5 climate reanalysis, Copernicus/ECMWF)"
+   ],
+   "segundos": 1.46
   }
  },
  "-42.500,-67.500": {
@@ -554,6 +754,37 @@
     "Open-Meteo (elevation)"
    ],
    "segundos": 0.98
+  },
+  "hechos2": {
+   "lat": -42.5,
+   "lon": -67.5,
+   "lugar": {
+    "nombre": "Departamento Telsen",
+    "condado": "Departamento Telsen",
+    "region": "Chubut",
+    "pais": "Argentina",
+    "tipo": "state_district",
+    "descripcion": "Departamento Telsen, Chubut, Argentina"
+   },
+   "wikipedia": null,
+   "wikipedia_area": null,
+   "elevacion_m": 923.0,
+   "clima": {
+    "anio": 2025,
+    "temp_media_c": 11.2,
+    "oscilacion_diaria_media_c": 10.0,
+    "temp_min_c": -8.9,
+    "temp_max_c": 35.8,
+    "lluvia_anual_mm": 301,
+    "dias_secos_pct": 85,
+    "viento_max_medio_kmh": 36.4
+   },
+   "fuentes": [
+    "OpenStreetMap Nominatim (© OpenStreetMap contributors, ODbL)",
+    "Wikipedia (CC BY-SA)",
+    "Open-Meteo (elevation; ERA5 climate reanalysis, Copernicus/ECMWF)"
+   ],
+   "segundos": 2.32
   }
  },
  "33.500,-113.500": {
@@ -574,6 +805,43 @@
     "Open-Meteo (elevation)"
    ],
    "segundos": 1.72
+  },
+  "hechos2": {
+   "lat": 33.5,
+   "lon": -113.5,
+   "lugar": {
+    "nombre": "La Paz County",
+    "condado": "La Paz County",
+    "region": "Arizona",
+    "pais": "United States",
+    "tipo": "county",
+    "descripcion": "La Paz County, Arizona, United States"
+   },
+   "wikipedia": null,
+   "wikipedia_area": {
+    "titulo": "La Paz County, Arizona",
+    "extracto": "La Paz County is the 15th county in the U.S. state of Arizona, located in the western part of the state. As of the 2020 census, its population was 16,557, making it the second-least populous county in Arizona. The county seat is Parker. The name of the county is the Spanish word for \"the peace\", and is taken from the early settlement of La Paz along the Colorado River.",
+    "url": "https://en.wikipedia.org/wiki/La_Paz_County%2C_Arizona",
+    "imagen": "https://thumb.wikimedia.org/wikipedia/commons/thumb/f/f8/View_of_Trigo_Mountains_Wilderness%2C_AZ.jpg/330px-View_of_Trigo_Mountains_Wilderness%2C_AZ.jpg?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail",
+    "idioma": "en"
+   },
+   "elevacion_m": 510.0,
+   "clima": {
+    "anio": 2025,
+    "temp_media_c": 22.6,
+    "oscilacion_diaria_media_c": 13.1,
+    "temp_min_c": 0.5,
+    "temp_max_c": 46.1,
+    "lluvia_anual_mm": 198,
+    "dias_secos_pct": 88,
+    "viento_max_medio_kmh": 19.3
+   },
+   "fuentes": [
+    "OpenStreetMap Nominatim (© OpenStreetMap contributors, ODbL)",
+    "Wikipedia (CC BY-SA)",
+    "Open-Meteo (elevation; ERA5 climate reanalysis, Copernicus/ECMWF)"
+   ],
+   "segundos": 1.66
   }
  },
  "33.500,-114.500|v4|Structures against Martian dust|ef81adf975": {
@@ -604,6 +872,50 @@
     "Open-Meteo (elevation)"
    ],
    "segundos": 1.61
+  },
+  "hechos2": {
+   "lat": 33.5,
+   "lon": -112.5,
+   "lugar": {
+    "nombre": "Buckeye",
+    "condado": "Maricopa County",
+    "region": "Arizona",
+    "pais": "United States",
+    "tipo": "city",
+    "descripcion": "Buckeye, Maricopa County, Arizona, United States"
+   },
+   "wikipedia": {
+    "titulo": "Verrado High School",
+    "extracto": "Verrado High School is a public high school in the Verrado community of Buckeye, Arizona, United States. Operated by the Agua Fria Union High School District, the school primarily serves the Verrado area and is the fourth school in the district.",
+    "url": "https://en.wikipedia.org/wiki/Verrado_High_School",
+    "imagen": "https://thumb.wikimedia.org/wikipedia/en/thumb/c/c8/Verrado_High_School_V_logo.svg/330px-Verrado_High_School_V_logo.svg.png?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail",
+    "idioma": "en",
+    "distancia_km": 1.0
+   },
+   "wikipedia_area": {
+    "titulo": "Buckeye, Arizona",
+    "extracto": "Buckeye is a city in Maricopa County, Arizona, United States. It is Arizona's second-largest city by area, and it is the westernmost suburb in the Phoenix Metropolitan Area. As of the 2020 census, the population was 91,502, up from 50,876 in 2010, and 6,537 in 2000. It was the fastest-growing city in the United States for 2017, 2018, and 2021.",
+    "url": "https://en.wikipedia.org/wiki/Buckeye%2C_Arizona",
+    "imagen": "https://thumb.wikimedia.org/wikipedia/commons/thumb/0/0a/Buckeye-Downtown_Monroe_Ave.jpg/330px-Buckeye-Downtown_Monroe_Ave.jpg?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail",
+    "idioma": "en"
+   },
+   "elevacion_m": 378.0,
+   "clima": {
+    "anio": 2025,
+    "temp_media_c": 23.4,
+    "oscilacion_diaria_media_c": 12.1,
+    "temp_min_c": 2.8,
+    "temp_max_c": 46.5,
+    "lluvia_anual_mm": 390,
+    "dias_secos_pct": 88,
+    "viento_max_medio_kmh": 15.1
+   },
+   "fuentes": [
+    "OpenStreetMap Nominatim (© OpenStreetMap contributors, ODbL)",
+    "Wikipedia (CC BY-SA)",
+    "Open-Meteo (elevation; ERA5 climate reanalysis, Copernicus/ECMWF)"
+   ],
+   "segundos": 1.8
   }
  },
  "34.500,-114.500": {
@@ -631,6 +943,50 @@
     "Open-Meteo (elevation)"
    ],
    "segundos": 1.66
+  },
+  "hechos2": {
+   "lat": 34.5,
+   "lon": -114.5,
+   "lugar": {
+    "nombre": "San Bernardino County",
+    "condado": "San Bernardino County",
+    "region": "California",
+    "pais": "United States",
+    "tipo": "county",
+    "descripcion": "San Bernardino County, California, United States"
+   },
+   "wikipedia": {
+    "titulo": "Chemehuevi Valley Airport",
+    "extracto": "Chemehuevi Valley Airport is a public airport located four miles (6.4 km) north of Chemehuevi Valley, serving as one of two airports in the Lake Havasu City, Arizona, United States metropolitan area. The airport is mostly used for general aviation.",
+    "url": "https://en.wikipedia.org/wiki/Chemehuevi_Valley_Airport",
+    "imagen": "",
+    "idioma": "en",
+    "distancia_km": 7.0
+   },
+   "wikipedia_area": {
+    "titulo": "San Bernardino County, California",
+    "extracto": "San Bernardino County, officially the County of San Bernardino, is located in the southern portion of the U.S. state of California, and is located within the Inland Empire area. As of the 2020 United States census, the population was 2,181,654, making it the fifth-most populous county in California, and the 14th-most populous in the United States. As part of the Greater Los Angeles area, San Bernardino County is included in the Riverside–San Bernardino–Fontana metropolitan statistical area, and has San Bernardino as its county seat.",
+    "url": "https://en.wikipedia.org/wiki/San_Bernardino_County%2C_California",
+    "imagen": "https://thumb.wikimedia.org/wikipedia/commons/thumb/b/b3/The_Santa_Fe_Depot_in_San_Bernardino%2C_CA_%289494837081%29.jpg/330px-The_Santa_Fe_Depot_in_San_Bernardino%2C_CA_%289494837081%29.jpg?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail",
+    "idioma": "en"
+   },
+   "elevacion_m": 367.0,
+   "clima": {
+    "anio": 2025,
+    "temp_media_c": 24.0,
+    "oscilacion_diaria_media_c": 12.7,
+    "temp_min_c": 1.9,
+    "temp_max_c": 46.6,
+    "lluvia_anual_mm": 114,
+    "dias_secos_pct": 93,
+    "viento_max_medio_kmh": 16.6
+   },
+   "fuentes": [
+    "OpenStreetMap Nominatim (© OpenStreetMap contributors, ODbL)",
+    "Wikipedia (CC BY-SA)",
+    "Open-Meteo (elevation; ERA5 climate reanalysis, Copernicus/ECMWF)"
+   ],
+   "segundos": 1.68
   }
  },
  "33.500,-116.500": {
@@ -658,6 +1014,50 @@
     "Open-Meteo (elevation)"
    ],
    "segundos": 1.39
+  },
+  "hechos2": {
+   "lat": 33.5,
+   "lon": -116.5,
+   "lugar": {
+    "nombre": "Riverside County",
+    "condado": "Riverside County",
+    "region": "California",
+    "pais": "United States",
+    "tipo": "county",
+    "descripcion": "Riverside County, California, United States"
+   },
+   "wikipedia": {
+    "titulo": "Santa Rosa Mountain (Riverside County)",
+    "extracto": "Santa Rosa Mountain is a mountain summit of the Santa Rosa Mountains, in Riverside County, California.",
+    "url": "https://en.wikipedia.org/wiki/Santa_Rosa_Mountain_(Riverside_County)",
+    "imagen": "https://thumb.wikimedia.org/wikipedia/commons/thumb/3/3e/Santa_Rosa_Mountain_from_Pines_to_Palms_Trail%2C_California.jpg/330px-Santa_Rosa_Mountain_from_Pines_to_Palms_Trail%2C_California.jpg?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail",
+    "idioma": "en",
+    "distancia_km": 5.6
+   },
+   "wikipedia_area": {
+    "titulo": "Riverside County, California",
+    "extracto": "Riverside County is a southern county in the U.S. state of California. As of the 2020 census, its population was 2,418,185, making it the fourth-most populous county in California and the 10th-most populous county in the United States. The county seat is the city of Riverside.",
+    "url": "https://en.wikipedia.org/wiki/Riverside_County%2C_California",
+    "imagen": "https://thumb.wikimedia.org/wikipedia/commons/thumb/e/ee/Mission_Inn%27s_main_interior_courtyard.jpg/330px-Mission_Inn%27s_main_interior_courtyard.jpg?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail",
+    "idioma": "en"
+   },
+   "elevacion_m": 1412.0,
+   "clima": {
+    "anio": 2025,
+    "temp_media_c": 15.3,
+    "oscilacion_diaria_media_c": 11.9,
+    "temp_min_c": -3.9,
+    "temp_max_c": 35.6,
+    "lluvia_anual_mm": 405,
+    "dias_secos_pct": 85,
+    "viento_max_medio_kmh": 17.6
+   },
+   "fuentes": [
+    "OpenStreetMap Nominatim (© OpenStreetMap contributors, ODbL)",
+    "Wikipedia (CC BY-SA)",
+    "Open-Meteo (elevation; ERA5 climate reanalysis, Copernicus/ECMWF)"
+   ],
+   "segundos": 1.72
   }
  },
  "36.500,-118.500": {
@@ -685,6 +1085,50 @@
     "Open-Meteo (elevation)"
    ],
    "segundos": 1.42
+  },
+  "hechos2": {
+   "lat": 36.5,
+   "lon": -118.5,
+   "lugar": {
+    "nombre": "Tulare County",
+    "condado": "Tulare County",
+    "region": "California",
+    "pais": "United States",
+    "tipo": "county",
+    "descripcion": "Tulare County, California, United States"
+   },
+   "wikipedia": {
+    "titulo": "Mount Kaweah",
+    "extracto": "Mount Kaweah is a mountain in California's Sequoia National Park and forms part of the Kaweah Peaks Ridge, a spur of the Great Western Divide which extends south from Triple Divide Peak. It has a summit elevation of 13,807 ft (4,208 m), the highest along the Kaweah Peaks Ridge.",
+    "url": "https://en.wikipedia.org/wiki/Mount_Kaweah",
+    "imagen": "https://thumb.wikimedia.org/wikipedia/commons/thumb/0/06/Mt_Kaweah.jpg/330px-Mt_Kaweah.jpg?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail",
+    "idioma": "en",
+    "distancia_km": 3.5
+   },
+   "wikipedia_area": {
+    "titulo": "Tulare County, California",
+    "extracto": "Tulare County is a county located in the U.S. state of California. As of the 2020 census, the population was 473,117. The county seat is Visalia. The county is named for Tulare Lake, once the largest freshwater lake west of the Great Lakes. Drained for agricultural development, the site is now in Kings County, which was created in 1893 from the western portion of the formerly larger Tulare County.",
+    "url": "https://en.wikipedia.org/wiki/Tulare_County%2C_California",
+    "imagen": "https://thumb.wikimedia.org/wikipedia/commons/thumb/e/e0/Mt_Whitney%2C_CA_6-20-16_%2827765952931%29_%28cropped%29.jpg/330px-Mt_Whitney%2C_CA_6-20-16_%2827765952931%29_%28cropped%29.jpg?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail",
+    "idioma": "en"
+   },
+   "elevacion_m": 2857.0,
+   "clima": {
+    "anio": 2025,
+    "temp_media_c": 3.0,
+    "oscilacion_diaria_media_c": 12.5,
+    "temp_min_c": -21.0,
+    "temp_max_c": 25.3,
+    "lluvia_anual_mm": 1041,
+    "dias_secos_pct": 77,
+    "viento_max_medio_kmh": 8.9
+   },
+   "fuentes": [
+    "OpenStreetMap Nominatim (© OpenStreetMap contributors, ODbL)",
+    "Wikipedia (CC BY-SA)",
+    "Open-Meteo (elevation; ERA5 climate reanalysis, Copernicus/ECMWF)"
+   ],
+   "segundos": 1.72
   }
  },
  "-49.500,-70.500": {
@@ -705,6 +1149,43 @@
     "Open-Meteo (elevation)"
    ],
    "segundos": 1.27
+  },
+  "hechos2": {
+   "lat": -49.5,
+   "lon": -70.5,
+   "lugar": {
+    "nombre": "Corpen Aike",
+    "condado": "Corpen Aike",
+    "region": "Santa Cruz",
+    "pais": "Argentina",
+    "tipo": "state_district",
+    "descripcion": "Corpen Aike, Santa Cruz, Argentina"
+   },
+   "wikipedia": null,
+   "wikipedia_area": {
+    "titulo": "Corpen Aike Department",
+    "extracto": "Corpen Aike Department is one of the seven departments in Santa Cruz Province, Argentina. It has an area of 26,350 km2. The seat of the department is in Puerto Santa Cruz. It borders the departments of Río Chico and Magallanes to the north, Lago Argentino to the west, and Güer Aike to the south, and has coastlines on the Atlantic Ocean to the east. It is traversed from west to east by the Santa Cruz and Chico rivers.",
+    "url": "https://en.wikipedia.org/wiki/Corpen_Aike_Department",
+    "imagen": "https://thumb.wikimedia.org/wikipedia/commons/thumb/3/3b/Caminos_y_destinos_Santacruce%C3%B1os_-_Yanet_Adriana_Perez_2.jpg/330px-Caminos_y_destinos_Santacruce%C3%B1os_-_Yanet_Adriana_Perez_2.jpg?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail",
+    "idioma": "en"
+   },
+   "elevacion_m": 215.0,
+   "clima": {
+    "anio": 2025,
+    "temp_media_c": 9.2,
+    "oscilacion_diaria_media_c": 9.4,
+    "temp_min_c": -9.5,
+    "temp_max_c": 28.5,
+    "lluvia_anual_mm": 199,
+    "dias_secos_pct": 88,
+    "viento_max_medio_kmh": 34.1
+   },
+   "fuentes": [
+    "OpenStreetMap Nominatim (© OpenStreetMap contributors, ODbL)",
+    "Wikipedia (CC BY-SA)",
+    "Open-Meteo (elevation; ERA5 climate reanalysis, Copernicus/ECMWF)"
+   ],
+   "segundos": 2.38
   }
  },
  "-15.500,-73.500": {
@@ -732,6 +1213,50 @@
     "Open-Meteo (elevation)"
    ],
    "segundos": 1.33
+  },
+  "hechos2": {
+   "lat": -15.5,
+   "lon": -73.5,
+   "lugar": {
+    "nombre": "Cahuacho",
+    "condado": "Province of Caravelí",
+    "region": "Arequipa",
+    "pais": "Peru",
+    "tipo": "village",
+    "descripcion": "Cahuacho, Province of Caravelí, Arequipa, Peru"
+   },
+   "wikipedia": {
+    "titulo": "Distrito de Cahuacho",
+    "extracto": "El distrito de Cahuacho es uno de los trece distritos de la Provincia de Caravelí, ubicada en el Departamento de Arequipa, bajo la administración del Gobierno regional de Arequipa, en el sur del Perú.",
+    "url": "https://es.wikipedia.org/wiki/Distrito_de_Cahuacho",
+    "imagen": "https://thumb.wikimedia.org/wikipedia/commons/thumb/8/8d/Location_of_the_province_Caravel%C3%AD_in_Arequipa.svg/langes-330px-Location_of_the_province_Caravel%C3%AD_in_Arequipa.svg.png?utm_source=es.wikipedia.org&utm_campaign=api&utm_content=thumbnail",
+    "idioma": "es",
+    "distancia_km": 2.3
+   },
+   "wikipedia_area": {
+    "titulo": "Cahuacho District",
+    "extracto": "Cahuacho District is one of thirteen districts of the province Caravelí in Peru.",
+    "url": "https://en.wikipedia.org/wiki/Cahuacho_District",
+    "imagen": "",
+    "idioma": "en"
+   },
+   "elevacion_m": 3400.0,
+   "clima": {
+    "anio": 2025,
+    "temp_media_c": 10.7,
+    "oscilacion_diaria_media_c": 9.7,
+    "temp_min_c": 2.7,
+    "temp_max_c": 19.0,
+    "lluvia_anual_mm": 1122,
+    "dias_secos_pct": 72,
+    "viento_max_medio_kmh": 17.2
+   },
+   "fuentes": [
+    "OpenStreetMap Nominatim (© OpenStreetMap contributors, ODbL)",
+    "Wikipedia (CC BY-SA)",
+    "Open-Meteo (elevation; ERA5 climate reanalysis, Copernicus/ECMWF)"
+   ],
+   "segundos": 2.63
   }
  },
  "-11.500,-76.500|v5||39f4ed2be8": {
@@ -852,5 +1377,58 @@
    ],
    "segundos": 1.8
   }
+ },
+ "-23.500,-67.500": {
+  "hechos2": {
+   "lat": -23.5,
+   "lon": -67.5,
+   "lugar": {
+    "nombre": "San Pedro de Atacama",
+    "condado": "Provincia de El Loa",
+    "region": "Antofagasta Region",
+    "pais": "Chile",
+    "tipo": "city",
+    "descripcion": "San Pedro de Atacama, Provincia de El Loa, Antofagasta Region, Chile"
+   },
+   "wikipedia": {
+    "titulo": "Corral de Coquena",
+    "extracto": "\nCorral de Coquena is a volcanic spatter rampart in the Andes, over the Tropic of Capricorn. The rampart at its highest point is 4,572 metres (15,000 ft) high.",
+    "url": "https://en.wikipedia.org/wiki/Corral_de_Coquena",
+    "imagen": "",
+    "idioma": "en",
+    "distancia_km": 8.2
+   },
+   "wikipedia_area": {
+    "titulo": "San Pedro de Atacama",
+    "extracto": "San Pedro de Atacama is a Chilean town and commune in El Loa Province, Antofagasta Region. It is located east of Antofagasta, some 106 km (60 mi) southeast of Calama and the Chuquicamata copper mine, overlooking the Licancabur volcano. It features a significant archeological museum, the R. P. Gustavo Le Paige Archaeological Museum, with a large collection of relics and artifacts from the region. Native ruins nearby attract increasing numbers of tourists interested in learning about pre-Columbian cultures.",
+    "url": "https://en.wikipedia.org/wiki/San_Pedro_de_Atacama",
+    "imagen": "https://thumb.wikimedia.org/wikipedia/commons/thumb/1/19/San_Pedro_de_Atacama_oasis.jpg/330px-San_Pedro_de_Atacama_oasis.jpg?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail",
+    "idioma": "en"
+   },
+   "elevacion_m": 4363.0,
+   "clima": {
+    "anio": 2025,
+    "temp_media_c": 1.8,
+    "oscilacion_diaria_media_c": 15.7,
+    "temp_min_c": -21.3,
+    "temp_max_c": 20.7,
+    "lluvia_anual_mm": 237,
+    "dias_secos_pct": 88,
+    "viento_max_medio_kmh": 27.2
+   },
+   "fuentes": [
+    "OpenStreetMap Nominatim (© OpenStreetMap contributors, ODbL)",
+    "Wikipedia (CC BY-SA)",
+    "Open-Meteo (elevation; ERA5 climate reanalysis, Copernicus/ECMWF)"
+   ],
+   "segundos": 1.45
+  }
+ },
+ "82.500,-84.500": {},
+ "33.500,-114.500|v6|Structures against Martian dust|1b21ac0cd5": {
+  "resumen": "**Where it is:** La Paz County, Arizona, United States, at about 158 m elevation. The county lies in the western part of Arizona and is sparsely populated, with its seat in Parker; its name comes from the early Colorado‑River settlement “La Paz.”  \n\n**Climate:** Mean annual temperature ≈ 24.8 °C with a mean daily range of 12.7 °C; recorded lows of 2.9 °C and highs of 47.3 °C. Annual precipitation is low (≈ 134 mm) and dry days dominate (≈ 94 % of the year). Mean daily maximum wind is about 18.8 km h⁻¹ (≈ 5.2 m s⁻¹).  \n\n**Why it is an analog:** The site ranks 1 of 41 on the Pareto front for the “Structures against Martian dust” mission, with a total score of 0.413.  \n- **Humidity:** 24.4 % RH vs. Martian target 19.9 % RH (difference 4.5 % RH, within a 15 % tolerance, weight 22 %).  \n- **Wind speed:** 5.24 m s⁻¹ vs. target 4 m s⁻¹ (difference 1.24 m s⁻¹, within a 3 m s⁻¹ tolerance, weight 18 %). This is the decisive parameter.  \n- **Reflectance (albedo):** 0.21 vs. target 0.20 (difference 0.010, within a 0.05 tolerance, weight 60 %).  \n\nThe combination of low humidity, modest wind, and near‑Martian albedo makes it an excellent Earth analog for testing dust‑related structural performance.  \n\n**What you could test here:**  \n1. Deploy dust‑resistant solar‑panel prototypes and monitor deposition rates under the prevailing wind regime.  \n2. Install material coupons on test structures to evaluate abrasion and erosion from locally sourced dust under the measured wind speeds.  \n\n**Where it falls short:**  \n- Wind speed is slightly higher than the Martian target, and humidity is modestly above the desired 19.9 % RH, which may over‑estimate dust cohesion.  \n- Earth cannot replicate Martian gravity, atmospheric pressure, vacuum, or radiation levels, so any dust‑lifting mechanisms will differ in magnitude from those on Mars."
+ },
+ "33.500,-114.500|v6||d21d7a12cb": {
+  "resumen": "**Where it is:** La Paz County, Arizona, United States, elevation ≈ 158 m. The county lies in the western part of Arizona, a sparsely populated desert region whose name comes from the historic settlement of La Paz along the Colorado River.\n\n**Climate:** Mean annual temperature ≈ 24.8 °C with a large daily range of ≈ 12.7 °C. Recorded extremes run from a low of ≈ 2.9 °C to a high of ≈ 47.3 °C. Annual precipitation is low, about 134 mm, and dry days account for roughly 94 % of the year. Mean daily maximum wind is ≈ 18.8 km/h.\n\n**Why it is an analog:** Surface measurements show a temperature of 24.1 °C, humidity 24.4 % RH, wind speed 5.24 m s⁻¹, temperature variation 26.2 °C, and reflectance 0.21. These values sit near the upper end of continental ranges, especially the temperature variation and low humidity, which resemble the harsh thermal cycling and thin‑air conditions of Martian sites such as Jezero Crater. For the “Structures against Martian dust” mission, this point ranks **1 of 41 on the Pareto front**, indicating it offers an optimal balance of the tested parameters for dust‑resilience studies.\n\n**What you could test here:**  \n1. Deploy prototype habitat panels or solar arrays to evaluate dust accumulation and cleaning strategies under high temperature swings and low humidity.  \n2. Conduct long‑duration rover camera and thermal sensor trials to assess performance during rapid day‑night temperature changes.\n\n**Where it falls short:** Gravity remains Earth‑normal (9.81 m s⁻²) and the atmosphere is far denser than Mars, so dust transport dynamics differ. The site cannot reproduce the Martian vacuum, radiation environment, or the exact atmospheric composition, limiting the fidelity of some dust‑erosion tests."
  }
 }
