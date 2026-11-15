@@ -1,0 +1,12 @@
+# Configuración del servicio en Render (Blueprint). Plan gratuito.
+services:
+  - type: web
+    name: earth-analogs
+    runtime: docker
+    plan: free
+    dockerfilePath: ./Dockerfile
+    healthCheckPath: /
+    autoDeploy: true
+    envVars:
+      - key: IA_CLAVE      # clave de Groq: Render la pide al crear el servicio; no va en el repositorio
+        sync: false

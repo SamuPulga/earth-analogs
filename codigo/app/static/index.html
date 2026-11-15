@@ -1,0 +1,432 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Earth Analogs</title>
+  <meta name="description" content="Find places on Earth to test missions to the Moon and Mars.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=Inter:wght@400;500;600&display=swap">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+  <link rel="stylesheet" href="/static/estilos.css">
+</head>
+<body>
+  <canvas id="estrellas" aria-hidden="true"></canvas>
+
+  <!-- ============================================================ NAVEGACIÓN -->
+  <header class="nav" id="nav">
+    <a class="marca" href="#/inicio" aria-label="Earth Analogs, home">
+      <svg viewBox="0 0 40 40" aria-hidden="true">
+        <circle cx="20" cy="20" r="7" fill="currentColor"/>
+        <ellipse cx="20" cy="20" rx="17" ry="7" fill="none" stroke="currentColor" stroke-width="1.6" transform="rotate(-25 20 20)"/>
+        <circle cx="34.5" cy="13" r="2.4" fill="var(--acento)"/>
+      </svg>
+      <span>EARTH<b>ANALOGS</b></span>
+    </a>
+    <button class="menu-btn" id="menu-btn" aria-label="Open menu" aria-expanded="false"><span></span><span></span></button>
+    <nav class="enlaces" id="enlaces">
+      <a href="#/analogos" data-vista="analogos">Analogs</a>
+      <a href="#/luna" data-vista="luna">Moon</a>
+      <a href="#/marte" data-vista="marte">Mars</a>
+      <a href="#/mision" data-vista="mision">Plan a mission</a>
+      <a href="#/datos" data-vista="datos">More data</a>
+    </nav>
+    <div class="reloj" title="Coordinated Universal Time (UTC)"><span>UTC</span><b id="reloj">--:--:--</b></div>
+  </header>
+
+  <div id="avisos" class="avisos"></div>
+
+  <main>
+    <!-- ============================================================ INICIO -->
+    <section class="vista" id="v-inicio" data-vista="inicio">
+      <div class="hero">
+        <div class="hero-texto">
+          <p class="kicker">NASA Space Apps Challenge 2026</p>
+          <h1>The Moon and Mars,<br>right here on Earth</h1>
+          <p class="lead">Choose what you want to test and we show you where to do it: the places in the Americas that best match your destination in what matters for your mission, and where they fall short.</p>
+          <div class="botones">
+            <a class="btn primario" href="#/mision">Plan a mission <i class="flecha"></i></a>
+            <a class="btn" href="#/analogos">See analogs <i class="flecha"></i></a>
+          </div>
+          <dl class="cifras-hero" id="cifras-hero"></dl>
+        </div>
+        <div class="hero-globo" id="globo-tierra" aria-label="The Earth rotating"></div>
+        <a class="bajar" href="#explora" aria-label="Scroll down"><span></span></a>
+      </div>
+
+      <div class="contenedor" id="explora">
+        <div class="titulo-seccion">
+          <h2>Explore the project</h2>
+          <a class="mas" href="#/mision">Start a mission <i class="punto-flecha"></i></a>
+        </div>
+        <div class="tarjetas">
+          <a class="tarjeta" href="#/analogos" style="--img:url(/static/img/analogos.jpg);--pos:80% center">
+            <span class="num">01</span>
+            <span class="tarjeta-pie"><h3>Earth analogs</h3><i class="punto-flecha"></i></span>
+            <span class="tarjeta-desc">Candidate sites across the Americas, on the map with their data.</span>
+          </a>
+          <a class="tarjeta" href="#/luna" style="--img:url(/static/img/luna.jpg)">
+            <span class="num">02</span>
+            <span class="tarjeta-pie"><h3>The Moon</h3><i class="punto-flecha"></i></span>
+            <span class="tarjeta-desc">The south pole and Artemis permanent bases.</span>
+          </a>
+          <a class="tarjeta" href="#/marte" style="--img:url(/static/img/marte.jpg)">
+            <span class="num">03</span>
+            <span class="tarjeta-pie"><h3>Mars</h3><i class="punto-flecha"></i></span>
+            <span class="tarjeta-desc">Dust, cold and a very thin atmosphere.</span>
+          </a>
+          <a class="tarjeta" href="#/mision" style="--img:url(/static/img/mision.jpg)">
+            <span class="num">04</span>
+            <span class="tarjeta-pie"><h3>Plan a mission</h3><i class="punto-flecha"></i></span>
+            <span class="tarjeta-desc">Set up your mission and get the site ranking.</span>
+          </a>
+        </div>
+        <a class="banda" href="#/datos" style="--img:url(/static/img/datos.jpg)">
+          <span class="num">05</span>
+          <div>
+            <h3>More data</h3>
+            <p>How the model decides, where the data comes from, and what Earth cannot reproduce.</p>
+          </div>
+          <i class="punto-flecha"></i>
+        </a>
+      </div>
+    </section>
+
+    <!-- ============================================================ 1. ANÁLOGOS -->
+    <section class="vista" id="v-analogos" data-vista="analogos">
+      <div class="cabecera" style="--img:url(/static/img/analogos.jpg)">
+        <div class="contenedor">
+          <p class="kicker">01 · Analogs</p>
+          <h1>Places in the Americas<br>that mimic other worlds</h1>
+          <p class="lead">We focus on the Americas, from Canada to Patagonia. Each point is a candidate site. None of them matches the Moon or Mars in everything: each matches in some ways, and that decides which mission it is good for.</p>
+          <dl class="cifras-hero" id="cifras-analogos"></dl>
+        </div>
+      </div>
+      <div class="contenedor">
+        <div class="filtros" id="filtros-analogos">
+          <div class="segmentado" id="filtro-destino" role="group" aria-label="Suggested destination">
+            <button data-d="todos" class="activo">All</button>
+            <button data-d="luna">Moon</button>
+            <button data-d="marte">Mars</button>
+            <button data-d="ambos">Both</button>
+          </div>
+          <input type="search" id="filtro-texto" placeholder="Search site or country" aria-label="Search site or country">
+        </div>
+        <div class="mapa-y-lugar">
+        <div class="mapa-caja">
+          <div id="mapa-analogos" class="mapa grande"></div>
+          <div class="hud hud-coords" id="coords-analogos">LAT —  ·  LON —</div>
+          <div class="hud hud-leyenda">
+            <span><i class="pto luna"></i>Moon</span>
+            <span><i class="pto marte"></i>Mars</span>
+            <span><i class="pto ambos"></i>Both</span>
+          </div>
+        </div>
+          <aside class="panel panel-lugar" id="panel-lugar">
+            <p class="kicker">About this place</p>
+            <div id="info-lugar"><p class="nota">Tap a site, or <b>any point on the map</b>, to look up that place by its latitude and longitude.</p></div>
+          </aside>
+        </div>
+        <div class="rejilla-sitios" id="lista-analogos"></div>
+      </div>
+    </section>
+
+    <!-- ============================================================ 2. LUNA -->
+    <section class="vista cuerpo luna" id="v-luna" data-vista="luna">
+      <div class="hero">
+        <div class="hero-texto">
+          <p class="kicker">02 · Destination</p>
+          <h1>The Moon</h1>
+          <p class="lead">Our closest neighbor and the first place where humanity wants to stay. The Artemis program targets the <b>lunar south pole</b>, where some craters never see sunlight and may hold ice.</p>
+          <dl class="datos-rapidos">
+            <div><dt>Gravity</dt><dd>1.62 <small>m/s²</small></dd><span>16.5 % of Earth's</span></div>
+            <div><dt>Mean distance</dt><dd>384,400 <small>km</small></dd><span>from Earth</span></div>
+            <div><dt>One lunar day</dt><dd>29.5 <small>days</small></dd><span>sunrise to sunrise</span></div>
+            <div><dt>Atmosphere</dt><dd>~0</dd><span>near vacuum (exosphere)</span></div>
+          </dl>
+          <a class="btn primario" href="#/mision?destino=luna">Plan a lunar mission <i class="flecha"></i></a>
+        </div>
+        <div class="hero-globo" id="globo-luna" aria-label="The Moon rotating. Drag to spin it."></div>
+        <p class="pista-globo">Drag to spin</p>
+      </div>
+
+      <div class="contenedor">
+        <div class="titulo-seccion"><h2>Key facts</h2></div>
+        <div class="fichas-datos">
+          <div class="ficha-dato"><span>Mean radius</span><b>1,737.4 km</b><small>27 % of Earth's</small></div>
+          <div class="ficha-dato"><span>Escape velocity</span><b>2.38 km/s</b><small>Earth: 11.19 km/s</small></div>
+          <div class="ficha-dato"><span>Mean density</span><b>3,344 kg/m³</b><small>Earth: 5,514 kg/m³</small></div>
+          <div class="ficha-dato"><span>Axial tilt</span><b>1.54°</b><small>relative to the ecliptic</small></div>
+          <div class="ficha-dato"><span>Geometric albedo</span><b>0.12</b><small>reflects little light: it is dark</small></div>
+          <div class="ficha-dato"><span>Surface pressure</span><b>3×10⁻¹⁵ bar</b><small>practically a vacuum</small></div>
+        </div>
+
+        <div class="bloque-info">
+          <div class="bloque-texto">
+            <p class="kicker">Temperature</p>
+            <h2>From oven to freezer</h2>
+            <p>With no atmosphere to hold heat, the surface temperature swings to extremes between day and night: near the equator it goes from about <b>120 °C</b> in sunlight to about <b>−130 °C</b> at night.</p>
+            <p>At the south pole the Sun always sits very low on the horizon, so the floors of some craters <b>never receive light</b>. These permanently shadowed regions are among the coldest places measured in the solar system, at about <b>−240 °C</b> according to LRO's Diviner radiometer.</p>
+            <ul class="lista-param">
+              <li><b>Temperature variation:</b> the most useful parameter for comparing with Earth, since no place on Earth reaches those absolute values.</li>
+              <li><b>Humidity and wind:</b> do not apply. The Moon has no atmosphere, so the app turns them off for lunar destinations.</li>
+            </ul>
+          </div>
+          <figure class="bloque-img"><img src="/static/img/luna_superficie.jpg" alt="Apollo 17 astronaut driving the lunar rover in the Taurus-Littrow valley" loading="lazy">
+            <figcaption>Apollo 17, Taurus-Littrow valley (1972). NASA.</figcaption></figure>
+        </div>
+
+        <div class="bloque-info invertido">
+          <div class="bloque-texto">
+            <p class="kicker">Surface</p>
+            <h2>Regolith, craters and little reflected light</h2>
+            <p>The surface is covered in <b>regolith</b>: dust and rock fragments produced by millions of years of impacts. It is fine, abrasive and clings to everything because of electrostatic charge.</p>
+            <p>The Moon reflects only about 12 % of the light it receives, similar to asphalt. With the grazing sunlight of the south pole, shadows are long and pitch black: a challenge for a rover's navigation cameras.</p>
+            <ul class="lista-param">
+              <li><b>Reflectance:</b> basaltic lava fields are among the few surfaces on Earth as dark as regolith.</li>
+            </ul>
+          </div>
+          <div class="bloque-destinos">
+            <p class="kicker">Destinations we compare against</p>
+            <div id="destinos-luna" class="lista-destinos"></div>
+          </div>
+        </div>
+
+        <div class="no-analogo">
+          <h3>What no place on Earth can reproduce</h3>
+          <ul>
+            <li><b>Gravity:</b> on Earth everything weighs about 6 times more. It changes wheel traction and how an astronaut walks.</li>
+            <li><b>Vacuum:</b> without air, heat moves only by radiation and conduction, and dust is not slowed down.</li>
+            <li><b>Radiation:</b> Earth's atmosphere and magnetic field protect us; the Moon has neither.</li>
+          </ul>
+        </div>
+        <p class="fuentes">Sources: NASA NSSDCA, <i>Moon Fact Sheet</i>; NASA, <i>Moon: Facts</i>; LRO Diviner. Texture: NASA SVS, <i>CGI Moon Kit</i> (LROC). Rounded figures are TO BE VERIFIED against the final source.</p>
+      </div>
+    </section>
+
+    <!-- ============================================================ 3. MARTE -->
+    <section class="vista cuerpo marte" id="v-marte" data-vista="marte">
+      <div class="hero">
+        <div class="hero-texto">
+          <p class="kicker">03 · Destination</p>
+          <h1>Mars</h1>
+          <p class="lead">A frozen desert with an atmospheric pressure about 160 times lower than ours. Rovers like Perseverance explore <b>Jezero crater</b>, an ancient lake where water left a delta of sediments.</p>
+          <dl class="datos-rapidos">
+            <div><dt>Gravity</dt><dd>3.71 <small>m/s²</small></dd><span>38 % of Earth's</span></div>
+            <div><dt>One sol (day)</dt><dd>24 h 40 <small>min</small></dd><span>almost the same as Earth's</span></div>
+            <div><dt>Mean temperature</dt><dd>−63 <small>°C</small></dd><span>Earth: about 15 °C</span></div>
+            <div><dt>Pressure</dt><dd>6.4 <small>mbar</small></dd><span>~0.6 % of Earth's</span></div>
+          </dl>
+          <a class="btn primario" href="#/mision?destino=marte">Plan a mission to Mars <i class="flecha"></i></a>
+        </div>
+        <div class="hero-globo" id="globo-marte" aria-label="Mars rotating. Drag to spin it."></div>
+        <p class="pista-globo">Drag to spin</p>
+      </div>
+
+      <div class="contenedor">
+        <div class="titulo-seccion"><h2>Key facts</h2></div>
+        <div class="fichas-datos">
+          <div class="ficha-dato"><span>Mean radius</span><b>3,389.5 km</b><small>53 % of Earth's</small></div>
+          <div class="ficha-dato"><span>One Martian year</span><b>687 days</b><small>Earth days</small></div>
+          <div class="ficha-dato"><span>Axial tilt</span><b>25.19°</b><small>it has seasons, like Earth</small></div>
+          <div class="ficha-dato"><span>Distance from the Sun</span><b>227.9 M km</b><small>1.52 times Earth's</small></div>
+          <div class="ficha-dato"><span>Atmosphere</span><b>95 % CO₂</b><small>2.6 % N₂ · 1.9 % Ar</small></div>
+          <div class="ficha-dato"><span>Bond albedo</span><b>0.25</b><small>Moon: 0.11</small></div>
+        </div>
+
+        <div class="bloque-info">
+          <div class="bloque-texto">
+            <p class="kicker">Climate</p>
+            <h2>Cold, dry and very dusty</h2>
+            <p>At the Viking 1 site the temperature ranged from about <b>−89 °C</b> at night to <b>−31 °C</b> during the day. The air is so dry and so thin that liquid water does not last on the surface.</p>
+            <p>The wind usually blows at <b>2 to 10 m/s</b> and reaches about <b>30 m/s</b> in dust storms. But Martian air has only <b>1.6 %</b> of Earth's density (0.020 vs. 1.217 kg/m³): at the same speed, the wind pushes far less.</p>
+            <ul class="lista-param">
+              <li><b>Humidity:</b> used to find the <b>driest</b> places on Earth.</li>
+              <li><b>Wind speed:</b> useful for dust transport and deposition, not for wind loads on a structure.</li>
+              <li><b>Temperature and its variation:</b> for thermal-cycling tests of equipment.</li>
+            </ul>
+          </div>
+          <figure class="bloque-img"><img src="/static/img/marte_atardecer.jpg" alt="Bluish sunset in Gale crater, photographed by the Curiosity rover" loading="lazy">
+            <figcaption>Sunset in Gale crater, Curiosity rover (2015). NASA/JPL-Caltech/MSSS/Texas A&amp;M Univ.</figcaption></figure>
+        </div>
+
+        <div class="bloque-info invertido">
+          <div class="bloque-texto">
+            <p class="kicker">Surface</p>
+            <h2>Iron oxide and ancient lakes</h2>
+            <p>The reddish color comes from <b>iron oxide</b> in the dust. The surface has giant volcanoes such as Olympus Mons, the Valles Marineris canyon, and craters that once held water, such as Jezero.</p>
+            <ul class="lista-param">
+              <li><b>Reflectance:</b> Mars reflects more light than the Moon (albedo ~0.25), similar to many reddish deserts on Earth.</li>
+            </ul>
+          </div>
+          <div class="bloque-destinos">
+            <p class="kicker">Destinations we compare against</p>
+            <div id="destinos-marte" class="lista-destinos"></div>
+          </div>
+        </div>
+
+        <div class="no-analogo">
+          <h3>What no place on Earth can reproduce</h3>
+          <ul>
+            <li><b>Gravity:</b> on Earth everything weighs about 2.6 times more than on Mars.</li>
+            <li><b>Thin CO₂ atmosphere:</b> Earth's pressure is about 160 times higher. It changes how heat moves and how much force the wind exerts.</li>
+            <li><b>Radiation:</b> Mars has almost no magnetic field and its atmosphere filters little radiation.</li>
+          </ul>
+        </div>
+        <p class="fuentes">Sources: NASA NSSDCA, <i>Mars Fact Sheet</i> (pressure, density, Viking 1 temperatures, winds); NASA/JPL, Mars 2020 mission. Texture: NASA, <i>NASA 3D Resources</i>. Rounded figures are TO BE VERIFIED against the final source.</p>
+      </div>
+    </section>
+
+    <!-- ============================================================ 4. PREPARAR MISIÓN -->
+    <section class="vista" id="v-mision" data-vista="mision">
+      <div class="cabecera corta" style="--img:url(/static/img/mision.jpg)">
+        <div class="contenedor">
+          <p class="kicker">04 · Plan a mission</p>
+          <h1>What do you want to test?</h1>
+          <p class="lead">Constraints → Pareto front → mission weights (weighted Chebyshev). Move the tolerances and watch the ranking change.</p>
+        </div>
+      </div>
+
+      <div class="contenedor rejilla-mision">
+        <aside class="panel config" id="config">
+          <div class="paso"><span>1</span><h2>The mission</h2></div>
+          <div class="pestanas" role="tablist">
+            <button class="pestana activa" data-modo="predefinida">Preset</button>
+            <button class="pestana" data-modo="personalizada">Custom</button>
+            <button class="pestana" data-modo="ia" disabled title="Phase 3">AI assistant <em>soon</em></button>
+          </div>
+          <div id="lista-misiones" class="lista-misiones"></div>
+
+          <label class="campo">Destination
+            <select id="sel-destino"></select>
+          </label>
+          <p id="nota-mision" class="nota"></p>
+
+          <div class="paso"><span>2</span><h2>Parameters and tolerances</h2></div>
+          <p class="ayuda">Lower tolerance = more weight: that parameter penalizes differences more.</p>
+          <div id="lista-parametros"></div>
+          <div class="agregar">
+            <select id="sel-nuevo-parametro" aria-label="Parameter to add"></select>
+            <button id="btn-agregar-parametro" class="btn chico">+ Parameter</button>
+          </div>
+
+          <div class="paso"><span>3</span><h2>Constraints</h2></div>
+          <p class="ayuda">They rule out sites before comparing.</p>
+          <div id="lista-restricciones"></div>
+          <div class="agregar">
+            <select id="sel-nueva-restriccion" aria-label="Constraint to add"></select>
+            <button id="btn-agregar-restriccion" class="btn chico">+ Constraint</button>
+          </div>
+
+          <div class="paso"><span>!</span><h2>What Earth cannot reproduce</h2></div>
+          <ul id="lista-limites" class="limites"></ul>
+        </aside>
+
+        <section class="resultado">
+          <div class="mapa-caja">
+            <div id="mapa" class="mapa"></div>
+            <div class="hud hud-coords" id="coords-mision">CENTER —</div>
+            <div class="optimo" id="optimo" hidden></div>
+            <div class="hud hud-leyenda">
+              <span><i class="pto frente"></i>Pareto front (number = rank)</span>
+              <span><i class="pto dominado"></i>Dominated</span>
+              <span><i class="pto descartado"></i>Ruled out</span>
+            </div>
+          </div>
+
+          <div class="dos">
+            <div class="panel">
+              <div class="paso"><span>4</span><h2>Ranking</h2></div>
+              <p id="filtro-nota" class="nota" hidden></p>
+              <p id="error" class="error" hidden></p>
+              <ol id="ranking" class="ranking"></ol>
+              <details id="det-dominados"><summary>Dominated (<span id="n-dom">0</span>)</summary><ul id="dominados" class="lista-chica"></ul></details>
+              <details id="det-descartados"><summary>Ruled out (<span id="n-desc">0</span>)</summary><ul id="descartados" class="lista-chica"></ul></details>
+            </div>
+            <div class="panel ficha" id="ficha">
+              <div class="paso"><span>5</span><h2>Site profile</h2></div>
+              <p class="nota">Pick a site from the ranking or the map.</p>
+            </div>
+          </div>
+        </section>
+      </div>
+    </section>
+
+    <!-- ============================================================ 5. DATOS EXTRA -->
+    <section class="vista" id="v-datos" data-vista="datos">
+      <div class="cabecera corta" style="--img:url(/static/img/datos.jpg)">
+        <div class="contenedor">
+          <p class="kicker">05 · More data</p>
+          <h1>How it works inside</h1>
+          <p class="lead">The method, the data it uses and its limits. Everything you need to check or reproduce a result.</p>
+        </div>
+      </div>
+      <div class="contenedor">
+        <div class="titulo-seccion"><h2>How the model decides</h2></div>
+        <p class="ayuda">Scope: the <b>Americas</b> only, from Canada to Patagonia. Downloading and processing data for the whole planet is not feasible with the team's tools; the Americas have enough deserts, salt flats, volcanoes and craters to cover the missions.</p>
+        <ol class="pasos-metodo">
+          <li><span>01</span><h3>Distances</h3><p>For each site we compute how different it is from the destination in each parameter: f<sub>i</sub>(x) ≥ 0, where 0 means identical.</p></li>
+          <li><span>02</span><h3>Constraints</h3><p>Sites that do not meet the minimum are ruled out, for example a slope the rover cannot climb.</p></li>
+          <li><span>03</span><h3>Pareto front</h3><p>Only the sites that no other site beats in every parameter at once remain.</p></li>
+          <li><span>04</span><h3>Weighted Chebyshev</h3><p>They are ranked by the worst weighted difference, max<sub>i</sub> w<sub>i</sub>·f<sub>i</sub>, with w<sub>i</sub> = 1/τ<sub>i</sub>. Score ≤ 1: within tolerance in everything.</p></li>
+          <li><span>05</span><h3>Robustness</h3><p>We repeat it with slightly different weights and count how often each site comes first.</p></li>
+        </ol>
+
+        <div class="bloque-info">
+          <div class="bloque-texto">
+            <p class="kicker">Why Chebyshev and not an average</p>
+            <h2>Don't hide the balanced sites</h2>
+            <p>With five sites A(1, 8), B(2, 5), C(4.2, 4.2), D(5, 2) and E(8, 1), a weighted sum <b>never</b> picks C, with any weights, because C lies in a "sunken" part of the front.</p>
+            <p>Chebyshev with equal weights does pick it: its worst difference is 4.2, versus 5 for B and D. A site that is acceptable in everything should not lose to one that is excellent in one thing and poor in another.</p>
+          </div>
+          <figure class="panel grafico-pareto"><svg id="grafico-pareto" viewBox="0 0 360 300" role="img" aria-label="Example Pareto front with sites A to E"></svg>
+            <figcaption>Lower = more similar on each axis.</figcaption></figure>
+        </div>
+
+        <div class="titulo-seccion"><h2>The parameters</h2></div>
+        <p class="ayuda">The five parameters the team chose to weight, and the data products for each body. Cells marked "not applicable" are turned off automatically in the app.</p>
+        <div class="tabla-caja"><table class="tabla" id="tabla-variables"></table></div>
+
+        <div class="titulo-seccion"><h2>Site values (for constraints)</h2></div>
+        <div class="tabla-caja"><table class="tabla" id="tabla-atributos"></table></div>
+
+        <div class="dos-col">
+          <div class="panel">
+            <h3>Data status</h3>
+            <ul class="estado-datos" id="estado-datos"></ul>
+          </div>
+          <div class="panel">
+            <h3>Use of artificial intelligence</h3>
+            <p class="nota">Space Apps asks teams to declare their use of AI. TO BE COMPLETED by the team: which tools were used, for which parts, and how their output was reviewed. In the app, AI only writes short place summaries from open data and translates mission descriptions into settings; the site is always chosen by the math.</p>
+          </div>
+        </div>
+
+        <div class="titulo-seccion"><h2>Image credits</h2></div>
+        <ul class="creditos">
+          <li><b>Lunar Electric Rover at Desert RATS, Arizona (2008)</b> · NASA/JSC · jsc2008e138809</li>
+          <li><b>The Moon seen by the Artemis II crew (2026)</b> · NASA · art002e012632</li>
+          <li><b>Perseverance selfie with Ingenuity (2021)</b> · NASA/JPL-Caltech/MSSS · PIA24542</li>
+          <li><b>Night field test in Flagstaff, Arizona (2021)</b> · NASA/JSC · jsc2021e048675</li>
+          <li><b>Atacama Desert from the Space Station</b> · NASA/JSC · iss074e0315662</li>
+          <li><b>Apollo 17, lunar rover at Taurus-Littrow (1972)</b> · NASA · AS17-147-22527</li>
+          <li><b>Sunset in Gale crater (2015)</b> · NASA/JPL-Caltech/MSSS/Texas A&amp;M Univ. · PIA19400</li>
+          <li><b>3D textures</b> · Moon: NASA SVS, CGI Moon Kit (LROC/LOLA) · Mars: NASA 3D Resources · Earth: NASA Visible Earth, Blue Marble</li>
+          <li><b>Base maps</b> · Esri World Imagery and World Dark Gray Base (Esri, Maxar, Earthstar Geographics)</li>
+          <li><b>Place lookups</b> · OpenStreetMap Nominatim (© OpenStreetMap contributors, ODbL) · Wikipedia (CC BY-SA) · Open-Meteo</li>
+        </ul>
+      </div>
+    </section>
+  </main>
+
+  <footer class="pie">
+    <div class="contenedor pie-dentro">
+      <span>EARTH<b>ANALOGS</b> · NASA Space Apps Challenge 2026</span>
+      <span id="pie-modelo"></span>
+    </div>
+  </footer>
+
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script type="module" src="/static/js/principal.js"></script>
+</body>
+</html>

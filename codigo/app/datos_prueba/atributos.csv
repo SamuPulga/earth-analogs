@@ -1,0 +1,14 @@
+sitio_id,pendiente_p95,precipitacion_anual_mm,temperatura_media_c,humedad_media_pct,viento_medio_ms,amplitud_termica_c,albedo,elevacion_m
+atacama,18,5,16,18,4.1,28,0.28,1000
+haughton,22,150,-16,70,5.6,8,0.20,200
+tatacoa,20,1100,28,65,2.9,14,0.22,450
+mdrs,26,180,13,40,4.4,22,0.25,1350
+uyuni,5,180,8,35,5.0,30,0.65,3650
+pinacate,19,120,23,32,3.6,26,0.12,700
+craters_moon,24,380,8,45,4.8,20,0.10,1800
+meteor_crater,28,250,14,38,5.2,22,0.20,1700
+sp_crater,30,300,10,42,5.5,21,0.11,2000
+ischigualasto,22,100,17,35,5.9,24,0.27,1300
+sechura,12,30,24,70,5.0,12,0.30,100
+guajira,10,300,28,72,7.5,10,0.29,50
+death_valley,16,60,25,23,4.5,25,0.27,-50

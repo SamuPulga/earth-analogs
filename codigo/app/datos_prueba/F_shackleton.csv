@@ -1,0 +1,14 @@
+sitio_id,f_temperatura,f_variacion_temperatura,f_reflectancia
+atacama,95,0.10,0.14
+haughton,45,0.30,0.06
+tatacoa,110,0.32,0.09
+mdrs,80,0.18,0.10
+uyuni,85,0.12,0.45
+pinacate,105,0.16,0.03
+craters_moon,75,0.18,0.01
+meteor_crater,82,0.17,0.08
+sp_crater,78,0.17,0.02
+ischigualasto,92,0.14,0.13
+sechura,105,0.33,0.15
+guajira,112,0.36,0.14
+death_valley,110,0.15,0.13

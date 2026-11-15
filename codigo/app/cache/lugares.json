@@ -1,0 +1,415 @@
+{
+ "-24.080,-69.930": {
+  "hechos": {
+   "lat": -24.08,
+   "lon": -69.93,
+   "lugar": {
+    "nombre": "Antofagasta",
+    "region": "Antofagasta Region",
+    "pais": "Chile",
+    "descripcion": "Antofagasta, Provincia de Antofagasta, Antofagasta Region, Chile"
+   },
+   "wikipedia": {
+    "titulo": "Aguas Blancas Airport",
+    "extracto": "Aguas Blancas Airport (Spanish: Aeropuerto Aguas Blancas, is an airport serving the Aguas Blancas iodine mine in the Antofagasta Region of Chile.",
+    "url": "https://en.wikipedia.org/wiki/Aguas_Blancas_Airport",
+    "imagen": "",
+    "idioma": "en",
+    "distancia_km": 9.6
+   },
+   "elevacion_m": 960.0,
+   "fuentes": [
+    "OpenStreetMap Nominatim (© OpenStreetMap contributors, ODbL)",
+    "Wikipedia (CC BY-SA)",
+    "Open-Meteo (elevation)"
+   ],
+   "segundos": 2.03
+  }
+ },
+ "75.380,-89.670": {
+  "hechos": {
+   "lat": 75.38,
+   "lon": -89.67,
+   "lugar": {
+    "nombre": "Qikiqtaaluk Region",
+    "region": "Nunavut",
+    "pais": "Canada",
+    "descripcion": "Qikiqtaaluk Region, Nunavut, Canada"
+   },
+   "wikipedia": {
+    "titulo": "Haughton impact crater",
+    "extracto": "Haughton impact crater is located on Devon Island, Nunavut in far Northern Canada. It is about 23 km (14 mi) in diameter and was formed 31–32 million years ago during the Early Oligocene. The impacting object is estimated to have been approximately 2 km (1.2 mi) in diameter. Devon Island itself is composed of Paleozoic shale and siltstone overlying gneissic bedrock. When the crater formed, the shale and siltstone were peeled back to expose the basement; material from as deep as 1,700 m (5,600 ft) has been identified.",
+    "url": "https://en.wikipedia.org/wiki/Haughton_impact_crater",
+    "imagen": "https://thumb.wikimedia.org/wikipedia/commons/thumb/7/77/Haughton_impact_crater_radar_image.jpg/330px-Haughton_impact_crater_radar_image.jpg?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail",
+    "idioma": "en",
+    "distancia_km": 0.4
+   },
+   "elevacion_m": 132.0,
+   "fuentes": [
+    "OpenStreetMap Nominatim (© OpenStreetMap contributors, ODbL)",
+    "Wikipedia (CC BY-SA)",
+    "Open-Meteo (elevation)"
+   ],
+   "segundos": 1.95
+  }
+ },
+ "3.230,-75.170": {
+  "hechos": {
+   "lat": 3.23,
+   "lon": -75.17,
+   "lugar": {
+    "nombre": "Villavieja",
+    "region": "Huila",
+    "pais": "Colombia",
+    "descripcion": "Villavieja, Norte, Huila, RAP (Especial) Central, 411027, Colombia"
+   },
+   "wikipedia": {
+    "titulo": "Tatacoa Desert",
+    "extracto": "The Tatacoa Desert is the second largest arid zone in Colombia after the Guajira Peninsula. It occupies more than 330 square kilometers. This region is located north of Huila Department, 38 km from the city of Neiva and 15 km (9 mi) from Natagaima in Tolima. It is renowned as a rich deposit of fossils and a tourist destination. The Tatacoa Desert has two distinctive colors: ochre in the area of Cuzco and gray in the Los Hoyos area.",
+    "url": "https://en.wikipedia.org/wiki/Tatacoa_Desert",
+    "imagen": "https://thumb.wikimedia.org/wikipedia/commons/thumb/a/ac/Desierto_de_la_Tatacoa_-_camilogaleano%28com%29.jpg/330px-Desierto_de_la_Tatacoa_-_camilogaleano%28com%29.jpg?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail",
+    "idioma": "en",
+    "distancia_km": 0.5
+   },
+   "elevacion_m": 434.0,
+   "fuentes": [
+    "OpenStreetMap Nominatim (© OpenStreetMap contributors, ODbL)",
+    "Wikipedia (CC BY-SA)",
+    "Open-Meteo (elevation)"
+   ],
+   "segundos": 2.35
+  }
+ },
+ "38.410,-110.790": {
+  "hechos": {
+   "lat": 38.41,
+   "lon": -110.79,
+   "lugar": {
+    "nombre": "Wayne County",
+    "region": "Utah",
+    "pais": "United States",
+    "descripcion": "Wayne County, Utah, United States"
+   },
+   "wikipedia": {
+    "titulo": "Mars Desert Research Station",
+    "extracto": "The Mars Desert Research Station (MDRS) is the largest and longest-running Mars surface research facility and is one of two simulated Mars analog habitats owned and operated by the Mars Society.",
+    "url": "https://en.wikipedia.org/wiki/Mars_Desert_Research_Station",
+    "imagen": "https://thumb.wikimedia.org/wikipedia/commons/thumb/4/49/Mars_Desert_Research_Station_2020.jpg/330px-Mars_Desert_Research_Station_2020.jpg?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail",
+    "idioma": "en",
+    "distancia_km": 0.4
+   },
+   "elevacion_m": 1376.0,
+   "fuentes": [
+    "OpenStreetMap Nominatim (© OpenStreetMap contributors, ODbL)",
+    "Wikipedia (CC BY-SA)",
+    "Open-Meteo (elevation)"
+   ],
+   "segundos": 1.75
+  }
+ },
+ "-20.130,-67.490": {
+  "hechos": {
+   "lat": -20.13,
+   "lon": -67.49,
+   "lugar": {
+    "nombre": "Municipio Colcha K",
+    "region": "Potosí",
+    "pais": "Bolivia",
+    "descripcion": "Municipio Colcha K, Provincia Nor Lípez, Potosí, Bolivia"
+   },
+   "wikipedia": {
+    "titulo": "Salar de Uyuni",
+    "extracto": "Salar de Uyuni is the largest salt flat in the world, with an area of approximately 10,582 square kilometres (4,086 mi2). It is situated in southwestern Bolivia, within the Daniel Campos Province of the Potosí Department, near the crest of the Andes Mountains, at an elevation of 3,656 m (11,995 ft) above sea level.",
+    "url": "https://en.wikipedia.org/wiki/Salar_de_Uyuni",
+    "imagen": "https://thumb.wikimedia.org/wikipedia/commons/thumb/4/4a/Salar_Uyuni_au01.jpg/330px-Salar_Uyuni_au01.jpg?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail",
+    "idioma": "en",
+    "distancia_km": 0.4
+   },
+   "elevacion_m": 3654.0,
+   "fuentes": [
+    "OpenStreetMap Nominatim (© OpenStreetMap contributors, ODbL)",
+    "Wikipedia (CC BY-SA)",
+    "Open-Meteo (elevation)"
+   ],
+   "segundos": 2.53
+  }
+ },
+ "31.770,-113.500": {
+  "hechos": {
+   "lat": 31.77,
+   "lon": -113.5,
+   "lugar": {
+    "nombre": "Puerto Peñasco",
+    "region": "Sonora",
+    "pais": "Mexico",
+    "descripcion": "Puerto Peñasco, Sonora, Mexico"
+   },
+   "wikipedia": {
+    "titulo": "Pinacate Peaks",
+    "extracto": "The Pinacate Peaks are a group of volcanic peaks and cinder cones located mostly in the Mexican state of Sonora along the international border adjacent to the U.S. state of Arizona, surrounded by the vast sand dune field of the Gran Desierto de Altar, at the desert's southeast.",
+    "url": "https://en.wikipedia.org/wiki/Pinacate_Peaks",
+    "imagen": "https://thumb.wikimedia.org/wikipedia/commons/thumb/8/86/20091211_-_Puerto_Penasco_-63.jpg/330px-20091211_-_Puerto_Penasco_-63.jpg?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail",
+    "idioma": "en",
+    "distancia_km": 0.9
+   },
+   "elevacion_m": 1112.0,
+   "fuentes": [
+    "OpenStreetMap Nominatim (© OpenStreetMap contributors, ODbL)",
+    "Wikipedia (CC BY-SA)",
+    "Open-Meteo (elevation)"
+   ],
+   "segundos": 1.67
+  }
+ },
+ "43.420,-113.520": {
+  "hechos": {
+   "lat": 43.42,
+   "lon": -113.52,
+   "lugar": {
+    "nombre": "Butte County",
+    "region": "Idaho",
+    "pais": "United States",
+    "descripcion": "Butte County, Idaho, United States"
+   },
+   "wikipedia": {
+    "titulo": "Craters of the Moon National Monument and Preserve",
+    "extracto": "Craters of the Moon National Monument and Preserve is a U.S. national monument and national preserve in the Snake River Plain in central Idaho. It is along US 20, between the small towns of Arco and Carey, at an average elevation of 5,900 feet (1,800 m) above sea level.",
+    "url": "https://en.wikipedia.org/wiki/Craters_of_the_Moon_National_Monument_and_Preserve",
+    "imagen": "https://thumb.wikimedia.org/wikipedia/commons/thumb/a/a3/CratersDrone1.jpg/330px-CratersDrone1.jpg?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail",
+    "idioma": "en",
+    "distancia_km": 5.8
+   },
+   "elevacion_m": 1740.0,
+   "fuentes": [
+    "OpenStreetMap Nominatim (© OpenStreetMap contributors, ODbL)",
+    "Wikipedia (CC BY-SA)",
+    "Open-Meteo (elevation)"
+   ],
+   "segundos": 2.32
+  }
+ },
+ "35.030,-111.020": {
+  "hechos": {
+   "lat": 35.03,
+   "lon": -111.02,
+   "lugar": {
+    "nombre": "Coconino County",
+    "region": "Arizona",
+    "pais": "United States",
+    "descripcion": "Coconino County, Arizona, United States"
+   },
+   "wikipedia": {
+    "titulo": "Meteor Crater",
+    "extracto": "Meteor Crater, or Barringer Crater, is an impact crater about 37 mi (60 km) east of Flagstaff and 18 mi (29 km) west of Winslow in the desert of northern Arizona, United States. The site had several earlier names, and fragments of the meteorite are officially called the Canyon Diablo Meteorite, after the adjacent Canyon Diablo.",
+    "url": "https://en.wikipedia.org/wiki/Meteor_Crater",
+    "imagen": "https://thumb.wikimedia.org/wikipedia/commons/thumb/f/fd/Meteor_Crater_-_Arizona.jpg/330px-Meteor_Crater_-_Arizona.jpg?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail",
+    "idioma": "en",
+    "distancia_km": 0.4
+   },
+   "elevacion_m": 1627.0,
+   "fuentes": [
+    "OpenStreetMap Nominatim (© OpenStreetMap contributors, ODbL)",
+    "Wikipedia (CC BY-SA)",
+    "Open-Meteo (elevation)"
+   ],
+   "segundos": 1.52
+  }
+ },
+ "35.580,-111.630": {
+  "hechos": {
+   "lat": 35.58,
+   "lon": -111.63,
+   "lugar": {
+    "nombre": "Coconino County",
+    "region": "Arizona",
+    "pais": "United States",
+    "descripcion": "Coconino County, Arizona, United States"
+   },
+   "wikipedia": {
+    "titulo": "S P Crater",
+    "extracto": "S P Crater is a cinder cone volcano in the San Francisco volcanic field, 25 miles (40 km) north of Flagstaff, Arizona, United States. It is surrounded by several other cinder cones which are older and more eroded. It is a striking feature on the local landscape, with a well-defined lava flow that extends for 4.3 miles (7 km) to the north. American astronauts have used the crater to train for moonwalking.",
+    "url": "https://en.wikipedia.org/wiki/S_P_Crater",
+    "imagen": "https://upload.wikimedia.org/wikipedia/commons/7/78/SP_Crater.jpg?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail_unscaled",
+    "idioma": "en",
+    "distancia_km": 0.3
+   },
+   "elevacion_m": 2093.0,
+   "fuentes": [
+    "OpenStreetMap Nominatim (© OpenStreetMap contributors, ODbL)",
+    "Wikipedia (CC BY-SA)",
+    "Open-Meteo (elevation)"
+   ],
+   "segundos": 2.27
+  }
+ },
+ "-30.000,-67.900": {
+  "hechos": {
+   "lat": -30.0,
+   "lon": -67.9,
+   "lugar": {
+    "nombre": "Departamento Independencia",
+    "region": "La Rioja",
+    "pais": "Argentina",
+    "descripcion": "Departamento Independencia, La Rioja, F5386, Argentina"
+   },
+   "wikipedia": null,
+   "elevacion_m": 1491.0,
+   "fuentes": [
+    "OpenStreetMap Nominatim (© OpenStreetMap contributors, ODbL)",
+    "Wikipedia (CC BY-SA)",
+    "Open-Meteo (elevation)"
+   ],
+   "segundos": 0.92
+  }
+ },
+ "-5.900,-80.600": {
+  "hechos": {
+   "lat": -5.9,
+   "lon": -80.6,
+   "lugar": {
+    "nombre": "Sechura",
+    "region": "Piura",
+    "pais": "Peru",
+    "descripcion": "Sechura, Province of Sechura, Piura, Peru"
+   },
+   "wikipedia": {
+    "titulo": "Loma Cheleque",
+    "extracto": "Loma Cheleque es una localidad peruana ubicada en el distrito de Catacaos, perteneciente a la provincia y departamento de Piura, al norte del Perú.",
+    "url": "https://es.wikipedia.org/wiki/Loma_Cheleque",
+    "imagen": "https://thumb.wikimedia.org/wikipedia/commons/thumb/7/7b/Peru_location_map.svg/langes-330px-Peru_location_map.svg.png?utm_source=es.wikipedia.org&utm_campaign=api&utm_content=thumbnail",
+    "idioma": "es",
+    "distancia_km": 9.8
+   },
+   "elevacion_m": 2.0,
+   "fuentes": [
+    "OpenStreetMap Nominatim (© OpenStreetMap contributors, ODbL)",
+    "Wikipedia (CC BY-SA)",
+    "Open-Meteo (elevation)"
+   ],
+   "segundos": 0.91
+  }
+ },
+ "12.200,-71.900": {
+  "hechos": {
+   "lat": 12.2,
+   "lon": -71.9,
+   "lugar": {
+    "nombre": "Colombia",
+    "region": "",
+    "pais": "Colombia",
+    "descripcion": "Colombia"
+   },
+   "wikipedia": {
+    "titulo": "Bahia Portete (La Guajira, Colombia)",
+    "extracto": "Bahía de Portete is a bay in La Guajira, Colombia. It lies approximately 30 miles (48 km) from the Venezuelan border on the Guajira Peninsula in the northeast region of Colombia. The bay opens to the Caribbean Sea. A large coal terminal lies at the mouth of the bay, and the bay's inlet is less than 1 mile (2 km) wide.",
+    "url": "https://en.wikipedia.org/wiki/Bahia_Portete_(La_Guajira%2C_Colombia)",
+    "imagen": "https://thumb.wikimedia.org/wikipedia/commons/thumb/2/2a/BahiaPortete.PNG/330px-BahiaPortete.PNG?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail",
+    "idioma": "en",
+    "distancia_km": 2.4
+   },
+   "elevacion_m": 0.0,
+   "fuentes": [
+    "OpenStreetMap Nominatim (© OpenStreetMap contributors, ODbL)",
+    "Wikipedia (CC BY-SA)",
+    "Open-Meteo (elevation)"
+   ],
+   "segundos": 0.92
+  }
+ },
+ "36.500,-117.100": {
+  "hechos": {
+   "lat": 36.5,
+   "lon": -117.1,
+   "lugar": {
+    "nombre": "Inyo County",
+    "region": "California",
+    "pais": "United States",
+    "descripcion": "Inyo County, California, United States"
+   },
+   "wikipedia": {
+    "titulo": "Skidoo, California",
+    "extracto": "Skidoo was an unincorporated community in Inyo County, California. The geographical location of the old town site lies at an elevation of 5,689 feet. Skidoo is a ghost town located in Death Valley National Park. It is on the National Register of Historic Places.",
+    "url": "https://en.wikipedia.org/wiki/Skidoo%2C_California",
+    "imagen": "https://thumb.wikimedia.org/wikipedia/commons/thumb/6/66/DETAIL_OF_STAMP_BATTERIES_CAMS%2C_TAPPETS_AND_STEMS_WITH_SIX_FOOT_SCALE%2C_LOOKING_NORTH_NORTHWEST._SEE_CA-290-24_FOR_IDENTICAL_BandW_NEGATIVE._-_Skidoo_Mine%2C_Park_Route_38_%28Skidoo_HAER_CA-290-48_%28CT%29.tif/lossy-page1-330px-thumbnail.tif.jpg?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail",
+    "idioma": "en",
+    "distancia_km": 8.3
+   },
+   "elevacion_m": 1525.0,
+   "fuentes": [
+    "OpenStreetMap Nominatim (© OpenStreetMap contributors, ODbL)",
+    "Wikipedia (CC BY-SA)",
+    "Open-Meteo (elevation)"
+   ],
+   "segundos": 0.86
+  }
+ },
+ "-23.860,-69.140": {
+  "hechos": {
+   "lat": -23.86,
+   "lon": -69.14,
+   "lugar": {
+    "nombre": "Antofagasta",
+    "region": "Antofagasta Region",
+    "pais": "Chile",
+    "descripcion": "Antofagasta, Provincia de Antofagasta, Antofagasta Region, Chile"
+   },
+   "wikipedia": null,
+   "elevacion_m": 2700.0,
+   "fuentes": [
+    "OpenStreetMap Nominatim (© OpenStreetMap contributors, ODbL)",
+    "Wikipedia (CC BY-SA)",
+    "Open-Meteo (elevation)"
+   ],
+   "segundos": 0.86
+  }
+ },
+ "16.864,-82.063": {
+  "hechos": {
+   "lat": 16.864321268434598,
+   "lon": -82.06263445488476,
+   "lugar": {
+    "nombre": "",
+    "region": "",
+    "pais": "",
+    "descripcion": ""
+   },
+   "wikipedia": null,
+   "elevacion_m": 0.0,
+   "fuentes": [
+    "OpenStreetMap Nominatim (© OpenStreetMap contributors, ODbL)",
+    "Wikipedia (CC BY-SA)",
+    "Open-Meteo (elevation)"
+   ],
+   "segundos": 1.12
+  }
+ },
+ "-24.080,-69.930|v3|Structures against Martian dust": {
+  "resumen": "**What it is:** The Atacama Desert (Yungay) is a hyperarid desert site in Chile’s Antofagasta Region, at about 960 m elevation.  \n\n**Why it could work:** The team hypothesizes the soils contain very little life, making it a good analog for testing structures against Martian dust for missions targeting Jezero Crater.  \n\n**What it does not reproduce:** It does not replicate Martian gravity."
+ },
+ "3.230,-75.170|v3|": {
+  "resumen": "**What it is:** The Tatacoa Desert is a desert environment in Colombia, situated in the Villavieja area of Huila at 434 m elevation.  \n\n**Why it could work:** The team hypothesizes that its gullies and red sediments could serve as analogs for Mars‑related studies, as it is suggested for Mars testing.  \n\n**What it does not reproduce:** It does not replicate Martian gravity, vacuum, atmosphere, or radiation."
+ },
+ "40.900,-113.510|v3|": {
+  "resumen": "**What it is:** A point at 1,286 m elevation with no identified site or surrounding area.  \n**Why it could work:** The team has not evaluated this point yet, so its value as an analog is unknown.  \n**What it does not reproduce:** It does not replicate lunar or Martian gravity, vacuum, atmosphere, or radiation conditions."
+ },
+ "40.900,-113.510": {
+  "hechos": {
+   "lat": 40.9,
+   "lon": -113.51,
+   "lugar": {
+    "nombre": "Tooele County",
+    "region": "Utah",
+    "pais": "United States",
+    "descripcion": "Tooele County, Utah, United States"
+   },
+   "wikipedia": null,
+   "elevacion_m": 1286.0,
+   "fuentes": [
+    "OpenStreetMap Nominatim (© OpenStreetMap contributors, ODbL)",
+    "Wikipedia (CC BY-SA)",
+    "Open-Meteo (elevation)"
+   ],
+   "segundos": 1.16
+  }
+ }
+}
