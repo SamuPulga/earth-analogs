@@ -697,3 +697,4 @@ summary { cursor: pointer; color: var(--suave); padding: 6px 0; }
 .cuota { position: relative; margin-top: 8px; font-size: 11px; color: var(--acento-2); padding-top: 6px; }
 .cuota::before { content: ""; position: absolute; top: 0; left: 0; height: 3px; width: var(--x, 0%); background: var(--acento); border-radius: 2px; transition: width .2s; }
 .fila .control:not(.tres):not(.objetivo) { grid-template-columns: 52px 1fr 80px; }
+.etq.medio { color: #f5c451; border-color: rgba(245,196,81,.5); }

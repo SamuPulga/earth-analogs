@@ -9,7 +9,6 @@ import { prepararRejilla, puntoRejilla, pedirNombre, alNombrar, nombres, MAPAS, 
 const E = {
   inicio: null,
   mision: null,       // configuración que se está editando
-  base: {},           // tolerancias originales (centro de cada slider)
   modo: "predefinida",
   resultado: null,
   sel: null,          // sitio seleccionado
@@ -56,7 +55,6 @@ export function iniciarMision(inicio) {
   $("#btn-agregar-restriccion").addEventListener("click", agregarRestriccion);
   $$(".pestana").forEach((b) => b.addEventListener("click", () => cambiarModo(b.dataset.modo)));
   iniciarAsistente(inicio);
-  $$("#modo-peso button").forEach((b) => b.addEventListener("click", () => cambiarModoPeso(b.dataset.m)));
   pintarMisiones();
 }
 
@@ -108,8 +106,6 @@ function marcarPestana() {
 function cargarMision(id) {
   const m = E.inicio.misiones.find((x) => x.id === id);
   E.mision = structuredClone(m);
-  E.base = {};
-  E.mision.parametros.forEach((p) => { if (p.metodo === "tolerancia") E.base[p.variable] = p.valor; });
   marcarPestana();
   pintarConfig();
   calcular();
@@ -153,7 +149,6 @@ function pintarConfig() {
   // parámetros
   const lp = $("#lista-parametros");
   lp.replaceChildren(...m.parametros.map((p, i) => filaParametro(p, i)));
-  $$("#modo-peso button").forEach((b) => b.classList.toggle("activo", b.dataset.m === modoPeso()));
   setTimeout(actualizarCuotas);
   if (!m.parametros.length) lp.append(el("p", { class: "nota" }, "Add at least one parameter."));
 
@@ -184,48 +179,22 @@ function pintarConfig() {
 }
 
 // ---------------------------------------------------------------- objetivo y peso de cada parámetro
+// Cada parámetro tiene un valor OBJETIVO (por defecto el del destino) y un PESO (1–100).
+// El modelo de Daniel recibe los pesos normalizados (suman 1): puntuación = max_i peso_i · brecha_i,
+// donde brecha_i = |valor − objetivo| / rango del parámetro en América (0 = idéntico, 1 = todo el rango).
 const unidadCorta = (v) => (variable(v).unidad || "").replace(/\s*\(.*\)$/, "").replace(/^albedo$/, "");
 const objetivoDestino = (v) => destino(E.mision.destino).objetivos?.[v] || null;
 
-// Peso de cada parámetro en el modelo: tolerancia → rango/τ (w = 1/τ en la escala de Daniel); peso → tal cual
-function pesoModelo(p) {
-  return p.metodo === "tolerancia" ? (E.G?.rango[p.variable] || 1) / p.valor : (p.peso || 0);
-}
 function cuotas() {
   const ps = paramsActivos();
-  const suma = ps.reduce((a, p) => a + pesoModelo(p), 0) || 1;
-  return Object.fromEntries(ps.map((p) => [p.variable, pesoModelo(p) / suma]));
+  const suma = ps.reduce((a, p) => a + (p.peso || 0), 0) || 1;
+  return Object.fromEntries(ps.map((p) => [p.variable, (p.peso || 0) / suma]));
 }
 function actualizarCuotas() {
-  const c = cuotas();
-  for (const [v, x] of Object.entries(c)) {
+  for (const [v, x] of Object.entries(cuotas())) {
     const n = document.getElementById(`cuota-${v}`);
-    if (n) { n.textContent = `${Math.round(x * 100)} % of the weight`; n.style.setProperty("--x", `${x * 100}%`); }
+    if (n) { n.textContent = `${Math.round(x * 100)} % of the total weight`; n.style.setProperty("--x", `${x * 100}%`); }
   }
-}
-
-// Todas las tolerancias o todos los pesos: mezclarlos no tiene una escala común
-function modoPeso() {
-  const ps = E.mision?.parametros || [];
-  return ps.length && ps.every((p) => p.metodo === "ahp") ? "ahp" : "tolerancia";
-}
-function cambiarModoPeso(modo) {
-  if (!E.mision || modo === modoPeso()) return;
-  pasarAPersonalizada();
-  if (modo === "ahp") {
-    const c = cuotas();
-    E.mision.parametros.forEach((p) => {
-      if (p.metodo === "tolerancia") p._tol = p.valor;
-      p.metodo = "ahp"; p.peso = Math.max(0.01, +(c[p.variable] ?? 1 / E.mision.parametros.length).toFixed(2));
-    });
-  } else {
-    E.mision.parametros.forEach((p) => {
-      p.metodo = "tolerancia";
-      p.valor = p._tol ?? E.base[p.variable] ?? +((E.G?.rango[p.variable] || 1) * 0.2).toPrecision(2);
-      E.base[p.variable] ??= p.valor;
-    });
-  }
-  cambio(true);
 }
 
 function filaParametro(p, i) {
@@ -247,11 +216,10 @@ function filaParametro(p, i) {
   const pintarNota = (recorte = "") => {
     nota.className = `nota-objetivo${recorte ? " recorte" : ""}`;
     nota.textContent = recorte || (p.objetivo == null
-      ? `${destino(E.mision.destino).nombre || "Destination"}: ${regla[od?.regla] || "target"}`
-      : `Your target · destination: ${od ? +od.valor.toPrecision(3) : "—"}`);
+      ? `${destino(E.mision.destino).nombre || "Destination"}: ${regla[od?.regla] || "target"} · range ${lo != null ? `${+lo.toPrecision(3)} to ${+hi.toPrecision(3)}` : "—"}`
+      : `Your target · destination: ${od ? +od.valor.toPrecision(3) : "—"} · range ${lo != null ? `${+lo.toPrecision(3)} to ${+hi.toPrecision(3)}` : "—"}`);
   };
-  const obj = el("input", { type: "number", step: "any", value: +(p.objetivo ?? od?.valor ?? 0).toPrecision(4),
-    "aria-label": `Target for ${nombre(v)}`, title: lo != null ? `Range in the Americas: ${+lo.toPrecision(3)} to ${+hi.toPrecision(3)} ${u}` : "" });
+  const obj = el("input", { type: "number", step: "any", value: +(p.objetivo ?? od?.valor ?? 0).toPrecision(4), "aria-label": `Target for ${nombre(v)}` });
   obj.addEventListener("change", () => {
     let x = parseFloat(obj.value);
     if (Number.isNaN(x)) { obj.value = +(p.objetivo ?? od?.valor ?? 0).toPrecision(4); return; }
@@ -268,31 +236,14 @@ function filaParametro(p, i) {
   pintarNota();
   const filaObjetivo = el("div", { class: "control objetivo" }, el("span", { class: "etq-ctrl" }, "Target"), obj, volver, nota);
 
-  // ---- peso: como tolerancia (menor = más importante) o como peso directo
-  let control;
-  if (p.metodo === "tolerancia") {
-    // slider en escala logarítmica alrededor de la tolerancia original: de base/10 a base·10
-    const base = E.base[v] ?? p.valor;
-    const num = el("input", { type: "number", min: "0", step: "any", value: +p.valor.toPrecision(3), "aria-label": `Tolerance for ${nombre(v)}` });
-    const rango = el("input", { type: "range", min: "-1", max: "1", step: "0.02",
-      value: Math.log10(p.valor / base).toFixed(2), "aria-label": `Tolerance for ${nombre(v)} (slider)` });
-    rango.addEventListener("input", () => {
-      p.valor = +(base * 10 ** +rango.value).toPrecision(3);
-      num.value = p.valor; cambio();
-    });
-    num.addEventListener("change", () => {
-      const x = parseFloat(num.value);
-      if (x > 0) { p.valor = x; rango.value = Math.log10(x / base).toFixed(2); cambio(); }
-    });
-    control = el("div", { class: "control" }, el("span", { class: "etq-ctrl", title: "Largest acceptable difference from the target. Smaller = more weight" }, "± Tol."), rango, num);
-  } else {
-    const num = el("input", { type: "number", min: "1", max: "100", step: "1", value: Math.round((p.peso || 0) * 100), "aria-label": `Weight of ${nombre(v)} (%)` });
-    const rango = el("input", { type: "range", min: "1", max: "100", step: "1", value: Math.round((p.peso || 0) * 100), "aria-label": `Weight of ${nombre(v)} (slider)` });
-    const poner = (x) => { x = Math.min(100, Math.max(1, Math.round(x))); p.peso = x / 100; num.value = x; rango.value = x; cambio(); };
-    rango.addEventListener("input", () => poner(+rango.value));
-    num.addEventListener("change", () => { const x = parseFloat(num.value); if (x > 0) poner(x); });
-    control = el("div", { class: "control" }, el("span", { class: "etq-ctrl" }, "Weight"), rango, num);
-  }
+  // ---- peso: 1 a 100 (lo que cuenta es la proporción entre los parámetros)
+  const pesoPct = Math.round((p.peso || 0) * 100) || 1;
+  const num = el("input", { type: "number", min: "1", max: "100", step: "1", value: pesoPct, "aria-label": `Weight of ${nombre(v)}` });
+  const rango = el("input", { type: "range", min: "1", max: "100", step: "1", value: pesoPct, "aria-label": `Weight of ${nombre(v)} (slider)` });
+  const poner = (x) => { x = Math.min(100, Math.max(1, Math.round(x))); p.peso = x / 100; num.value = x; rango.value = x; cambio(); };
+  rango.addEventListener("input", () => poner(+rango.value));
+  num.addEventListener("change", () => { const x = parseFloat(num.value); if (x > 0) poner(x); });
+  const control = el("div", { class: "control" }, el("span", { class: "etq-ctrl" }, "Weight"), rango, num);
   const cuota = el("div", { class: "cuota", id: `cuota-${v}` });
   return el("div", { class: "fila" }, cab, texto, filaObjetivo, control, cuota);
 }
@@ -315,12 +266,8 @@ function agregarParametro() {
   const v = $("#sel-nuevo-parametro").value;
   if (!v || !disponible(v)) return;
   pasarAPersonalizada();
-  // tolerancia inicial: 20 % del rango de América (o un peso parejo, si la misión usa pesos)
-  const tol = +((E.G?.rango[v] || 1) * 0.2).toPrecision(2);
-  const conPesos = modoPeso() === "ahp" && E.mision.parametros.length;
-  E.mision.parametros.push({ variable: v, metodo: conPesos ? "ahp" : "tolerancia", valor: conPesos ? null : tol,
-    peso: conPesos ? 0.3 : null, objetivo: null, unidad: variable(v).unidad || "", texto: "Added by hand: set its target and weight", fuente: "" });
-  E.base[v] = tol;
+  E.mision.parametros.push({ variable: v, metodo: "ahp", valor: null, peso: 0.3, objetivo: null,
+    unidad: "share of the weight", texto: "Added by hand: set its target and weight", fuente: "" });
   cambio(true);
 }
 
@@ -353,7 +300,9 @@ async function calcular() {
   if (!E.mision) return;
   const err = $("#error");
   // Solo se mandan los parámetros que el destino tiene (los "no aplica" quedan fuera)
-  const parametros = paramsActivos();
+  // Al modelo van los pesos normalizados (suman 1), todos como peso directo ("ahp" en el modelo de Daniel)
+  const c = cuotas();
+  const parametros = paramsActivos().map((p) => ({ ...p, metodo: "ahp", valor: null, peso: Math.max(c[p.variable], 1e-6) }));
   if (!parametros.length) {
     err.hidden = false;
     err.textContent = "Add at least one parameter that exists for this destination.";
@@ -396,16 +345,19 @@ function evaluar(k) {
   const detalle = E.parametrosCalculo.map((p) => {
     const v = p.variable, x = E.G.val[v][k], o = obj[v].valor;
     const dif = Math.abs(x - o), f = dif / E.G.rango[v];
-    const w_f = p.metodo === "tolerancia" ? dif / p.valor : f * p.peso;
-    return { variable: v, f, w_f, dentro_tolerancia: p.metodo === "tolerancia" ? w_f <= 1 : null,
-      valor_sitio: x, objetivo: o, diferencia: dif, tolerancia: p.metodo === "tolerancia" ? p.valor : null };
+    return { variable: v, f, w_f: f * p.peso, dentro_tolerancia: null, valor_sitio: x, objetivo: o, diferencia: dif, peso: p.peso };
   });
   const wf = detalle.map((d) => d.w_f);
   const m = Math.max(...wf);
-  const conTol = detalle.filter((d) => d.dentro_tolerancia !== null);
   return { sitio_id: E.G.ids[k], puntuacion: m, parametro_decisivo: detalle[wf.indexOf(m)].variable,
-    dentro_tolerancia: conTol.length ? conTol.every((d) => d.dentro_tolerancia) : null, robustez: null, detalle };
+    dentro_tolerancia: null, robustez: null, detalle };
 }
+
+// Brecha = |valor − objetivo| / rango en América. Cercano ≤ 10 %, parcial ≤ 25 %, lejos > 25 %
+const peorBrecha = (detalle) => Math.max(...detalle.map((d) => d.f));
+const nivel = (f) => (f <= 0.1 ? "bien" : f <= 0.25 ? "medio" : "mal");
+const NIVEL = { bien: "close match", medio: "partial match", mal: "far from target" };
+const pctR = (f) => `${Math.round(f * 100)} %`;
 
 function puestoFrente(k) {
   const P = E.resultado.puntos, s = P[k][0];
@@ -465,15 +417,15 @@ function pintarResultado(conMapa = true) {
   const tot = R.totales;
   $("#ranking").replaceChildren(...R.ranking.map((x, i) => {
     const s = sitio(x.sitio_id);
-    const etq = x.dentro_tolerancia === null ? null :
-      el("span", { class: `etq ${x.dentro_tolerancia ? "bien" : "mal"}` },
-        x.dentro_tolerancia ? "within tolerance" : "outside tolerance");
+    const b = peorBrecha(x.detalle);
+    const etq = el("span", { class: `etq ${nivel(b)}`, title: "Largest gap to a target, as % of that parameter's range in the Americas" },
+      `${{ bien: "close", medio: "partial", mal: "far" }[nivel(b)]} · gap ${pctR(b)}`);
     return el("li", { class: x.sitio_id === E.sel ? "sel" : "", tabindex: "0", onclick: () => seleccionar(x.sitio_id),
       onkeydown: (e) => { if (e.key === "Enter") seleccionar(x.sitio_id); } },
       el("span", { class: "puesto" }, String(i + 1).padStart(2, "0")),
       el("div", {}, el("div", { class: "nombre" }, s.nombre),
         el("div", { class: "meta" }, `${s.pais ? s.pais + " · " : ""}decided by: ${nombre(x.parametro_decisivo)} · robustness ${pct(x.robustez)} `), etq),
-      el("div", { class: "punt" }, el("b", {}, fmt(x.puntuacion)), el("span", { class: "meta" }, "score")));
+      el("div", { class: "punt" }, el("b", {}, fmt(x.puntuacion, 3)), el("span", { class: "meta" }, "score")));
   }));
   if (!R.ranking.length) {
     $("#ranking").append(el("p", { class: "nota" }, "No site meets the constraints."));
@@ -500,18 +452,20 @@ function pintarResultado(conMapa = true) {
 }
 
 // ---------------------------------------------------------------- ¿el resultado es bueno o solo el menos malo?
-// Puntuación del óptimo > 1 = ningún lugar cumple todas las tolerancias: el primero es solo el menos malo.
+// ¿El óptimo se parece de verdad a los objetivos? Si en algún parámetro queda a más del 25 % del rango de
+// América de su objetivo, ningún lugar se acerca a todo: el primero es solo el mejor compromiso.
 function pintarAvisoCalidad() {
   const R = E.resultado, caja = $("#aviso-calidad");
   const top = R.ranking[0];
   if (!top) { caja.hidden = true; return; }
   const partes = [];
-  if (top.puntuacion > 1) {
-    const p = E.parametrosCalculo.find((q) => q.variable === top.parametro_decisivo);
-    partes.push(el("span", {}, el("b", {}, "No place in the Americas meets all the tolerances"),
-      ` (best score ${fmt(top.puntuacion)}; 1 or less means within tolerance). The optimal site is only the `, el("b", {}, "least-bad match"),
-      `, limited by ${nombre(top.parametro_decisivo)}${p?.metodo === "tolerancia" ? ` (tolerance ±${p.valor}, ${fmt(top.puntuacion, 1)}× exceeded)` : ""}. `,
-      "Loosen that tolerance if the mission allows it, or check whether the settings really describe the mission."));
+  const lejos = top.detalle.filter((d) => d.f > 0.25).sort((a, b) => b.f - a.f);
+  if (lejos.length) {
+    const u = (v) => unidadCorta(v);
+    partes.push(el("span", {}, el("b", {}, "No place in the Americas gets close to every target. "),
+      "The optimal site is only the ", el("b", {}, "best compromise"), ": it is still far in ",
+      lejos.map((d) => `${nombre(d.variable)} (${+d.valor_sitio.toPrecision(3)} vs target ${+d.objetivo.toPrecision(3)} ${u(d.variable)}, a gap of ${pctR(d.f)} of the range)`).join(" and "),
+      ". Lower the weight of what matters less, change the target, or accept that Earth cannot reproduce it."));
   }
   if (top.robustez < 0.3) {
     partes.push(el("span", {}, el("b", {}, "Fragile first place: "),
@@ -551,7 +505,7 @@ function pintarControl() {
     const estado = est === 0 ? `Pareto front #${puestoFrente(k)}` : est === 2 ? "ruled out by a constraint" : "dominated";
     return { a, g, html: el("li", { class: "clic", tabindex: "0", onclick: () => seleccionar(a.celda), onkeydown: (e) => { if (e.key === "Enter") seleccionar(a.celda); } },
       el("span", {}, el("b", {}, a.nombre)), el("span", { class: `pos ${clase}` }, `#${g.n.toLocaleString("en")}`),
-      el("small", {}, `Top ${Math.max(1, Math.round(g.frac * 100))} % of ${g.total.toLocaleString("en")} · score ${fmt(s)}${s <= 1 ? " (within tolerance)" : ""} · ${estado}`),
+      el("small", {}, `Top ${Math.max(1, Math.round(g.frac * 100))} % of ${g.total.toLocaleString("en")} · score ${fmt(s, 3)} · ${estado}`),
       a.por_que ? el("small", { class: "uso" }, `Used for: ${a.por_que}`) : null) };
   });
   $("#control-positivo").replaceChildren(...filas.map((f) => f.html));
@@ -577,7 +531,7 @@ function pintarOptimo() {
   const s = sitio(o.sitio_id);
   caja.replaceChildren(...[
     el("span", { class: "optimo-etq" }, "Optimal site"),
-    (E.resultado.ranking[0]?.puntuacion > 1) ? el("span", { class: "etq-menos-malo", title: "No place meets all the tolerances" }, "least-bad match") : null,
+    (E.resultado.ranking[0] && peorBrecha(E.resultado.ranking[0].detalle) > 0.25) ? el("span", { class: "etq-menos-malo", title: "No place gets close to every target" }, "best compromise") : null,
     el("b", {}, s.nombre || o.sitio_id),
     el("span", { class: "optimo-coords" }, `${s.pais && s.rejilla ? s.pais + " · " : ""}${coordenadas(o.lat, o.lon)}`),
     el("button", { class: "btn chico", type: "button", onclick: () => seleccionar(o.sitio_id, 7) }, "Center ", el("i", { class: "flecha" })),
@@ -669,26 +623,26 @@ function sobreElLugar(s, st) {
 const REGLA = { min: "lowest_on_earth", max: "highest_on_earth", fijo: "fixed_value", usuario: "set_by_user" };
 const redondo = (x) => (x == null ? null : +(+x).toPrecision(3));
 
-// Lo que la IA necesita para explicar el ranking: valores del punto, objetivo del destino, tolerancias y pesos
+// Lo que la IA necesita para explicar el ranking: valores del punto, objetivos, brechas y pesos
 function paraIA(st) {
   const ev = st.eval, R = E.resultado, obj = R.objetivos || {};
-  const pesos = E.parametrosCalculo.map((p) => (p.metodo === "tolerancia" ? (E.G?.rango[p.variable] || 1) / p.valor : p.peso));
-  const suma = pesos.reduce((a, b) => a + b, 0) || 1;
+  const c = cuotas();
+  const top = R.ranking[0];
   return {
     status: { frente: "on the Pareto front", dominado: "dominated: another point is equal or better in every parameter" }[st.tipo],
     rank: st.puesto ? `${st.puesto} of ${R.totales?.frente ?? R.ranking.length} on the Pareto front` : null,
     is_optimal_site: ev.sitio_id === R.optimo?.sitio_id,
-    no_place_meets_all_tolerances: (R.ranking[0]?.puntuacion ?? 0) > 1,
+    best_place_far_from_some_target: top ? peorBrecha(top.detalle) > 0.25 : false,
     score: redondo(ev.puntuacion),
-    score_meaning: "largest difference/tolerance among the parameters; 1 or less means within tolerance in all of them",
+    score_meaning: "largest weighted gap among the parameters (lower = better)",
     decisive_parameter: nombre(ev.parametro_decisivo),
     robustness: ev.robustez == null ? null : `ranked first in ${Math.round(ev.robustez * 100)}% of runs with slightly changed weights`,
-    parameters: ev.detalle.map((d, i) => ({
-      name: nombre(d.variable), unit: (variable(d.variable).unidad || "").replace(/\s*\(.*\)$/, ""),
-      value_here: redondo(d.valor_sitio), destination_target: redondo(d.objetivo),
+    parameters: ev.detalle.map((d) => ({
+      name: nombre(d.variable), unit: unidadCorta(d.variable),
+      value_here: redondo(d.valor_sitio), target: redondo(d.objetivo),
       target_rule: REGLA[obj[d.variable]?.regla] || null, difference: redondo(d.diferencia),
-      tolerance: redondo(d.tolerancia), within_tolerance: d.dentro_tolerancia,
-      weight_share_percent: Math.round((pesos[i] / suma) * 100),
+      gap_percent_of_range: Math.round(d.f * 100), match: NIVEL[nivel(d.f)],
+      weight_share_percent: Math.round((c[d.variable] ?? 0) * 100),
     })),
   };
 }
@@ -710,17 +664,17 @@ function mapasMedidos(s) {
 function tablaAnalogo(ev) {
   const obj = E.resultado.objetivos || {};
   const regla = { min: "lowest on Earth", max: "highest on Earth", usuario: "set by you" };
-  const u = (v) => (variable(v).unidad || "").replace(/\s*\(.*\)$/, "");
   const n = (x) => (x == null ? "—" : String(+(+x).toPrecision(3)));
+  const c = cuotas();
   return el("div", { class: "tabla-scroll" }, el("table", { class: "tabla-analogo" },
-    el("thead", {}, el("tr", {}, ...["Parameter", "Here", "Target", "Diff.", "Tol.", ""].map((h) => el("th", {}, h)))),
+    el("thead", {}, el("tr", {}, ...["Parameter", "Here", "Target", "Gap", "Weight"].map((h) => el("th", {}, h)))),
     el("tbody", {}, ...ev.detalle.map((d) => el("tr", {},
-      el("td", {}, nombre(d.variable), el("small", {}, u(d.variable))),
+      el("td", {}, nombre(d.variable), el("small", {}, unidadCorta(d.variable))),
       el("td", { class: "num-t" }, n(d.valor_sitio)),
       el("td", { class: "num-t", title: obj[d.variable]?.por_que || "" }, n(d.objetivo), regla[obj[d.variable]?.regla] ? el("small", {}, regla[obj[d.variable].regla] + (obj[d.variable].recortado ? " (clipped)" : "")) : null),
-      el("td", { class: "num-t" }, n(d.diferencia)),
-      el("td", { class: "num-t" }, d.tolerancia == null ? "AHP" : n(d.tolerancia)),
-      el("td", {}, d.dentro_tolerancia == null ? "" : el("span", { class: `etq ${d.dentro_tolerancia ? "bien" : "mal"}` }, d.dentro_tolerancia ? "✓" : "✗")))))));
+      el("td", { class: "num-t", title: `Difference ${n(d.diferencia)} ${unidadCorta(d.variable)} = ${pctR(d.f)} of the range in the Americas` },
+        el("span", { class: `etq ${nivel(d.f)}` }, pctR(d.f)), el("small", {}, `±${n(d.diferencia)}`)),
+      el("td", { class: "num-t" }, `${Math.round((c[d.variable] ?? 0) * 100)} %`))))));
 }
 
 function pintarFicha() {
@@ -748,7 +702,7 @@ function pintarFicha() {
     const quien = st.dato.dominado_por ? sitio(st.dato.dominado_por).nombre : "another point";
     f.replaceChildren(titulo, cab,
       el("p", {}, `Dominated by ${quien}: that point is equal or better in every mission parameter and better in at least one. That is why it is not recommended.`),
-      hipotesis, st.eval ? [el("h3", {}, "Compared with the destination"), tablaAnalogo(st.eval)] : null,
+      hipotesis, st.eval ? [el("h3", {}, "Compared with the targets"), tablaAnalogo(st.eval)] : null,
       sobreElLugar(s, st), mapasMedidos(s), fuente);
     return;
   }
@@ -756,27 +710,26 @@ function pintarFicha() {
   const x = st.dato;
   const cifras = el("div", { class: "cifras" },
     el("div", { class: "cifra" }, el("b", {}, `#${st.puesto}`), el("span", {}, "rank")),
-    el("div", { class: "cifra" }, el("b", {}, fmt(x.puntuacion)), el("span", {}, "score (≤ 1 = within)")),
+    el("div", { class: "cifra" }, el("b", {}, fmt(x.puntuacion, 3)), el("span", {}, "score (lower = better)")),
     el("div", { class: "cifra" }, el("b", {}, x.robustez == null ? "—" : pct(x.robustez)), el("span", {}, "robustness (times 1st)")));
 
-  const escala = Math.max(2, ...x.detalle.map((d) => d.w_f));
+  const escala = Math.max(...x.detalle.map((d) => d.w_f)) || 1;
   const barras = x.detalle.map((d) => {
-    const color = d.dentro_tolerancia === false ? "var(--mal)" : d.dentro_tolerancia ? "var(--bien)" : "var(--cian)";
+    const color = { bien: "var(--bien)", medio: "#f5c451", mal: "var(--mal)" }[nivel(d.f)];
     return el("div", { class: "barra-param" },
       el("div", { class: "rotulo" }, el("span", {}, nombre(d.variable)),
-        el("span", { class: "meta" }, `w·f = ${fmt(d.w_f)}`)),
+        el("span", { class: "meta" }, `gap ${pctR(d.f)} × weight ${Math.round((cuotas()[d.variable] ?? 0) * 100)} % = ${fmt(d.w_f, 3)}`)),
       el("div", { class: "pista" },
-        el("i", { style: `width:${(d.w_f / escala) * 100}%;background:${color}` }),
-        el("span", { class: "marca-1", style: `left:${(1 / escala) * 100}%` })));
+        el("i", { style: `width:${(d.w_f / escala) * 100}%;background:${color}` })));
   });
 
   const fuera = E.mision.parametros.filter((p) => !disponible(p.variable));
   const comparacion = x.detalle[0]?.valor_sitio !== undefined
-    ? [el("h3", {}, "Compared with the destination"), el("p", { class: "ayuda" }, "Target = the destination's value. When the Moon or Mars is beyond anything on Earth, the target is the most extreme value on the continent."), tablaAnalogo(x)]
+    ? [el("h3", {}, "Compared with the targets"), el("p", { class: "ayuda" }, "Gap = how far this place is from the target, as % of that parameter's range in the Americas (green ≤ 10 %, yellow ≤ 25 %, red > 25 %). When the Moon or Mars is beyond anything on Earth, the destination's target is the most extreme value on the continent."), tablaAnalogo(x)]
     : null;
   f.replaceChildren(titulo, cab, hipotesis, cifras, comparacion, sobreElLugar(s, st),
-    el("h3", {}, "Weighted difference per parameter"),
-    el("p", { class: "ayuda" }, "Difference ÷ tolerance. The white line marks 1: to its left, within tolerance. The longest bar sets the score."),
+    el("h3", {}, "Weighted gap per parameter"),
+    el("p", { class: "ayuda" }, "Gap × weight. The longest bar sets the score: it is what keeps this place from being a better match."),
     ...barras,
     mapasMedidos(s),
     fuera.length ? el("p", { class: "nota" }, `Not compared at this destination: ${fuera.map((p) => nombre(p.variable)).join(", ")}.`) : null,
@@ -784,7 +737,7 @@ function pintarFicha() {
 }
 
 // ---------------------------------------------------------------- asistente de IA (AGENTS.md §7)
-// El usuario describe su misión; la IA la TRADUCE a parámetros, tolerancias y restricciones (cada uno con
+// El usuario describe su misión; la IA la TRADUCE a parámetros (objetivo y peso) y restricciones (cada uno con
 // su razón), el servidor la valida y aquí se carga como configuración editable. El sitio lo escoge el modelo.
 const EJEMPLOS = [
   ["Rover cameras at the lunar pole", "We want to test the navigation cameras and batteries of a lunar rover: bright ground like regolith and big day–night temperature swings, as near the lunar south pole."],
@@ -817,8 +770,6 @@ async function traducirIA() {
     const datos = await r.json();
     if (!r.ok) throw new Error(Array.isArray(datos.detail) ? datos.detail.map((d) => d.msg).join("; ") : datos.detail);
     E.mision = datos.mision;
-    E.base = {};
-    E.mision.parametros.forEach((p) => { E.base[p.variable] = p.valor; });
     E.sel = null;
     pintarConfig();
     calcular();
@@ -826,7 +777,7 @@ async function traducirIA() {
     caja.replaceChildren(...[
       el("h4", {}, "How the AI read your mission"),
       el("p", {}, el("b", {}, datos.mision.nombre), ` → ${d.nombre || datos.mision.destino}. ${datos.resumen || ""}`),
-      el("p", { class: "nota" }, `Settings loaded below: ${datos.mision.parametros.map((p) => `${nombre(p.variable)} (±${p.valor})`).join(", ")}${datos.mision.restricciones.length ? ` and ${datos.mision.restricciones.length} constraint(s)` : ""}. Review and edit them: the ranking updates by itself.`),
+      el("p", { class: "nota" }, `Settings loaded below: ${datos.mision.parametros.map((p) => `${nombre(p.variable)} (weight ${Math.round(p.peso * 100)}${p.objetivo != null ? `, target ${+p.objetivo.toPrecision(3)}` : ""})`).join(", ")}${datos.mision.restricciones.length ? ` and ${datos.mision.restricciones.length} constraint(s)` : ""}. Review and edit them: the ranking updates by itself.`),
       datos.no_disponible.length ? [el("h4", {}, "Needed but not in the app's data"),
         el("ul", {}, ...datos.no_disponible.map((x) => el("li", {}, el("b", {}, x.need), x.reason ? ` — ${x.reason}` : "")))] : null,
       datos.avisos.length ? el("ul", { class: "aviso-ia" }, ...datos.avisos.map((t) => el("li", {}, `Checked by the app: ${t}`))) : null,

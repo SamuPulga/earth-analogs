@@ -1703,5 +1703,412 @@
    ],
    "segundos": 3.91
   }
+ },
+ "-13.500,-75.500": {
+  "hechos2": {
+   "lat": -13.5,
+   "lon": -75.5,
+   "lugar": {
+    "nombre": "Huancano",
+    "condado": "Province of Pisco",
+    "region": "Ica",
+    "pais": "Peru",
+    "tipo": "village",
+    "descripcion": "Huancano, Province of Pisco, Ica, Peru"
+   },
+   "wikipedia": null,
+   "wikipedia_area": {
+    "titulo": "Huancano District",
+    "extracto": "Huancano District is one of eight districts of the province Pisco in Peru.",
+    "url": "https://en.wikipedia.org/wiki/Huancano_District",
+    "imagen": "https://thumb.wikimedia.org/wikipedia/commons/thumb/2/24/Distrito_de_Huancano%2C_en_la_provincia_de_Pisco%2C_Ica.JPG/330px-Distrito_de_Huancano%2C_en_la_provincia_de_Pisco%2C_Ica.JPG?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail",
+    "idioma": "en"
+   },
+   "elevacion_m": 2510.0,
+   "clima": {
+    "anio": 2025,
+    "temp_media_c": 14.9,
+    "oscilacion_diaria_media_c": 9.5,
+    "temp_min_c": 6.7,
+    "temp_max_c": 23.0,
+    "lluvia_anual_mm": 740,
+    "dias_secos_pct": 73,
+    "viento_max_medio_kmh": 9.5
+   },
+   "fuentes": [
+    "OpenStreetMap Nominatim (© OpenStreetMap contributors, ODbL)",
+    "Wikipedia (CC BY-SA)",
+    "Open-Meteo (elevation; ERA5 climate reanalysis, Copernicus/ECMWF)"
+   ],
+   "segundos": 2.04
+  }
+ },
+ "-11.500,-76.500|v9|Lunar rover navigation (cameras and thermal cycles)|5139100b4e": {
+  "resumen": "**Where it is:** San Pedro de Laraos is a village in the Province of Huarochirí, Lima region, Peru, perched at about **4,700 m** elevation. The point lies in the high Andes of the Huarochirí province, a rugged mountainous area that borders the Lima Metropolitan Area and is near the 5,000‑m Tarapu peak.\n\n**Climate:** Mean annual temperature is **2.8 °C** with a large daily swing of **≈9 °C**. Recorded extremes range from **‑6 °C** to **10.8 °C**. Annual precipitation is high at **≈1,590 mm**, and about **32 %** of days are dry. Mean daily maximum wind is modest at **16 km h⁻¹**.\n\n**Why it is an analog:** *No place in the Americas gets close to every target, so this is the best compromise, not a full analog.* The site matches the lunar‑rover mission’s reflectance requirement well: measured reflectance **0.154** versus the target **0.12** (gap 5 %, a close match) and this parameter carries **60 %** of the mission weight. Temperature‑related parameters are far from lunar values: the local temperature variation is **21.3 °C** versus the lunar target **28.8 °C** (gap 27 %, far) and the mean temperature is **9.4 °C** versus the lunar target **‑25 °C** (gap 62 %, far). Temperature accounts for the decisive **16 %** weight and drives the overall score. The site ranks **1st of 357** on the Pareto front with a robustness of **61 %** (rank stable in most weight‑perturbation runs).\n\n**What you could test here:**  \n1. Validate rover camera algorithms on high‑contrast, low‑reflectance terrain that mimics the lunar surface albedo.  \n2. Conduct thermal‑cycle endurance tests for rover components using the site’s large diurnal temperature swing.\n\n**Where it falls short:** The biggest gaps are in absolute temperature (far warmer than the Moon) and in temperature variation (lower than lunar extremes). Earth cannot reproduce the Moon’s **‑25 °C** ambient, the vacuum, reduced gravity, and intense radiation environment, so thermal management and dust‑interaction tests must be complemented by laboratory simulations."
+ },
+ "72.500,-122.500": {
+  "hechos2": {
+   "lat": 72.5,
+   "lon": -122.5,
+   "lugar": {
+    "nombre": "Inuvialuit Settlement Region",
+    "condado": "Inuvik Region",
+    "region": "Northwest Territories",
+    "pais": "Canada",
+    "tipo": "region",
+    "descripcion": "Inuvialuit Settlement Region, Inuvik Region, Northwest Territories, Canada"
+   },
+   "wikipedia": null,
+   "wikipedia_area": {
+    "titulo": "Inuvialuit Settlement Region",
+    "extracto": "The Inuvialuit Settlement Region, located in Canada's western Arctic, was designated in 1984 in the Inuvialuit Final Agreement by the Government of Canada for the Inuvialuit. It spans 435,000 km (270,000 mi), including 90,650 km2 (35,000 sq mi) of land and 12,980 km2 (5,010 sq mi) of subsurface mineral rights. The ISR is mainly North of the tree line, and includes several sub-regions: the Beaufort Sea, the Mackenzie River delta, the northern portion of Yukon, and the northwest portion of the Northwest Territories. The ISR includes both Crown Lands and Inuvialuit Private Lands. Most of the ISR is represented by Nunakput, the territorial electoral district, meaning \"our land\" in Inuvialuktun.",
+    "url": "https://en.wikipedia.org/wiki/Inuvialuit_Settlement_Region",
+    "imagen": "https://thumb.wikimedia.org/wikipedia/commons/thumb/4/40/NWT-YT_Inuvialuit_Settlement_Locator.svg/330px-NWT-YT_Inuvialuit_Settlement_Locator.svg.png?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail",
+    "idioma": "en"
+   },
+   "elevacion_m": 127.0,
+   "clima": {
+    "anio": 2025,
+    "temp_media_c": -12.2,
+    "oscilacion_diaria_media_c": 6.1,
+    "temp_min_c": -41.0,
+    "temp_max_c": 18.7,
+    "lluvia_anual_mm": 341,
+    "dias_secos_pct": 79,
+    "viento_max_medio_kmh": 23.2
+   },
+   "fuentes": [
+    "OpenStreetMap Nominatim (© OpenStreetMap contributors, ODbL)",
+    "Wikipedia (CC BY-SA)",
+    "Open-Meteo (elevation; ERA5 climate reanalysis, Copernicus/ECMWF)"
+   ],
+   "segundos": 2.62
+  }
+ },
+ "72.500,-121.500": {
+  "hechos2": {
+   "lat": 72.5,
+   "lon": -121.5,
+   "lugar": {
+    "nombre": "Inuvialuit Settlement Region",
+    "condado": "Inuvik Region",
+    "region": "Northwest Territories",
+    "pais": "Canada",
+    "tipo": "region",
+    "descripcion": "Inuvialuit Settlement Region, Inuvik Region, Northwest Territories, Canada"
+   },
+   "wikipedia": null,
+   "wikipedia_area": {
+    "titulo": "Inuvialuit Settlement Region",
+    "extracto": "The Inuvialuit Settlement Region, located in Canada's western Arctic, was designated in 1984 in the Inuvialuit Final Agreement by the Government of Canada for the Inuvialuit. It spans 435,000 km (270,000 mi), including 90,650 km2 (35,000 sq mi) of land and 12,980 km2 (5,010 sq mi) of subsurface mineral rights. The ISR is mainly North of the tree line, and includes several sub-regions: the Beaufort Sea, the Mackenzie River delta, the northern portion of Yukon, and the northwest portion of the Northwest Territories. The ISR includes both Crown Lands and Inuvialuit Private Lands. Most of the ISR is represented by Nunakput, the territorial electoral district, meaning \"our land\" in Inuvialuktun.",
+    "url": "https://en.wikipedia.org/wiki/Inuvialuit_Settlement_Region",
+    "imagen": "https://thumb.wikimedia.org/wikipedia/commons/thumb/4/40/NWT-YT_Inuvialuit_Settlement_Locator.svg/330px-NWT-YT_Inuvialuit_Settlement_Locator.svg.png?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail",
+    "idioma": "en"
+   },
+   "elevacion_m": 130.0,
+   "clima": {
+    "anio": 2025,
+    "temp_media_c": -12.1,
+    "oscilacion_diaria_media_c": 6.2,
+    "temp_min_c": -41.8,
+    "temp_max_c": 18.0,
+    "lluvia_anual_mm": 287,
+    "dias_secos_pct": 81,
+    "viento_max_medio_kmh": 21.4
+   },
+   "fuentes": [
+    "OpenStreetMap Nominatim (© OpenStreetMap contributors, ODbL)",
+    "Wikipedia (CC BY-SA)",
+    "Open-Meteo (elevation; ERA5 climate reanalysis, Copernicus/ECMWF)"
+   ],
+   "segundos": 2.13
+  }
+ },
+ "72.500,-122.500|v9|Lunar rover navigation (cameras and thermal cycles)|ffea7905f9": {
+  "resumen": "**Where it is:** Inuvialuit Settlement Region, Inuvik Region, Northwest Territories, Canada, elevation ≈ 127 m. The point lies in the western Arctic of Canada, north of the tree line and within a vast area that includes the Beaufort Sea and the Mackenzie River delta.\n\n**Climate:** Mean annual temperature ≈ ‑12 °C with a mean daily range of 6 °C. Recorded extremes run from ‑41 °C to +19 °C. Annual precipitation is about 340 mm and dry days constitute roughly 80 % of the year. Mean daily maximum wind is 23 km/h.\n\n**Why it is an analog:** No place in the Americas gets close to every target, so this is the best compromise, not a full analog. The temperature is a partial match to the lunar night‑side target (‑13 °C here vs. ‑25 °C desired, 21 % gap, weighted 54 %). Reflectance (0.357) is far from the lunar rim target of 0.12 (34 % gap, 33 % weight). Temperature variation is far from the lunar extreme of 28.8 °C (4.2 °C here, 88 % gap, 13 % weight). The site ranks 1st of 357 on the Pareto front, with robustness indicating it stays in the top 10 % of runs under modest weight changes.\n\n**What you could test here:** 1) Validate rover camera algorithms under low‑reflectance, high‑albedo Arctic snow/ice that approximates lunar surface brightness contrast. 2) Conduct thermal‑cycle endurance tests on rover components using the modest daily temperature swing (≈ 4 °C) combined with extreme cold nights.\n\n**Where it falls short:** The site cannot reproduce the Moon’s large temperature swings (≈ 29 °C) or the very low reflectance of lunar regolith. It also lacks lunar gravity, vacuum, and radiation conditions, which remain unreplicable on Earth."
+ },
+ "72.500,-123.500": {
+  "hechos2": {
+   "lat": 72.5,
+   "lon": -123.5,
+   "lugar": {
+    "nombre": "Inuvialuit Settlement Region",
+    "condado": "Inuvik Region",
+    "region": "Northwest Territories",
+    "pais": "Canada",
+    "tipo": "region",
+    "descripcion": "Inuvialuit Settlement Region, Inuvik Region, Northwest Territories, Canada"
+   },
+   "wikipedia": null,
+   "wikipedia_area": {
+    "titulo": "Inuvialuit Settlement Region",
+    "extracto": "The Inuvialuit Settlement Region, located in Canada's western Arctic, was designated in 1984 in the Inuvialuit Final Agreement by the Government of Canada for the Inuvialuit. It spans 435,000 km (270,000 mi), including 90,650 km2 (35,000 sq mi) of land and 12,980 km2 (5,010 sq mi) of subsurface mineral rights. The ISR is mainly North of the tree line, and includes several sub-regions: the Beaufort Sea, the Mackenzie River delta, the northern portion of Yukon, and the northwest portion of the Northwest Territories. The ISR includes both Crown Lands and Inuvialuit Private Lands. Most of the ISR is represented by Nunakput, the territorial electoral district, meaning \"our land\" in Inuvialuktun.",
+    "url": "https://en.wikipedia.org/wiki/Inuvialuit_Settlement_Region",
+    "imagen": "https://thumb.wikimedia.org/wikipedia/commons/thumb/4/40/NWT-YT_Inuvialuit_Settlement_Locator.svg/330px-NWT-YT_Inuvialuit_Settlement_Locator.svg.png?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail",
+    "idioma": "en"
+   },
+   "elevacion_m": 54.0,
+   "clima": {
+    "anio": 2025,
+    "temp_media_c": -11.6,
+    "oscilacion_diaria_media_c": 6.3,
+    "temp_min_c": -41.4,
+    "temp_max_c": 19.7,
+    "lluvia_anual_mm": 308,
+    "dias_secos_pct": 82,
+    "viento_max_medio_kmh": 22.9
+   },
+   "fuentes": [
+    "OpenStreetMap Nominatim (© OpenStreetMap contributors, ODbL)",
+    "Wikipedia (CC BY-SA)",
+    "Open-Meteo (elevation; ERA5 climate reanalysis, Copernicus/ECMWF)"
+   ],
+   "segundos": 1.55
+  }
+ },
+ "33.500,-112.500|v9|Dust coverage test for solar panels|a10f68029f": {
+  "resumen": "**Where it is:** Buckley is a city in Maricopa County, Arizona, United States, at an elevation of about 378 m. The point lies in the westernmost suburb of the Phoenix Metropolitan Area, a rapidly expanding desert‑urban landscape.\n\n**Climate:** Mean annual temperature is 23.4 °C with a mean daily range of 12.1 °C. Recorded extremes run from a low of 2.8 °C to a high of 46.5 °C. Annual precipitation is modest at ~390 mm, and dry days account for about 88 % of the year. Mean daily maximum wind is 15.1 km h⁻¹.\n\n**Why it is an analog:** For a dust‑coverage test on solar panels, Buckley scores highly. Humidity matches the target exactly (19.9 % RH, weight 65 % of the score) and wind speed is only 5.09 m s⁻¹ versus the target 4 m s⁻¹ (gap ≈ 9 %, weight 35 %). The decisive parameter is wind speed, but its gap remains within the “close match” range (< 25 %). The site sits on the Pareto front, ranked 1 of 10, and robustness is 100 % across weight variations, indicating a stable optimum.\n\n**What you could test here:** 1) Deploy solar‑panel prototypes with dust‑repellent coatings and monitor performance degradation under the local wind regime. 2) Conduct automated cleaning trials using low‑pressure air jets calibrated to the measured 5 m s⁻¹ wind to evaluate dust‑removal efficiency.\n\n**Where it falls short:** The wind speed is slightly higher than the Martian target, and the ambient pressure and gravity differ dramatically from Mars, so the site cannot reproduce Martian atmospheric density, low gravity, or radiation environment."
+ },
+ "72.500,-120.500": {
+  "hechos2": {
+   "lat": 72.5,
+   "lon": -120.5,
+   "lugar": {
+    "nombre": "Inuvialuit Settlement Region",
+    "condado": "Inuvik Region",
+    "region": "Northwest Territories",
+    "pais": "Canada",
+    "tipo": "region",
+    "descripcion": "Inuvialuit Settlement Region, Inuvik Region, Northwest Territories, Canada"
+   },
+   "wikipedia": null,
+   "wikipedia_area": {
+    "titulo": "Inuvialuit Settlement Region",
+    "extracto": "The Inuvialuit Settlement Region, located in Canada's western Arctic, was designated in 1984 in the Inuvialuit Final Agreement by the Government of Canada for the Inuvialuit. It spans 435,000 km (270,000 mi), including 90,650 km2 (35,000 sq mi) of land and 12,980 km2 (5,010 sq mi) of subsurface mineral rights. The ISR is mainly North of the tree line, and includes several sub-regions: the Beaufort Sea, the Mackenzie River delta, the northern portion of Yukon, and the northwest portion of the Northwest Territories. The ISR includes both Crown Lands and Inuvialuit Private Lands. Most of the ISR is represented by Nunakput, the territorial electoral district, meaning \"our land\" in Inuvialuktun.",
+    "url": "https://en.wikipedia.org/wiki/Inuvialuit_Settlement_Region",
+    "imagen": "https://thumb.wikimedia.org/wikipedia/commons/thumb/4/40/NWT-YT_Inuvialuit_Settlement_Locator.svg/330px-NWT-YT_Inuvialuit_Settlement_Locator.svg.png?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail",
+    "idioma": "en"
+   },
+   "elevacion_m": 150.0,
+   "clima": {
+    "anio": 2025,
+    "temp_media_c": -11.7,
+    "oscilacion_diaria_media_c": 5.7,
+    "temp_min_c": -42.4,
+    "temp_max_c": 19.1,
+    "lluvia_anual_mm": 279,
+    "dias_secos_pct": 82,
+    "viento_max_medio_kmh": 24.9
+   },
+   "fuentes": [
+    "OpenStreetMap Nominatim (© OpenStreetMap contributors, ODbL)",
+    "Wikipedia (CC BY-SA)",
+    "Open-Meteo (elevation; ERA5 climate reanalysis, Copernicus/ECMWF)"
+   ],
+   "segundos": 1.53
+  }
+ },
+ "72.500,-119.500": {
+  "hechos2": {
+   "lat": 72.5,
+   "lon": -119.5,
+   "lugar": {
+    "nombre": "Inuvialuit Settlement Region",
+    "condado": "Inuvik Region",
+    "region": "Northwest Territories",
+    "pais": "Canada",
+    "tipo": "region",
+    "descripcion": "Inuvialuit Settlement Region, Inuvik Region, Northwest Territories, Canada"
+   },
+   "wikipedia": null,
+   "wikipedia_area": {
+    "titulo": "Inuvialuit Settlement Region",
+    "extracto": "The Inuvialuit Settlement Region, located in Canada's western Arctic, was designated in 1984 in the Inuvialuit Final Agreement by the Government of Canada for the Inuvialuit. It spans 435,000 km (270,000 mi), including 90,650 km2 (35,000 sq mi) of land and 12,980 km2 (5,010 sq mi) of subsurface mineral rights. The ISR is mainly North of the tree line, and includes several sub-regions: the Beaufort Sea, the Mackenzie River delta, the northern portion of Yukon, and the northwest portion of the Northwest Territories. The ISR includes both Crown Lands and Inuvialuit Private Lands. Most of the ISR is represented by Nunakput, the territorial electoral district, meaning \"our land\" in Inuvialuktun.",
+    "url": "https://en.wikipedia.org/wiki/Inuvialuit_Settlement_Region",
+    "imagen": "https://thumb.wikimedia.org/wikipedia/commons/thumb/4/40/NWT-YT_Inuvialuit_Settlement_Locator.svg/330px-NWT-YT_Inuvialuit_Settlement_Locator.svg.png?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail",
+    "idioma": "en"
+   },
+   "elevacion_m": 108.0,
+   "clima": {
+    "anio": 2025,
+    "temp_media_c": -11.7,
+    "oscilacion_diaria_media_c": 5.3,
+    "temp_min_c": -40.8,
+    "temp_max_c": 19.6,
+    "lluvia_anual_mm": 302,
+    "dias_secos_pct": 82,
+    "viento_max_medio_kmh": 26.1
+   },
+   "fuentes": [
+    "OpenStreetMap Nominatim (© OpenStreetMap contributors, ODbL)",
+    "Wikipedia (CC BY-SA)",
+    "Open-Meteo (elevation; ERA5 climate reanalysis, Copernicus/ECMWF)"
+   ],
+   "segundos": 1.38
+  }
+ },
+ "28.500,-109.500": {
+  "hechos2": {
+   "lat": 28.5,
+   "lon": -109.5,
+   "lugar": {
+    "nombre": "Onavas",
+    "condado": "Onavas",
+    "region": "Sonora",
+    "pais": "Mexico",
+    "tipo": "county",
+    "descripcion": "Onavas, Sonora, Mexico"
+   },
+   "wikipedia": {
+    "titulo": "Ónavas",
+    "extracto": "Ónavas is a small town surrounded by Onavas Municipality in the southeast of the Mexican state of Sonora.",
+    "url": "https://en.wikipedia.org/wiki/%C3%93navas",
+    "imagen": "https://thumb.wikimedia.org/wikipedia/commons/thumb/9/98/IGLESIA_DE_ONAVAS_-_panoramio.jpg/330px-IGLESIA_DE_ONAVAS_-_panoramio.jpg?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail",
+    "idioma": "en",
+    "distancia_km": 5.8
+   },
+   "wikipedia_area": null,
+   "elevacion_m": 373.0,
+   "clima": {
+    "anio": 2025,
+    "temp_media_c": 24.6,
+    "oscilacion_diaria_media_c": 16.6,
+    "temp_min_c": 2.3,
+    "temp_max_c": 46.2,
+    "lluvia_anual_mm": 437,
+    "dias_secos_pct": 88,
+    "viento_max_medio_kmh": 10.9
+   },
+   "fuentes": [
+    "OpenStreetMap Nominatim (© OpenStreetMap contributors, ODbL)",
+    "Wikipedia (CC BY-SA)",
+    "Open-Meteo (elevation; ERA5 climate reanalysis, Copernicus/ECMWF)"
+   ],
+   "segundos": 1.32
+  }
+ },
+ "27.500,-109.500": {
+  "hechos2": {
+   "lat": 27.5,
+   "lon": -109.5,
+   "lugar": {
+    "nombre": "Quiriego",
+    "condado": "Quiriego",
+    "region": "Sonora",
+    "pais": "Mexico",
+    "tipo": "county",
+    "descripcion": "Quiriego, Sonora, Mexico"
+   },
+   "wikipedia": {
+    "titulo": "Cábora",
+    "extracto": "Cabora es una ranchería del municipio de Quiriego, ubicada en el sur del estado mexicano de Sonora. Según los datos del Censo de Población y Vivienda realizado en 2010 por el Instituto Nacional de Estadística y Geografía (INEGI), Cabora tiene un total de 322 habitantes.",
+    "url": "https://es.wikipedia.org/wiki/C%C3%A1bora",
+    "imagen": "",
+    "idioma": "es",
+    "distancia_km": 8.9
+   },
+   "wikipedia_area": {
+    "titulo": "Quiriego",
+    "extracto": "Quiriego is a small town and the county seat of the Municipality of Quiriego, located in the southeast of the Mexican state of Sonora.",
+    "url": "https://en.wikipedia.org/wiki/Quiriego",
+    "imagen": "https://thumb.wikimedia.org/wikipedia/commons/thumb/f/f3/Quiriego%2C_Sonora.jpg/330px-Quiriego%2C_Sonora.jpg?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail",
+    "idioma": "en"
+   },
+   "elevacion_m": 207.0,
+   "clima": {
+    "anio": 2025,
+    "temp_media_c": 25.3,
+    "oscilacion_diaria_media_c": 15.3,
+    "temp_min_c": 4.3,
+    "temp_max_c": 45.3,
+    "lluvia_anual_mm": 418,
+    "dias_secos_pct": 85,
+    "viento_max_medio_kmh": 13.2
+   },
+   "fuentes": [
+    "OpenStreetMap Nominatim (© OpenStreetMap contributors, ODbL)",
+    "Wikipedia (CC BY-SA)",
+    "Open-Meteo (elevation; ERA5 climate reanalysis, Copernicus/ECMWF)"
+   ],
+   "segundos": 1.33
+  }
+ },
+ "25.500,-107.500": {
+  "hechos2": {
+   "lat": 25.5,
+   "lon": -107.5,
+   "lugar": {
+    "nombre": "Badiraguato",
+    "condado": "",
+    "region": "Sinaloa",
+    "pais": "Mexico",
+    "tipo": "town",
+    "descripcion": "Badiraguato, Sinaloa, 80500, Mexico"
+   },
+   "wikipedia": null,
+   "wikipedia_area": {
+    "titulo": "Badiraguato",
+    "extracto": "Badiraguato is a small city and seat of the Badiraguato Municipality in the Mexican state of Sinaloa. It stands at 25°21′47″N 107°33′06″W.\n\nAccording to 2010 census, the city reported 3,725 inhabitants. The hamlet of La Tuna, located 55 kilometres to the North-East of the city, is the birthplace of Joaquín \"El Chapo\" Guzmán, for a long time one of Mexico's most powerful drug lords.",
+    "url": "https://en.wikipedia.org/wiki/Badiraguato",
+    "imagen": "https://thumb.wikimedia.org/wikipedia/commons/thumb/d/de/Badiraguato_-_panoramio.jpg/330px-Badiraguato_-_panoramio.jpg?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail",
+    "idioma": "en"
+   },
+   "elevacion_m": 385.0,
+   "clima": {
+    "anio": 2025,
+    "temp_media_c": 25.2,
+    "oscilacion_diaria_media_c": 14.1,
+    "temp_min_c": 5.5,
+    "temp_max_c": 39.3,
+    "lluvia_anual_mm": 563,
+    "dias_secos_pct": 81,
+    "viento_max_medio_kmh": 10.8
+   },
+   "fuentes": [
+    "OpenStreetMap Nominatim (© OpenStreetMap contributors, ODbL)",
+    "Wikipedia (CC BY-SA)",
+    "Open-Meteo (elevation; ERA5 climate reanalysis, Copernicus/ECMWF)"
+   ],
+   "segundos": 1.38
+  }
+ },
+ "-22.500,-56.500": {
+  "hechos2": {
+   "lat": -22.5,
+   "lon": -56.5,
+   "lugar": {
+    "nombre": "Bella Vista",
+    "condado": "",
+    "region": "Amambay",
+    "pais": "Paraguay",
+    "tipo": "town",
+    "descripcion": "Bella Vista, Amambay, Región Oriental, Paraguay"
+   },
+   "wikipedia": null,
+   "wikipedia_area": {
+    "titulo": "Bella Vista Norte",
+    "extracto": "Bella Vista is a border town in northeast of Paraguay, bordering the Brazilian town of Bela Vista, Mato Grosso do Sul. Both towns are divided by the Apa River, only connected by a borderbridge. It is a small town in the northern region of Amambay. Getting there is possible by way of Brazil or over a red earth road from the Paraguayan country-side.",
+    "url": "https://en.wikipedia.org/wiki/Bella_Vista_Norte",
+    "imagen": "",
+    "idioma": "en"
+   },
+   "elevacion_m": 209.0,
+   "clima": {
+    "anio": 2025,
+    "temp_media_c": 24.3,
+    "oscilacion_diaria_media_c": 10.4,
+    "temp_min_c": 4.3,
+    "temp_max_c": 39.8,
+    "lluvia_anual_mm": 1400,
+    "dias_secos_pct": 66,
+    "viento_max_medio_kmh": 16.4
+   },
+   "fuentes": [
+    "OpenStreetMap Nominatim (© OpenStreetMap contributors, ODbL)",
+    "Wikipedia (CC BY-SA)",
+    "Open-Meteo (elevation; ERA5 climate reanalysis, Copernicus/ECMWF)"
+   ],
+   "segundos": 1.39
+  }
  }
 }

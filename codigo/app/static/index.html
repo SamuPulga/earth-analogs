@@ -278,7 +278,7 @@
         <div class="contenedor">
           <p class="kicker">04 · Plan a mission</p>
           <h1>What do you want to test?</h1>
-          <p class="lead">Constraints → Pareto front → mission weights (weighted Chebyshev). Move the tolerances and watch the ranking change.</p>
+          <p class="lead">Constraints → Pareto front → mission weights (weighted Chebyshev). Set a target and a weight for each parameter and watch the ranking change.</p>
         </div>
       </div>
 
@@ -300,7 +300,7 @@
               <select id="ia-destino"><option value="">Let the AI choose</option></select>
             </label>
             <button id="ia-traducir" class="btn" type="button">Translate into settings <i class="flecha"></i></button>
-            <p class="ayuda">The AI only <b>translates</b> your description into parameters, tolerances and constraints, each with its reason. You can edit them below. The site is always picked by the mathematical model, not by the AI.</p>
+            <p class="ayuda">The AI only <b>translates</b> your description into parameters (target and weight) and constraints, each with its reason. You can edit them below. The site is always picked by the mathematical model, not by the AI.</p>
             <div id="ia-resultado" class="ia-resultado" aria-live="polite"></div>
           </div>
 
@@ -310,12 +310,8 @@
           <p id="nota-mision" class="nota"></p>
 
           <div class="paso"><span>2</span><h2>Targets and weights</h2></div>
-          <p class="ayuda">For each parameter: the <b>target</b> value you want to reproduce (by default, the destination's) and how much it <b>weighs</b>. Targets beyond what exists in the Americas are clipped to the maximum or minimum.</p>
-          <div class="modo-peso"><span class="etq-capa">Set importance as</span>
-            <div class="segmentado" id="modo-peso" role="group" aria-label="How to set the importance of each parameter">
-              <button type="button" data-m="tolerancia">Tolerances</button>
-              <button type="button" data-m="ahp">Weights (%)</button>
-            </div></div>
+          <p class="ayuda">For each parameter: the <b>target</b> value you want to reproduce (by default, the destination's) and how much it <b>weighs</b>. A higher weight makes that parameter count more. Targets beyond what exists in the Americas are clipped to the maximum or minimum.</p>
+
           <div id="lista-parametros"></div>
           <div class="agregar">
             <select id="sel-nuevo-parametro" aria-label="Parameter to add"></select>
@@ -388,7 +384,7 @@
           <li><span>01</span><h3>Distances</h3><p>For each site we compute how different it is from the destination in each parameter: f<sub>i</sub>(x) ≥ 0, where 0 means identical.</p></li>
           <li><span>02</span><h3>Constraints</h3><p>Sites that do not meet the minimum are ruled out, for example a slope the rover cannot climb.</p></li>
           <li><span>03</span><h3>Pareto front</h3><p>Only the sites that no other site beats in every parameter at once remain.</p></li>
-          <li><span>04</span><h3>Weighted Chebyshev</h3><p>They are ranked by the worst weighted difference, max<sub>i</sub> w<sub>i</sub>·f<sub>i</sub>, with w<sub>i</sub> = 1/τ<sub>i</sub>. Score ≤ 1: within tolerance in everything.</p></li>
+          <li><span>04</span><h3>Weighted Chebyshev</h3><p>They are ranked by the worst weighted difference, max<sub>i</sub> w<sub>i</sub>·f<sub>i</sub>, where w<sub>i</sub> is the mission's weight and f<sub>i</sub> the gap to the target as a share of the range in the Americas. Lower = better.</p></li>
           <li><span>05</span><h3>Robustness</h3><p>We repeat it with slightly different weights and count how often each site comes first.</p></li>
         </ol>
 

@@ -196,7 +196,8 @@ function pintarListas() {
           return el("li", { tabindex: "0", onclick: () => seleccionar(x.sitio_id), onkeydown: (e) => { if (e.key === "Enter") seleccionar(x.sitio_id); } },
             el("span", { class: "puesto" }, String(i + 1)),
             el("span", {}, el("b", {}, s.nombre), el("small", {}, `${s.pais} · ${coordenadas(s.lat, s.lon)}`)),
-            el("span", { class: `etq ${x.dentro_tolerancia ? "bien" : "mal"}` }, fmt(x.puntuacion)));
+            (() => { const b = Math.max(...x.detalle.map((d) => d.f)); const c = b <= 0.1 ? "bien" : b <= 0.25 ? "medio" : "mal";
+              return el("span", { class: `etq ${c}`, title: "Largest gap to a target, as % of the range in the Americas" }, `gap ${Math.round(b * 100)} %`); })());
         })),
       el("a", { class: "btn chico", href: `#/mision?mision=${m.id}` }, "Plan this mission ", el("i", { class: "flecha" })));
   }));
