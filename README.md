@@ -18,7 +18,6 @@ cd codigo/app
 uvicorn main:app --port 7860
 ```
 
-Then open http://127.0.0.1:7860. Optional: set `IA_CLAVE` (a Groq API key) to enable AI summaries.
 
 ## Structure
 
